@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Common/">
+    <Project Path="src/Common/Power9.Common/Power9.Common.csproj" />
+    <Project Path="src/Common/Power9.GrpcContracts/Power9.GrpcContracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/" />
+  <Folder Name="/src/Services/NotificationWorkerService/">
+    <Project Path="src/Services/NotificationWorkerService/Power9.NotificationWorker/Power9.NotificationWorker.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/RecommendationService/">
+    <Project Path="src/Services/RecommendationService/Power9.RecommendationGrpc/Power9.RecommendationGrpc.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/RoutineService/">
+    <Project Path="src/Services/RoutineService/Power9.RoutineService.Api/Power9.RoutineService.Api.csproj" />
+    <Project Path="src/Services/RoutineService/Power9.RoutineService.Application/Power9.RoutineService.Application.csproj" />
+    <Project Path="src/Services/RoutineService/Power9.RoutineService.Domain/Power9.RoutineService.Domain.csproj" />
+    <Project Path="src/Services/RoutineService/Power9.RoutineService.Infrastructure/Power9.RoutineService.Infrastructure.csproj" />
+  </Folder>
+</Solution>
