@@ -1,7 +1,16 @@
-using Power9.NotificationWorker;
+using Microsoft.EntityFrameworkCore;
+using Power9.NotificationWorker.Data;
+using Power9.NotificationWorker.Workers;
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+
+builder.Services.AddDbContext<WorkerDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sql => sql.EnableRetryOnFailure(maxRetryCount: 5)));
+
+builder.Services.AddHostedService<RoutineCompletedConsumerWorker>();
+builder.Services.AddHostedService<DailyScheduleReminderJob>();
 
 var host = builder.Build();
 host.Run();

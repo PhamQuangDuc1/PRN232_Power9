@@ -17,4 +17,8 @@
     <Project Path="src/Services/RoutineService/Power9.RoutineService.Domain/Power9.RoutineService.Domain.csproj" />
     <Project Path="src/Services/RoutineService/Power9.RoutineService.Infrastructure/Power9.RoutineService.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Power9.NotificationWorker.Tests/Power9.NotificationWorker.Tests.csproj" />
+    <Project Path="tests/Power9.RecommendationGrpc.Tests/Power9.RecommendationGrpc.Tests.csproj" />
+  </Folder>
 </Solution>

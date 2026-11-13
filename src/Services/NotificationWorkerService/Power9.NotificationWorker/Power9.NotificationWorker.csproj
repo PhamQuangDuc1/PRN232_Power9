@@ -14,6 +14,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Power9.Common\Power9.Common.csproj" />
-    <ProjectReference Include="..\..\RoutineService\Power9.RoutineService.Domain\Power9.RoutineService.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Power9.NotificationWorker.Tests" />
   </ItemGroup>
 </Project>

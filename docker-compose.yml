@@ -1,24 +1,39 @@
-version: '3.8'
+name: power9
+
+x-dotnet-common: &dotnet-common
+  restart: unless-stopped
+  networks:
+    - power9-network
 
 services:
   # ==========================================
-  # 1. DATABASE: Microsoft SQL Server 2022
+  # DATABASE: Microsoft SQL Server 2022
+  #   - Máy bạn / SSMS:          localhost,1433
+  #   - Máy khác cùng mạng LAN:   <IP-máy-bạn>,1433   (User: sa)
   # ==========================================
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: power9-sqlserver
     environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Password123!
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD:-Password123!}
     ports:
       - "1433:1433"
     volumes:
       - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
     networks:
       - power9-network
 
   # ==========================================
-  # 2. MESSAGE BROKER: Kafka & Zookeeper
+  # MESSAGE BROKER: Zookeeper + Apache Kafka
+  #   - Trong mạng Docker: kafka:29092
+  #   - Từ máy host (dotnet run): localhost:9092
   # ==========================================
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -39,69 +54,117 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:29092 --list > /dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 20s
+    networks:
+      - power9-network
+
+  # Tạo sẵn topic khi khởi động (chạy 1 lần rồi thoát)
+  kafka-init:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: power9-kafka-init
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic power9-routine-completed --partitions 3 --replication-factor 1 &&
+       kafka-topics --bootstrap-server kafka:29092 --create --if-not-exists --topic power9-routine-proposals --partitions 1 --replication-factor 1 &&
+       kafka-topics --bootstrap-server kafka:29092 --list"
+    networks:
+      - power9-network
+
+  # Giao diện web xem topic / message Kafka: http://localhost:8085
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: power9-kafka-ui
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8085:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: power9
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
     networks:
       - power9-network
 
   # ==========================================
-  # 3. SERVICE 2: Recommendation gRPC Service
+  # SERVICE: Recommendation gRPC (HTTP/2)
   # ==========================================
   recommendation-grpc:
+    <<: *dotnet-common
     build:
       context: .
       dockerfile: src/Services/RecommendationService/Dockerfile
+    image: power9/recommendation-grpc:latest
     container_name: power9-recommendation-grpc
     ports:
       - "50051:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8080
-    networks:
-      - power9-network
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      Kestrel__EndpointDefaults__Protocols: Http2
 
   # ==========================================
-  # 4. SERVICE 1: Routine REST API (Gateway)
+  # SERVICE: Routine REST API  -> http://localhost:5000/swagger
   # ==========================================
   routine-api:
+    <<: *dotnet-common
     build:
       context: .
       dockerfile: src/Services/RoutineService/Dockerfile
+    image: power9/routine-api:latest
     container_name: power9-routine-api
     depends_on:
-      - sqlserver
-      - kafka
-      - recommendation-grpc
+      sqlserver:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+      recommendation-grpc:
+        condition: service_started
     ports:
       - "5000:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=Power9Db;User Id=sa;Password=Password123!;TrustServerCertificate=True;
-      - Kafka__BootstrapServers=kafka:29092
-      - GrpcServices__RecommendationUrl=http://recommendation-grpc:8080
-    networks:
-      - power9-network
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=sqlserver,1433;Database=Power9Db;User Id=sa;Password=${SA_PASSWORD:-Password123!};TrustServerCertificate=True;
+      Kafka__BootstrapServers: kafka:29092
+      GrpcServices__RecommendationUrl: http://recommendation-grpc:8080
 
   # ==========================================
-  # 5. SERVICE 3: Notification Background Worker
+  # SERVICE: Notification Background Worker (Kafka consumer + scheduled job)
   # ==========================================
   notification-worker:
+    <<: *dotnet-common
     build:
       context: .
       dockerfile: src/Services/NotificationWorkerService/Dockerfile
+    image: power9/notification-worker:latest
     container_name: power9-notification-worker
     depends_on:
-      - sqlserver
-      - kafka
+      sqlserver:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
     environment:
-      - DOTNET_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=Power9Db;User Id=sa;Password=Password123!;TrustServerCertificate=True;
-      - Kafka__BootstrapServers=kafka:29092
-    networks:
-      - power9-network
+      DOTNET_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Server=sqlserver,1433;Database=Power9Db;User Id=sa;Password=${SA_PASSWORD:-Password123!};TrustServerCertificate=True;
+      Kafka__BootstrapServers: kafka:29092
+      Kafka__GroupId: power9-worker-group
+      Reminder__IntervalSeconds: 60
 
 networks:
   power9-network:

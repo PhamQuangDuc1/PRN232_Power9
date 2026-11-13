@@ -10,16 +10,14 @@ COPY ["src/Services/RoutineService/Power9.RoutineService.Domain/Power9.RoutineSe
 COPY ["src/Services/RoutineService/Power9.RoutineService.Application/Power9.RoutineService.Application.csproj", "src/Services/RoutineService/Power9.RoutineService.Application/"]
 COPY ["src/Services/RoutineService/Power9.RoutineService.Infrastructure/Power9.RoutineService.Infrastructure.csproj", "src/Services/RoutineService/Power9.RoutineService.Infrastructure/"]
 COPY ["src/Services/RoutineService/Power9.RoutineService.Api/Power9.RoutineService.Api.csproj", "src/Services/RoutineService/Power9.RoutineService.Api/"]
-
 RUN dotnet restore "src/Services/RoutineService/Power9.RoutineService.Api/Power9.RoutineService.Api.csproj"
-COPY . .
-WORKDIR "/src/src/Services/RoutineService/Power9.RoutineService.Api"
-RUN dotnet build "Power9.RoutineService.Api.csproj" -c Release -o /app/build
 
-FROM build AS publish
-RUN dotnet publish "Power9.RoutineService.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+COPY src/Common/ src/Common/
+COPY src/Services/RoutineService/ src/Services/RoutineService/
+WORKDIR "/src/src/Services/RoutineService/Power9.RoutineService.Api"
+RUN dotnet publish "Power9.RoutineService.Api.csproj" -c Release -o /app/publish --no-restore /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Power9.RoutineService.Api.dll"]
