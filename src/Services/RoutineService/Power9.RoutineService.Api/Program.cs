@@ -60,6 +60,10 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+// WebClient tĩnh (wwwroot/index.html) — plan Thành viên 1, bước 5.1
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
