@@ -9,5 +9,6 @@ public class DailyLog
     public Routine Routine { get; set; } = null!;
     public DateTime CompletedAt { get; set; }
     public int PointsEarned { get; set; }
-    public string Note { get; set; } = string.Empty;
+    public string? Note { get; set; }
+    public Guid? EventId { get; set; }
 }
