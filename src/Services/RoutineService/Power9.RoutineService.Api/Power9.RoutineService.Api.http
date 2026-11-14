@@ -1,6 +1,71 @@
-@Power9.RoutineService.Api_HostAddress = http://localhost:5016
+@Power9_HostAddress = http://localhost:5000
+@token = REPLACE_WITH_JWT
 
-GET {{Power9.RoutineService.Api_HostAddress}}/weatherforecast/
+### Login as seeded admin (admin@power9.com / Admin@123)
+POST {{Power9_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@power9.com",
+  "password": "Admin@123"
+}
+
+### Register an employee
+POST {{Power9_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "employee01",
+  "email": "employee01@example.com",
+  "fullName": "Power9 Employee",
+  "password": "Employee@123"
+}
+
+### List categories
+GET {{Power9_HostAddress}}/api/categories
 Accept: application/json
 
-###
+### Search routines
+GET {{Power9_HostAddress}}/api/routines?searchKeyword=walk&pageNumber=1&pageSize=6
+Accept: application/json
+
+### Ask Recommendation Service (provided by distributed-core integration)
+GET {{Power9_HostAddress}}/api/recommendations/smart-suggest?sittingMinutes=90&stressLevel=High&currentTimeOfDay=Afternoon
+Accept: application/json
+
+### Create a routine (Admin)
+POST {{Power9_HostAddress}}/api/routines
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "categoryId": 1,
+  "title": "Stretch break",
+  "description": "Stand and stretch for a moment.",
+  "durationMinutes": 3,
+  "energyLevel": "Low",
+  "targetTimeOfDay": "Anytime",
+  "rewardPoints": 10,
+  "isApproved": true
+}
+
+### View the signed-in user's schedules
+GET {{Power9_HostAddress}}/api/schedules/my-schedules
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Check in to a routine (provided by distributed-core integration)
+POST {{Power9_HostAddress}}/api/routines/1/checkin
+Authorization: Bearer {{token}}
+
+### Add a schedule
+POST {{Power9_HostAddress}}/api/schedules
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "routineId": 1,
+  "reminderTime": "09:00:00",
+  "daysOfWeek": "Mon,Tue,Wed,Fri",
+  "isActive": true
+}

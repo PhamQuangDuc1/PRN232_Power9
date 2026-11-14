@@ -11,12 +11,17 @@
     <PackageReference Include="Grpc.Net.Client" Version="2.66.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.66.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.29" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Power9.RoutineService.Infrastructure\Power9.RoutineService.Infrastructure.csproj" />
+    <ProjectReference Include="..\Power9.RoutineService.Application\Power9.RoutineService.Application.csproj" />
     <ProjectReference Include="..\..\..\Common\Power9.GrpcContracts\Power9.GrpcContracts.csproj" />
     <ProjectReference Include="..\..\..\Common\Power9.Common\Power9.Common.csproj" />
   </ItemGroup>
