@@ -1,74 +1,76 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Power9.RoutineService.Api.Extensions;
+using Power9.RoutineService.Application.Interfaces;
+using Power9.RoutineService.Application.Services;
+using Power9.RoutineService.Infrastructure.Data;
+using Power9.RoutineService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// ---------------------------------------------------------------
-// JWT Bearer (cấu hình kiểm tra token). Thành viên 1 sinh token trong AuthService
-// với CÙNG Jwt:Key / Jwt:Issuer / Jwt:Audience và claim ClaimTypes.NameIdentifier = UserId.
-// ---------------------------------------------------------------
-var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Missing Jwt:Key");
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromMinutes(1)
-        };
-    });
-builder.Services.AddAuthorization();
-
-// ---------------------------------------------------------------
-// [THÀNH VIÊN 1] TODO: đăng ký Power9DbContext, Repositories, AuthService, RoutineService...
-// ---------------------------------------------------------------
-
-// [THÀNH VIÊN 2] gRPC client (RecommendationService) + Kafka producer
-builder.Services.AddDistributedServices(builder.Configuration);
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(options =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Power9 Routine API", Version = "v1" });
-    var scheme = new OpenApiSecurityScheme
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Power9 Routine API", Version = "v1" });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Dán JWT token (không cần chữ 'Bearer ')",
-        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-    };
-    c.AddSecurityDefinition("Bearer", scheme);
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement { { scheme, Array.Empty<string>() } });
+        Name = "Authorization", Type = SecuritySchemeType.Http, Scheme = "bearer", BearerFormat = "JWT",
+        In = ParameterLocation.Header, Description = "Nhập JWT token (không cần thêm tiền tố Bearer)."
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, Array.Empty<string>() }
+    });
 });
 
-var app = builder.Build();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is not configured.");
+builder.Services.AddDbContext<Power9DbContext>(options => options.UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure()));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoutineRepository, RoutineRepository>();
+builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IRoutineService, RoutineService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-if (app.Environment.IsDevelopment())
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is not configured.");
+if (Encoding.UTF8.GetByteCount(jwtKey) < 32) throw new InvalidOperationException("Jwt:Key must be at least 32 bytes.");
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    // Token test tạm thời cho Thành viên 2 khi AuthController của Thành viên 1 chưa xong. Chỉ bật ở Development.
-    app.MapDevTokenEndpoint();
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        NameClaimType = System.Security.Claims.ClaimTypes.Name,
+        RoleClaimType = System.Security.Claims.ClaimTypes.Role,
+        ClockSkew = TimeSpan.FromSeconds(30)
+    };
+});
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<Power9DbContext>();
+    await db.Database.MigrateAsync();
+    await DbInitializer.SeedAsync(db);
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 app.Run();

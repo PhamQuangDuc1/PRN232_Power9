@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f2">
+  <title>Power9 · Daily wellbeing</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/suggestion.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="brand-mark">P9</span><span>power<span class="brand-nine">9</span><small>DAILY WELLBEING</small></span></a>
+    <nav><a href="#routines">Thói quen</a><a href="#schedule">Lịch của tôi</a></nav>
+    <div id="account-actions" class="account-actions"><button class="button button-quiet" id="show-login">Đăng nhập</button><button class="button button-dark" id="show-register">Tạo tài khoản</button></div>
+    <div id="account-info" class="account-info hidden"><span id="account-name"></span><span class="points" id="account-points"></span><button class="button button-quiet" id="logout">Thoát</button></div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy"><p class="eyebrow">SMALL STEPS, BETTER DAYS</p><h1>Chăm sóc bản thân,<br><em>từng chút một.</em></h1><p class="hero-subtitle">Những thói quen ngắn giúp bạn vận động, nghỉ ngơi và kết nối tốt hơn trong ngày.</p><a class="button button-dark" href="#routines">Khám phá thói quen <span>↘</span></a></div>
+      <div class="hero-art" aria-hidden="true"><div class="sun"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="plant">✳</div><div class="hero-note"><span>01 — 09</span><strong>Mỗi ngày<br>một lựa chọn tốt</strong></div></div>
+      <div class="hero-stats"><div><strong>9</strong><span>nhóm thói quen</span></div><div><strong>5′</strong><span>để bắt đầu</span></div><div><strong>∞</strong><span>cách tiến bộ</span></div></div>
+    </section>
+
+    <section class="section categories-section" id="categories"><div class="section-heading"><div><p class="eyebrow">YOUR WELLBEING, IN NINE WAYS</p><h2>Chọn điều bạn cần hôm nay</h2></div><span class="section-index">01 / 03</span></div><div id="category-grid" class="category-grid"><p class="muted">Đang tải các nhóm thói quen…</p></div></section>
+
+    <section class="section suggestion-section" id="suggestion"><div class="section-heading"><div><p class="eyebrow">A LITTLE HELP TO GET STARTED</p><h2>Gợi ý phù hợp với bạn</h2></div><span class="section-index">SMART PICK</span></div><div class="suggestion-panel"><div><p>Chia sẻ nhanh tình trạng hiện tại, Power9 sẽ tìm một hoạt động phù hợp.</p><form id="suggestion-form"><label>Ngồi liên tục (phút)<input name="sittingMinutes" type="number" min="0" max="600" value="60"></label><label>Mức căng thẳng<select name="stressLevel"><option>Low</option><option>Medium</option><option selected>High</option></select></label><button class="button button-dark" type="submit">Gợi ý hoạt động <span>↗</span></button></form></div><div id="suggestion-result" class="suggestion-result"><span class="suggestion-spark">✳</span><p>Một gợi ý nhỏ có thể giúp ngày của bạn nhẹ nhàng hơn.</p></div></div></section>
+
+    <section class="section routines-section" id="routines"><div class="section-heading"><div><p class="eyebrow">THE ROUTINE LIBRARY</p><h2>Thư viện thói quen</h2></div><span class="section-index">02 / 03</span></div>
+      <div class="filters"><label class="search-field"><span>⌕</span><input id="search" type="search" placeholder="Tìm một hoạt động…"></label><select id="category-filter" aria-label="Lọc theo nhóm"><option value="">Tất cả nhóm</option></select><button class="button button-outline" id="clear-filters">Xóa lọc</button></div>
+      <div id="routine-list" class="routine-grid"></div><div class="pagination"><span id="page-status" class="muted"></span><div><button class="button button-outline" id="previous-page">← Trước</button><button class="button button-outline" id="next-page">Tiếp →</button></div></div>
+    </section>
+
+    <section class="section schedule-section" id="schedule"><div class="section-heading"><div><p class="eyebrow">MAKE SPACE FOR YOURSELF</p><h2>Lịch nhắc của tôi</h2></div><span class="section-index">03 / 03</span></div><div class="schedule-panel"><div class="schedule-intro"><div class="schedule-icon">◷</div><h3>Nhịp tốt bắt đầu từ một lời nhắc</h3><p>Đăng nhập để tạo lịch nhắc riêng và theo dõi những hoạt động đã lên kế hoạch.</p><button class="button button-dark" id="schedule-login">Đăng nhập để xem lịch</button></div><div id="schedule-list" class="schedule-list"><p class="muted">Đăng nhập để tải lịch cá nhân.</p></div></div></section>
+
+    <section id="admin-section" class="section admin-section hidden"><div class="section-heading"><div><p class="eyebrow">ADMIN WORKSPACE</p><h2>Thêm thói quen</h2></div></div><form id="routine-form" class="admin-form"><label>Tên hoạt động<input name="title" required maxlength="120"></label><label>Nhóm<select name="categoryId" id="admin-category" required></select></label><label>Thời lượng (phút)<input name="durationMinutes" type="number" min="1" max="1440" value="5" required></label><label>Điểm<input name="rewardPoints" type="number" min="0" value="10" required></label><label>Mức năng lượng<select name="energyLevel"><option>Low</option><option>Medium</option><option>High</option></select></label><label>Thời điểm<select name="targetTimeOfDay"><option>Anytime</option><option>Morning</option><option>Afternoon</option><option>Evening</option></select></label><label class="wide">Mô tả<textarea name="description" required maxlength="2000" rows="3"></textarea></label><label class="check-label"><input name="isApproved" type="checkbox" checked> Hiển thị cho nhân viên</label><button class="button button-dark" type="submit">Tạo hoạt động</button></form></section>
+  </main>
+
+  <footer><a class="brand" href="#top"><span class="brand-mark">P9</span><span>power<span class="brand-nine">9</span><small>DAILY WELLBEING</small></span></a><p>Chậm lại một chút. Bắt đầu từ hôm nay.</p><span>© 2026 POWER9</span></footer>
+
+  <dialog id="auth-dialog"><button class="dialog-close" id="close-dialog" aria-label="Đóng">×</button><p class="eyebrow">WELCOME TO POWER9</p><h2 id="auth-title">Chào mừng trở lại</h2><form id="auth-form"><label id="username-field" class="hidden">Tên tài khoản<input name="username" minlength="3" maxlength="50"></label><label id="fullname-field" class="hidden">Họ tên<input name="fullName" maxlength="100"></label><label>Email<input name="email" type="email" required></label><label>Mật khẩu<input name="password" type="password" minlength="8" required></label><p id="auth-error" class="form-error"></p><button class="button button-dark dialog-submit" type="submit">Đăng nhập</button></form><button id="switch-auth" class="text-button">Chưa có tài khoản? Đăng ký</button></dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
