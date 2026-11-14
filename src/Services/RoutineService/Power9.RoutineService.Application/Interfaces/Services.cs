@@ -25,3 +25,29 @@ public interface IScheduleService
     Task<ScheduleDto?> UpdateAsync(int userId, int id, CreateScheduleDto request, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(int userId, int id, CancellationToken cancellationToken = default);
 }
+
+public interface ICityService
+{
+    Task<CityRoomResponse?> GetCurrentRoomAsync(int userId, CancellationToken cancellationToken = default);
+    Task<CityRoomResponse?> GetRoomByIdAsync(int roomId, int? currentUserId = null, CancellationToken cancellationToken = default);
+    Task<CityRoomResponse?> GetRoomByCodeAsync(string roomCode, int? currentUserId = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<PublicRoomSummary>> GetPublicRoomsAsync(CancellationToken cancellationToken = default);
+    Task<CityRoomResponse> CreateRoomAsync(int userId, CreateCityRoomRequest request, CancellationToken cancellationToken = default);
+    Task<CityRoomResponse> QuickMatchAsync(int userId, CancellationToken cancellationToken = default);
+    Task<CityRoomResponse> JoinRoomAsync(int userId, JoinCityRoomRequest request, CancellationToken cancellationToken = default);
+    Task<bool> TogglePrivacyAsync(int roomId, int userId, CancellationToken cancellationToken = default);
+    Task<bool> UpdateRooftopStatusAsync(int roomId, int userId, UpdateRooftopRequest request, CancellationToken cancellationToken = default);
+    Task<bool> InteractAsync(int roomId, int fromUserId, InteractRequest request, CancellationToken cancellationToken = default);
+    Task<UpgradeResult> UpgradeHouseAsync(int roomId, int userId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<ArchivedCitySummary>> GetArchivedRoomsAsync(int userId, CancellationToken cancellationToken = default);
+    Task<bool> LeaveRoomAsync(int roomId, int userId, CancellationToken cancellationToken = default);
+    Task RewardMaterialsAsync(int userId, int materials, CancellationToken cancellationToken = default);
+    Task<CityRoomResponse> AdminOverrideCityAsync(int roomId, AdminOverrideCityRequest request, CancellationToken cancellationToken = default);
+}
+
+public interface IFriendshipService
+{
+    Task<IReadOnlyList<FriendDto>> GetFriendsAsync(int userId, CancellationToken cancellationToken = default);
+    Task<bool> SendRequestAsync(int userId, SendFriendRequest request, CancellationToken cancellationToken = default);
+    Task<bool> AcceptRequestAsync(int userId, int friendshipId, CancellationToken cancellationToken = default);
+}

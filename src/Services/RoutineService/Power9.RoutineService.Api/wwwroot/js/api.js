@@ -51,6 +51,7 @@
     const local = D.ROUTINES.find(x => x.id === (r.id ?? r.routineId));
     return {
       id: r.id ?? r.routineId,
+      categoryId: r.categoryId ?? local?.categoryId,
       title: r.title ?? local?.title,
       categoryName: r.categoryName ?? r.category?.name ?? local?.categoryName,
       durationMinutes: r.durationMinutes ?? local?.durationMinutes,
@@ -58,7 +59,8 @@
       description: r.description ?? r.instruction ?? local?.description ?? '',
       energyLevel: r.energyLevel ?? local?.energyLevel,
       targetTimeOfDay: r.targetTimeOfDay ?? local?.targetTimeOfDay,
-      steps: local?.steps || []
+      isApproved: r.isApproved ?? local?.isApproved ?? true,
+      steps: r.steps || local?.steps || []
     };
   }
 
@@ -75,6 +77,16 @@
 
   const api = {
     ApiError, session,
+
+    /** [Thành viên 1] POST /api/auth/login */
+    async login(email, password) {
+      return await request('POST', '/api/auth/login', { body: { email, password }, auth: false });
+    },
+
+    /** [Thành viên 1] POST /api/auth/register */
+    async register(payload) {
+      return await request('POST', '/api/auth/register', { body: payload, auth: false });
+    },
 
     /** [Thành viên 2 - chỉ Development] POST /api/dev/token?userId=&role= */
     async devLogin(userId, role) {
@@ -107,19 +119,136 @@
       return { data: data.find(r => r.id === Number(id)), source };
     },
 
-    /** [Thành viên 1 - plan] GET /api/schedules/my-schedules */
-    async getMySchedules(routines) {
-      const today = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date().getDay()];
-      const filterToday = (list) => list
-        .filter(s => s.isActive && (!s.daysOfWeek || s.daysOfWeek.split(',').map(x => x.trim()).includes(today)))
-        .sort((a, b) => a.reminderTime.localeCompare(b.reminderTime));
-      if (session.isOffline()) return { data: filterToday(D.SAMPLE_SCHEDULES.map(s => normalizeSchedule(s, routines))), source: 'mock' };
+    /** [Thành viên 1] GET /api/categories */
+    async getCategories() {
+      if (session.isOffline()) return { data: D.CATEGORIES.map((c, i) => ({ id: i + 1, name: c.key, description: c.vi, icon: c.icon, displayOrder: i + 1 })), source: 'mock' };
       try {
-        const d = await request('GET', '/api/schedules/my-schedules');
-        return { data: filterToday(unwrapList(d).map(s => normalizeSchedule(s, routines))), source: 'api' };
+        const d = await request('GET', '/api/categories');
+        return { data: unwrapList(d), source: 'api' };
       } catch (e) {
         if (!canFallback(e)) throw e;
-        return { data: filterToday(D.SAMPLE_SCHEDULES.map(s => normalizeSchedule(s, routines))), source: 'mock' };
+        return { data: D.CATEGORIES.map((c, i) => ({ id: i + 1, name: c.key, description: c.vi, icon: c.icon, displayOrder: i + 1 })), source: 'mock' };
+      }
+    },
+
+    /** [Thành viên 1 - Admin] POST /api/routines */
+    async createRoutine(dto) {
+      if (session.isOffline()) {
+        const id = Date.now();
+        const r = { id, ...dto, steps: [] };
+        D.ROUTINES.push(r);
+        return { data: normalizeRoutine(r), source: 'mock' };
+      }
+      const d = await request('POST', '/api/routines', { body: dto });
+      return { data: normalizeRoutine(d), source: 'api' };
+    },
+
+    /** [Thành viên 1 - Admin] PUT /api/routines/{id} */
+    async updateRoutine(id, dto) {
+      if (session.isOffline()) {
+        const idx = D.ROUTINES.findIndex(r => r.id === Number(id));
+        if (idx >= 0) D.ROUTINES[idx] = { ...D.ROUTINES[idx], ...dto };
+        return { data: normalizeRoutine({ id, ...dto }), source: 'mock' };
+      }
+      const d = await request('PUT', `/api/routines/${id}`, { body: dto });
+      return { data: normalizeRoutine(d), source: 'api' };
+    },
+
+    /** [Thành viên 1 - Admin] DELETE /api/routines/{id} */
+    async deleteRoutine(id) {
+      if (session.isOffline()) {
+        const idx = D.ROUTINES.findIndex(r => r.id === Number(id));
+        if (idx >= 0) D.ROUTINES.splice(idx, 1);
+        return { source: 'mock' };
+      }
+      await request('DELETE', `/api/routines/${id}`);
+      return { source: 'api' };
+    },
+
+    /** [Thành viên 1 - plan] GET /api/schedules/my-schedules */
+    async getMySchedules(routines) {
+      const getLocal = () => {
+        try {
+          const raw = localStorage.getItem('p9_local_schedules');
+          if (raw) return JSON.parse(raw);
+        } catch {}
+        return D.SAMPLE_SCHEDULES;
+      };
+
+      if (session.isOffline()) {
+        const local = getLocal();
+        return { data: local.map(s => normalizeSchedule(s, routines)).sort((a, b) => a.reminderTime.localeCompare(b.reminderTime)), source: 'mock' };
+      }
+      try {
+        const d = await request('GET', '/api/schedules/my-schedules');
+        const list = unwrapList(d);
+        return { data: list.map(s => normalizeSchedule(s, routines)).sort((a, b) => a.reminderTime.localeCompare(b.reminderTime)), source: 'api' };
+      } catch (e) {
+        if (!canFallback(e)) throw e;
+        const local = getLocal();
+        return { data: local.map(s => normalizeSchedule(s, routines)).sort((a, b) => a.reminderTime.localeCompare(b.reminderTime)), source: 'mock' };
+      }
+    },
+
+    /** [Thành viên 1] POST /api/schedules */
+    async createSchedule(dto, routines) {
+      const getLocal = () => {
+        try {
+          const raw = localStorage.getItem('p9_local_schedules');
+          if (raw) return JSON.parse(raw);
+        } catch {}
+        return [...D.SAMPLE_SCHEDULES];
+      };
+
+      const reminderTimeFormatted = (dto.reminderTime || '09:00').length === 5 ? `${dto.reminderTime}:00` : dto.reminderTime;
+      const payload = {
+        routineId: Number(dto.routineId),
+        reminderTime: reminderTimeFormatted,
+        daysOfWeek: dto.daysOfWeek || 'Mon,Tue,Wed,Thu,Fri',
+        isActive: dto.isActive !== false
+      };
+
+      if (session.isOffline()) {
+        const local = getLocal();
+        const newItem = { id: Date.now(), ...payload, reminderTime: dto.reminderTime.slice(0, 5) };
+        local.push(newItem);
+        localStorage.setItem('p9_local_schedules', JSON.stringify(local));
+        return { data: normalizeSchedule(newItem, routines), source: 'mock' };
+      }
+      try {
+        const d = await request('POST', '/api/schedules', { body: payload });
+        return { data: normalizeSchedule(d, routines), source: 'api' };
+      } catch (e) {
+        if (!canFallback(e)) throw e;
+        const local = getLocal();
+        const newItem = { id: Date.now(), ...payload, reminderTime: dto.reminderTime.slice(0, 5) };
+        local.push(newItem);
+        localStorage.setItem('p9_local_schedules', JSON.stringify(local));
+        return { data: normalizeSchedule(newItem, routines), source: 'mock' };
+      }
+    },
+
+    /** [Thành viên 1] DELETE /api/schedules/{id} */
+    async deleteSchedule(id) {
+      const removeLocal = () => {
+        try {
+          let local = JSON.parse(localStorage.getItem('p9_local_schedules')) || [...D.SAMPLE_SCHEDULES];
+          local = local.filter(x => x.id !== Number(id));
+          localStorage.setItem('p9_local_schedules', JSON.stringify(local));
+        } catch {}
+      };
+
+      if (session.isOffline()) {
+        removeLocal();
+        return { source: 'mock' };
+      }
+      try {
+        await request('DELETE', `/api/schedules/${id}`);
+        return { source: 'api' };
+      } catch (e) {
+        if (!canFallback(e)) throw e;
+        removeLocal();
+        return { source: 'mock' };
       }
     },
 
@@ -148,6 +277,216 @@
         if (!canFallback(e)) throw e;
         return { data: { eventId: null, message: e.message }, source: 'mock', error: e.message };
       }
+    },
+
+    /* =================== TRIBE CITY & FRIEND API =================== */
+    async getCityCurrent() {
+      if (session.isOffline()) {
+        const local = localStorage.getItem('p9_local_city');
+        if (local) return { data: JSON.parse(local), source: 'mock' };
+        return { data: null, source: 'mock' };
+      }
+      try {
+        const d = await request('GET', '/api/city/current');
+        return { data: d, source: 'api' };
+      } catch (e) {
+        if (!canFallback(e)) throw e;
+        const local = localStorage.getItem('p9_local_city');
+        return { data: local ? JSON.parse(local) : null, source: 'mock' };
+      }
+    },
+
+    async getCityPublicRooms() {
+      if (session.isOffline()) return { data: D.SAMPLE_PUBLIC_ROOMS, source: 'mock' };
+      try {
+        const d = await request('GET', '/api/city/public-rooms');
+        return { data: d, source: 'api' };
+      } catch (e) {
+        if (!canFallback(e)) throw e;
+        return { data: D.SAMPLE_PUBLIC_ROOMS, source: 'mock' };
+      }
+    },
+
+    async getCityById(id) {
+      if (session.isOffline()) {
+        const local = localStorage.getItem('p9_local_city');
+        return { data: local ? JSON.parse(local) : null, source: 'mock' };
+      }
+      try {
+        const d = await request('GET', `/api/city/${id}`);
+        return { data: d, source: 'api' };
+      } catch (e) {
+        if (!canFallback(e)) throw e;
+        const local = localStorage.getItem('p9_local_city');
+        return { data: local ? JSON.parse(local) : null, source: 'mock' };
+      }
+    },
+
+    async createCity(body) {
+      if (session.isOffline()) {
+        const s = session.get() || { displayName: 'Người dùng', userId: 1 };
+        const newRoom = {
+          id: 999,
+          name: body.name || 'Thành Phố Xanh',
+          roomCode: 'TRIBE9',
+          hostUserId: s.userId || 1,
+          hostName: s.displayName,
+          isHost: true,
+          isPrivate: !!body.isPrivate,
+          status: 'Active',
+          maxSlots: 12,
+          totalCityScore: 100,
+          landmarkLevel: 0,
+          landmarkName: 'Khu đất hoang sơ (Đang xây dựng)',
+          landmarkProgress: 40,
+          remainingTime: 'Còn 7 ngày',
+          residents: [{
+            id: 1,
+            userId: s.userId || 1,
+            username: s.username || 'user',
+            fullName: s.displayName,
+            slotIndex: 0,
+            houseFloors: 1,
+            buildingMaterials: 100,
+            rooftopStatus: body.rooftopStatus || 'Chào mừng đến thành phố!',
+            theme: body.theme || 'modern',
+            isActive: true,
+            isMossy: false,
+            isMvp: false,
+            joinedAt: new Date().toISOString()
+          }],
+          recentInteractions: []
+        };
+        localStorage.setItem('p9_local_city', JSON.stringify(newRoom));
+        return { data: newRoom, source: 'mock' };
+      }
+      const d = await request('POST', '/api/city/create', { body });
+      return { data: d, source: 'api' };
+    },
+
+    async quickMatchCity() {
+      if (session.isOffline()) {
+        const s = session.get() || { displayName: 'Người dùng', userId: 1 };
+        return this.createCity({ name: 'Thành Phố Ghép Nhanh', isPrivate: false });
+      }
+      const d = await request('POST', '/api/city/quick-match');
+      return { data: d, source: 'api' };
+    },
+
+    async joinCity(body) {
+      if (session.isOffline()) {
+        return this.createCity({ name: 'Thành Phố Tham Gia', isPrivate: false });
+      }
+      const d = await request('POST', '/api/city/join', { body });
+      return { data: d, source: 'api' };
+    },
+
+    async toggleCityPrivacy(id) {
+      if (session.isOffline()) return { data: { message: 'Đã đổi trạng thái riêng tư' }, source: 'mock' };
+      const d = await request('PUT', `/api/city/${id}/toggle-privacy`);
+      return { data: d, source: 'api' };
+    },
+
+    async updateRooftopStatus(id, body) {
+      if (session.isOffline()) {
+        const local = localStorage.getItem('p9_local_city');
+        if (local) {
+          const room = JSON.parse(local);
+          const r = room.residents?.[0];
+          if (r) {
+            if (body.rooftopStatus) r.rooftopStatus = body.rooftopStatus;
+            if (body.theme) r.theme = body.theme;
+            localStorage.setItem('p9_local_city', JSON.stringify(room));
+          }
+        }
+        return { data: { message: 'Đã cập nhật' }, source: 'mock' };
+      }
+      const d = await request('PUT', `/api/city/${id}/rooftop-status`, { body });
+      return { data: d, source: 'api' };
+    },
+
+    async interactCity(id, body) {
+      if (session.isOffline()) return { data: { message: 'Đã tương tác (+10 vật liệu)' }, source: 'mock' };
+      const d = await request('POST', `/api/city/${id}/interact`, { body });
+      return { data: d, source: 'api' };
+    },
+
+    async upgradeCityHouse(id) {
+      if (session.isOffline()) {
+        const local = localStorage.getItem('p9_local_city');
+        if (local) {
+          const room = JSON.parse(local);
+          const r = room.residents?.[0];
+          if (r) {
+            r.houseFloors = Math.min(7, (r.houseFloors || 1) + 1);
+            localStorage.setItem('p9_local_city', JSON.stringify(room));
+            return { data: { success: true, message: 'Đã nâng cấp!', newFloors: r.houseFloors }, source: 'mock' };
+          }
+        }
+        return { data: { success: true, newFloors: 2 }, source: 'mock' };
+      }
+      const d = await request('POST', `/api/city/${id}/upgrade`);
+      return { data: d, source: 'api' };
+    },
+
+    async getCityArchive() {
+      if (session.isOffline()) return { data: D.SAMPLE_ARCHIVED_CITIES, source: 'mock' };
+      try {
+        const d = await request('GET', '/api/city/archive');
+        return { data: d, source: 'api' };
+      } catch (e) {
+        if (!canFallback(e)) throw e;
+        return { data: D.SAMPLE_ARCHIVED_CITIES, source: 'mock' };
+      }
+    },
+
+    async leaveCity(id) {
+      if (session.isOffline()) {
+        localStorage.removeItem('p9_local_city');
+        return { data: { message: 'Đã rời phòng' }, source: 'mock' };
+      }
+      const d = await request('POST', `/api/city/${id}/leave`);
+      return { data: d, source: 'api' };
+    },
+
+    async adminOverrideCity(id, body) {
+      if (session.isOffline()) {
+        return { data: { message: 'Offline mode override' }, source: 'mock' };
+      }
+      const d = await request('PUT', `/api/city/${id}/admin-override`, { body });
+      return { data: d, source: 'api' };
+    },
+
+    async getFriends() {
+      if (session.isOffline()) {
+        return {
+          data: [
+            { friendshipId: 1, userId: 2, fullName: 'Trần Thị Mai', username: 'mai.tran', status: 'Accepted' },
+            { friendshipId: 2, userId: 3, fullName: 'Lê Văn Nam', username: 'nam.le', status: 'Accepted' },
+            { friendshipId: 3, userId: 4, fullName: 'Nguyễn Hoàng Lan', username: 'lan.nguyen', status: 'Pending' }
+          ],
+          source: 'mock'
+        };
+      }
+      try {
+        const d = await request('GET', '/api/friends');
+        return { data: d, source: 'api' };
+      } catch (e) {
+        if (!canFallback(e)) throw e;
+        return { data: [], source: 'mock' };
+      }
+    },
+
+    async sendFriendRequest(body) {
+      if (session.isOffline()) return { data: { message: 'Đã gửi lời mời kết bạn' }, source: 'mock' };
+      const d = await request('POST', '/api/friends/request', { body });
+      return { data: d, source: 'api' };
+    },
+
+    async acceptFriendRequest(id) {
+      if (session.isOffline()) return { data: { message: 'Đã chấp nhận kết bạn' }, source: 'mock' };
+      const d = await request('POST', `/api/friends/${id}/accept`);
+      return { data: d, source: 'api' };
     }
   };
 

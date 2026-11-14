@@ -11,5 +11,6 @@ public class RoutineCompletedEvent
     public int UserId { get; set; }
     public int RoutineId { get; set; }
     public string? Note { get; set; }
+    public int BuildingMaterialsEarned { get; set; } = 50;
     public DateTime CompletedAt { get; set; } = DateTime.UtcNow;
 }

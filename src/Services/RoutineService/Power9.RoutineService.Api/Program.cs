@@ -8,6 +8,7 @@ using Power9.RoutineService.Application.Interfaces;
 using Power9.RoutineService.Application.Services;
 using Power9.RoutineService.Infrastructure.Data;
 using Power9.RoutineService.Infrastructure.Repositories;
+using Power9.RoutineService.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,8 @@ builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRoutineService, RoutineService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<ICityService, CityService>();
+builder.Services.AddScoped<IFriendshipService, FriendshipService>();
 
 // Distributed Services: gRPC Client (RecommendationService) + Kafka Producer (Thành viên 2)
 builder.Services.AddDistributedServices(builder.Configuration);

@@ -143,6 +143,37 @@ public sealed class RoutineCompletedConsumerWorker : BackgroundService
             EventId = evt.EventId
         });
 
+        // [Tribe City Integration]: Check if user is in an active City Room
+        var resident = await db.CityResidents
+            .Where(r => r.UserId == user.Id && r.IsActive)
+            .OrderByDescending(r => r.Id)
+            .FirstOrDefaultAsync(ct);
+
+        if (resident != null)
+        {
+            var room = await db.CityRooms.FirstOrDefaultAsync(r => r.Id == resident.RoomId && r.Status == "Active", ct);
+            if (room != null && room.ExpiredAt > DateTime.UtcNow)
+            {
+                var materialsEarned = evt.BuildingMaterialsEarned > 0 ? evt.BuildingMaterialsEarned : 50;
+                resident.BuildingMaterials += materialsEarned;
+                resident.LastCheckInAt = evt.CompletedAt;
+                room.TotalCityScore += materialsEarned;
+
+                // Threshold check: cứ 100 materials = +1 cấp (tối đa cấp 4)
+                var nextFloorThreshold = resident.HouseFloors * 100;
+                if (resident.BuildingMaterials >= nextFloorThreshold && resident.HouseFloors < 4)
+                {
+                    resident.HouseFloors += 1;
+                    _logger.LogInformation("[TRIBE CITY] Resident {UserId} in Room {RoomId} upgraded house to floor {Floors}!",
+                        user.Id, room.Id, resident.HouseFloors);
+                }
+
+                _logger.LogInformation(
+                    "[TRIBE CITY] User {UserId} in Room {RoomId} received +{Materials} materials (Total: {TotalMat}, Floor: {Floor}). Room score: {Score}",
+                    user.Id, room.Id, materialsEarned, resident.BuildingMaterials, resident.HouseFloors, room.TotalCityScore);
+            }
+        }
+
         await db.SaveChangesAsync(ct);
 
         _logger.LogInformation(

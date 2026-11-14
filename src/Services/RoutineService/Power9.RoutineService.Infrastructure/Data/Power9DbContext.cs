@@ -10,6 +10,10 @@ public class Power9DbContext(DbContextOptions<Power9DbContext> options) : DbCont
     public DbSet<Routine> Routines => Set<Routine>();
     public DbSet<UserSchedule> UserSchedules => Set<UserSchedule>();
     public DbSet<DailyLog> DailyLogs => Set<DailyLog>();
+    public DbSet<CityRoom> CityRooms => Set<CityRoom>();
+    public DbSet<CityResident> CityResidents => Set<CityResident>();
+    public DbSet<CityInteraction> CityInteractions => Set<CityInteraction>();
+    public DbSet<Friendship> Friendships => Set<Friendship>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -57,6 +61,40 @@ public class Power9DbContext(DbContextOptions<Power9DbContext> options) : DbCont
             entity.HasOne(x => x.User).WithMany(x => x.DailyLogs).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(x => x.Routine).WithMany(x => x.DailyLogs).HasForeignKey(x => x.RoutineId).OnDelete(DeleteBehavior.Restrict);
             entity.HasIndex(x => new { x.UserId, x.CompletedAt });
+        });
+        modelBuilder.Entity<CityRoom>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).HasMaxLength(100).IsRequired();
+            entity.Property(x => x.RoomCode).HasMaxLength(12).IsRequired();
+            entity.Property(x => x.Status).HasConversion<string>().HasMaxLength(20);
+            entity.HasIndex(x => x.RoomCode).IsUnique();
+            entity.HasOne(x => x.HostUser).WithMany().HasForeignKey(x => x.HostUserId).OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<CityResident>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.RooftopStatus).HasMaxLength(100);
+            entity.Property(x => x.Theme).HasMaxLength(30);
+            entity.HasOne(x => x.Room).WithMany(x => x.Residents).HasForeignKey(x => x.RoomId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(x => new { x.RoomId, x.SlotIndex }).IsUnique();
+        });
+        modelBuilder.Entity<CityInteraction>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ActionType).HasConversion<string>().HasMaxLength(30);
+            entity.HasOne(x => x.Room).WithMany(x => x.Interactions).HasForeignKey(x => x.RoomId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(x => x.FromUser).WithMany().HasForeignKey(x => x.FromUserId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(x => x.ToUser).WithMany().HasForeignKey(x => x.ToUserId).OnDelete(DeleteBehavior.Restrict);
+        });
+        modelBuilder.Entity<Friendship>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Status).HasConversion<string>().HasMaxLength(20);
+            entity.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(x => x.Friend).WithMany().HasForeignKey(x => x.FriendId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(x => new { x.UserId, x.FriendId }).IsUnique();
         });
         base.OnModelCreating(modelBuilder);
     }

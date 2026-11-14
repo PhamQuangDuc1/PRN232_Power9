@@ -11,6 +11,7 @@ builder.Services.AddDbContext<WorkerDbContext>(options =>
 
 builder.Services.AddHostedService<RoutineCompletedConsumerWorker>();
 builder.Services.AddHostedService<DailyScheduleReminderJob>();
+builder.Services.AddHostedService<CityCycleWorker>();
 
 var host = builder.Build();
 host.Run();

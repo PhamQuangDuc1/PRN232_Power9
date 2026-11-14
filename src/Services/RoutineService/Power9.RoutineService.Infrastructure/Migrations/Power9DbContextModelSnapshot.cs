@@ -22,6 +22,145 @@ namespace Power9.RoutineService.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.CityInteraction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FromUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromUserId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("ToUserId");
+
+                    b.ToTable("CityInteractions");
+                });
+
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.CityResident", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BuildingMaterials")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HouseFloors")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastCheckInAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RooftopStatus")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SlotIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("RoomId", "SlotIndex")
+                        .IsUnique();
+
+                    b.ToTable("CityResidents");
+                });
+
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.CityRoom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("HostUserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxSlots")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RoomCode")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("TotalCityScore")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HostUserId");
+
+                    b.HasIndex("RoomCode")
+                        .IsUnique();
+
+                    b.ToTable("CityRooms");
+                });
+
             modelBuilder.Entity("Power9.RoutineService.Domain.Entities.DailyLog", b =>
                 {
                     b.Property<int>("Id")
@@ -32,6 +171,9 @@ namespace Power9.RoutineService.Infrastructure.Migrations
 
                     b.Property<DateTime>("CompletedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("EventId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Note")
                         .IsRequired()
@@ -54,6 +196,38 @@ namespace Power9.RoutineService.Infrastructure.Migrations
                     b.HasIndex("UserId", "CompletedAt");
 
                     b.ToTable("DailyLogs");
+                });
+
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.Friendship", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FriendId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FriendId");
+
+                    b.HasIndex("UserId", "FriendId")
+                        .IsUnique();
+
+                    b.ToTable("Friendships");
                 });
 
             modelBuilder.Entity("Power9.RoutineService.Domain.Entities.Routine", b =>
@@ -224,6 +398,63 @@ namespace Power9.RoutineService.Infrastructure.Migrations
                     b.ToTable("UserSchedules");
                 });
 
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.CityInteraction", b =>
+                {
+                    b.HasOne("Power9.RoutineService.Domain.Entities.User", "FromUser")
+                        .WithMany()
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Power9.RoutineService.Domain.Entities.CityRoom", "Room")
+                        .WithMany("Interactions")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Power9.RoutineService.Domain.Entities.User", "ToUser")
+                        .WithMany()
+                        .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FromUser");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("ToUser");
+                });
+
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.CityResident", b =>
+                {
+                    b.HasOne("Power9.RoutineService.Domain.Entities.CityRoom", "Room")
+                        .WithMany("Residents")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Power9.RoutineService.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.CityRoom", b =>
+                {
+                    b.HasOne("Power9.RoutineService.Domain.Entities.User", "HostUser")
+                        .WithMany()
+                        .HasForeignKey("HostUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("HostUser");
+                });
+
             modelBuilder.Entity("Power9.RoutineService.Domain.Entities.DailyLog", b =>
                 {
                     b.HasOne("Power9.RoutineService.Domain.Entities.Routine", "Routine")
@@ -239,6 +470,25 @@ namespace Power9.RoutineService.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Routine");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.Friendship", b =>
+                {
+                    b.HasOne("Power9.RoutineService.Domain.Entities.User", "Friend")
+                        .WithMany()
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Power9.RoutineService.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Friend");
 
                     b.Navigation("User");
                 });
@@ -271,6 +521,13 @@ namespace Power9.RoutineService.Infrastructure.Migrations
                     b.Navigation("Routine");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Power9.RoutineService.Domain.Entities.CityRoom", b =>
+                {
+                    b.Navigation("Interactions");
+
+                    b.Navigation("Residents");
                 });
 
             modelBuilder.Entity("Power9.RoutineService.Domain.Entities.Routine", b =>

@@ -34,6 +34,8 @@
     bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
     lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
     mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+    eye: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+    eyeOff: '<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/>',
     shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
     cloud: '<path d="M7 18a5 5 0 1 1 1-9.9A6 6 0 0 1 19.5 10 4 4 0 0 1 18 18z"/>',
     cloudOff: '<path d="M7 18a5 5 0 0 1-1.4-9.8M10 6.3A6 6 0 0 1 19.5 10 4 4 0 0 1 20 17.6"/><path d="m3 3 18 18"/>',
@@ -43,7 +45,13 @@
     note: '<path d="M4 4h16v12l-4 4H4z"/><path d="M16 20v-4h4"/>',
     coffee: '<path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M8 3v2M12 3v2"/>',
     wind: '<path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h16a3 3 0 1 1-3 3"/><path d="M3 16h7"/>',
-    trophy: '<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>'
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+    trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+    trophy: '<path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',
+    edit: '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
+    bookOpen: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+    x: '<path d="M18 6 6 18M6 6l12 12"/>'
   };
 
   function icon(name, cls = '') {
@@ -128,5 +136,119 @@
     { icon: 'coffee', title: 'Cắt giảm caffeine sau 14h', text: 'Thay cà phê chiều bằng nước lọc hoặc trà thảo mộc để đảm bảo giấc ngủ sâu.' }
   ];
 
-  window.P9Data = { ICONS, icon, CATEGORIES, category, ROUTINES, SAMPLE_SCHEDULES, localRecommend, TIPS };
+  /* ----------------- TRIBE CITY ASSETS & MOCK DATA ----------------- */
+  const CITY_ASSETS = {
+    base: 'assets/city/base/island_base.png',
+    baseClean: 'assets/city/base/island_base.png',
+    buildings: {
+      modern: {
+        1: 'assets/city/buildings/modern_1.png',
+        2: 'assets/city/buildings/modern_2.png',
+        3: 'assets/city/buildings/modern_3.png',
+        4: 'assets/city/buildings/modern_4.png',
+        moss: {
+          1: 'assets/city/buildings/modern_1_moss.png',
+          2: 'assets/city/buildings/modern_2_moss.png',
+          3: 'assets/city/buildings/modern_3_moss.png'
+        }
+      },
+      japanese: {
+        1: 'assets/city/buildings/japanese_1.png',
+        2: 'assets/city/buildings/japanese_2.png',
+        3: 'assets/city/buildings/japanese_3.png',
+        4: 'assets/city/buildings/japanese_4.png',
+        moss: {
+          1: 'assets/city/buildings/japanese_1_moss.png',
+          2: 'assets/city/buildings/japanese_2_moss.png',
+          3: 'assets/city/buildings/japanese_3_moss.png'
+        }
+      },
+      cyberpunk: {
+        1: 'assets/city/buildings/cyberpunk_1.png',
+        2: 'assets/city/buildings/cyberpunk_2.png',
+        3: 'assets/city/buildings/cyberpunk_3.png',
+        4: 'assets/city/buildings/cyberpunk_4.png',
+        moss: {
+          1: 'assets/city/buildings/cyberpunk_1_moss.png',
+          2: 'assets/city/buildings/cyberpunk_2_moss.png',
+          3: 'assets/city/buildings/cyberpunk_3_moss.png'
+        }
+      },
+      alchemist: {
+        1: 'assets/city/buildings/alchemist_1.png',
+        2: 'assets/city/buildings/alchemist_2.png',
+        3: 'assets/city/buildings/alchemist_3.png',
+        4: 'assets/city/buildings/alchemist_4.png',
+        moss: {
+          1: 'assets/city/buildings/alchemist_1_moss.png',
+          2: 'assets/city/buildings/alchemist_2_moss.png',
+          3: 'assets/city/buildings/alchemist_3_moss.png'
+        }
+      },
+      greenhouse: {
+        1: 'assets/city/buildings/greenhouse_1.png',
+        2: 'assets/city/buildings/greenhouse_2.png',
+        3: 'assets/city/buildings/greenhouse_3.png',
+        4: 'assets/city/buildings/greenhouse_4.png',
+        moss: {
+          1: 'assets/city/buildings/greenhouse_1_moss.png',
+          2: 'assets/city/buildings/greenhouse_2_moss.png',
+          3: 'assets/city/buildings/greenhouse_3_moss.png'
+        }
+      },
+      coastal: {
+        1: 'assets/city/buildings/coastal_1.png',
+        2: 'assets/city/buildings/coastal_2.png',
+        3: 'assets/city/buildings/coastal_3.png',
+        4: 'assets/city/buildings/coastal_4.png',
+        moss: {
+          1: 'assets/city/buildings/coastal_1_moss.png',
+          2: 'assets/city/buildings/coastal_2_moss.png',
+          3: 'assets/city/buildings/coastal_3_moss.png'
+        }
+      }
+    },
+    landmarks: {
+      0: 'assets/city/landmarks/campfire.png',
+      1: 'assets/city/landmarks/tiny_park.png',
+      2: 'assets/city/landmarks/stone_fountain.png',
+      3: 'assets/city/landmarks/wellness_park.png',
+      zen: 'assets/city/landmarks/zen_garden.png',
+      rose: 'assets/city/landmarks/rose_maze.png',
+      playground: 'assets/city/landmarks/playground.png'
+    },
+    ui: {
+      buttons: 'assets/city/ui/action_buttons.png',
+      resources: 'assets/city/ui/resource_icons.png'
+    }
+  };
+
+  function getBuildingSprite(theme, floors, isMossy) {
+    const t = CITY_ASSETS.buildings[theme] || CITY_ASSETS.buildings.modern;
+    const lvl = Math.min(Math.max(1, floors || 1), 4);
+    if (isMossy) {
+      const mossLvl = Math.min(lvl, 3);
+      if (t.moss && t.moss[mossLvl]) {
+        return t.moss[mossLvl];
+      }
+    }
+    return t[lvl] || t[1];
+  }
+
+  function getLandmarkSprite(level) {
+    return CITY_ASSETS.landmarks[level] || null;
+  }
+
+  const SAMPLE_PUBLIC_ROOMS = [
+    { id: 1, name: 'Thành Phố Xanh Power9', roomCode: 'TRIBE8', residentCount: 6, maxSlots: 12, totalCityScore: 620, landmarkLevel: 2, remainingTime: 'Còn 5 ngày 4 giờ', hostName: 'Power9 Administrator' },
+    { id: 2, name: 'Đảo Bay Chiến Binh Tech', roomCode: 'TECH99', residentCount: 4, maxSlots: 12, totalCityScore: 340, landmarkLevel: 1, remainingTime: 'Còn 3 ngày 16 giờ', hostName: 'Trần Thị Mai' },
+    { id: 3, name: 'Làng Zen Uống Nước Đủ', roomCode: 'WATER7', residentCount: 8, maxSlots: 12, totalCityScore: 890, landmarkLevel: 3, remainingTime: 'Còn 2 ngày 8 giờ', hostName: 'Nguyễn Hoàng Lan' }
+  ];
+
+  const SAMPLE_ARCHIVED_CITIES = [
+    { id: 101, name: 'Thành Phố Năng Động Tuần 45', roomCode: 'ARCH45', completedAt: '2026-11-08T00:00:00Z', totalScore: 1250, greenCityRating: 'Cấp 1 - Đô thị Xanh Bền vững', mvpResidentName: 'Trần Thị Mai', mvpMaxFloors: 6, totalResidents: 11 },
+    { id: 102, name: 'Đảo Thần Thoại Tuần 44', roomCode: 'ARCH44', completedAt: '2026-11-01T00:00:00Z', totalScore: 780, greenCityRating: 'Cấp 2 - Đô thị Năng động', mvpResidentName: 'Lê Văn Nam', mvpMaxFloors: 4, totalResidents: 9 }
+  ];
+
+  window.P9Data = { ICONS, icon, CATEGORIES, category, ROUTINES, SAMPLE_SCHEDULES, localRecommend, TIPS, CITY_ASSETS, getBuildingSprite, getLandmarkSprite, SAMPLE_PUBLIC_ROOMS, SAMPLE_ARCHIVED_CITIES };
 })();

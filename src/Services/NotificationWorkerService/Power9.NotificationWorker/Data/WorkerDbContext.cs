@@ -41,6 +41,25 @@ public sealed class WorkerDailyLog
     public Guid? EventId { get; set; }
 }
 
+public sealed class WorkerCityRoom
+{
+    public int Id { get; set; }
+    public string Status { get; set; } = "Active";
+    public int TotalCityScore { get; set; }
+    public DateTime ExpiredAt { get; set; }
+}
+
+public sealed class WorkerCityResident
+{
+    public int Id { get; set; }
+    public int RoomId { get; set; }
+    public int UserId { get; set; }
+    public int HouseFloors { get; set; }
+    public int BuildingMaterials { get; set; }
+    public DateTime? LastCheckInAt { get; set; }
+    public bool IsActive { get; set; }
+}
+
 public sealed class WorkerDbContext : DbContext
 {
     public WorkerDbContext(DbContextOptions<WorkerDbContext> options) : base(options) { }
@@ -49,6 +68,8 @@ public sealed class WorkerDbContext : DbContext
     public DbSet<WorkerRoutine> Routines => Set<WorkerRoutine>();
     public DbSet<WorkerUserSchedule> UserSchedules => Set<WorkerUserSchedule>();
     public DbSet<WorkerDailyLog> DailyLogs => Set<WorkerDailyLog>();
+    public DbSet<WorkerCityRoom> CityRooms => Set<WorkerCityRoom>();
+    public DbSet<WorkerCityResident> CityResidents => Set<WorkerCityResident>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,5 +77,7 @@ public sealed class WorkerDbContext : DbContext
         modelBuilder.Entity<WorkerRoutine>().ToTable("Routines");
         modelBuilder.Entity<WorkerUserSchedule>().ToTable("UserSchedules");
         modelBuilder.Entity<WorkerDailyLog>().ToTable("DailyLogs");
+        modelBuilder.Entity<WorkerCityRoom>().ToTable("CityRooms");
+        modelBuilder.Entity<WorkerCityResident>().ToTable("CityResidents");
     }
 }
