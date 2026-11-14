@@ -22,7 +22,7 @@ public sealed class RoutinesController(IRoutineService routines) : ControllerBas
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public async Task<ActionResult<RoutineDto>> Create(CreateRoutineDto request, CancellationToken cancellationToken)
     {
         var result = await routines.CreateAsync(request, cancellationToken);

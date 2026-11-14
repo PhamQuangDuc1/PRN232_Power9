@@ -102,15 +102,39 @@
 
     /** [Thành viên 1 - plan] GET /api/routines?pageSize=100 */
     async getRoutines() {
-      if (session.isOffline()) return { data: D.ROUTINES.map(normalizeRoutine), source: 'mock' };
+      const getCustom = () => {
+        try {
+          const raw = localStorage.getItem('p9_local_custom_routines');
+          if (raw) return JSON.parse(raw);
+        } catch {}
+        return [];
+      };
+
+      if (session.isOffline()) {
+        const custom = getCustom();
+        const combined = [...D.ROUTINES];
+        for (const c of custom) {
+          if (!combined.some(x => x.id === c.id)) combined.push(c);
+        }
+        return { data: combined.map(normalizeRoutine), source: 'mock' };
+      }
       try {
         const d = await request('GET', '/api/routines?pageNumber=1&pageSize=100');
         const list = unwrapList(d).map(normalizeRoutine);
+        const custom = getCustom();
+        for (const c of custom) {
+          if (!list.some(x => x.id === c.id)) list.push(normalizeRoutine(c));
+        }
         if (!list.length) throw new ApiError(404, 'empty');
         return { data: list, source: 'api' };
       } catch (e) {
         if (!canFallback(e)) throw e;
-        return { data: D.ROUTINES.map(normalizeRoutine), source: 'mock' };
+        const custom = getCustom();
+        const combined = [...D.ROUTINES];
+        for (const c of custom) {
+          if (!combined.some(x => x.id === c.id)) combined.push(c);
+        }
+        return { data: combined.map(normalizeRoutine), source: 'mock' };
       }
     },
 
@@ -131,16 +155,46 @@
       }
     },
 
-    /** [Thành viên 1 - Admin] POST /api/routines */
+    /** [Thành viên 1 & Người dùng] POST /api/routines */
     async createRoutine(dto) {
+      const saveCustomLocal = (r) => {
+        try {
+          const raw = localStorage.getItem('p9_local_custom_routines');
+          const list = raw ? JSON.parse(raw) : [];
+          if (!list.some(x => x.id === r.id)) {
+            list.push(r);
+            localStorage.setItem('p9_local_custom_routines', JSON.stringify(list));
+          }
+        } catch {}
+      };
+
       if (session.isOffline()) {
         const id = Date.now();
-        const r = { id, ...dto, steps: [] };
+        const cat = D.CATEGORIES.find((c, idx) => (idx + 1) === Number(dto.categoryId)) || D.CATEGORIES[0];
+        const r = { id, ...dto, categoryName: dto.categoryName || cat.key, steps: [] };
         D.ROUTINES.push(r);
+        saveCustomLocal(r);
         return { data: normalizeRoutine(r), source: 'mock' };
       }
-      const d = await request('POST', '/api/routines', { body: dto });
-      return { data: normalizeRoutine(d), source: 'api' };
+      try {
+        const d = await request('POST', '/api/routines', { body: dto });
+        const res = normalizeRoutine(d);
+        if (!D.ROUTINES.some(x => x.id === res.id)) {
+          D.ROUTINES.push(res);
+        }
+        saveCustomLocal(res);
+        return { data: res, source: 'api' };
+      } catch (e) {
+        if (canFallback(e) || e.status === 403 || e.status === 401) {
+          const id = Date.now();
+          const cat = D.CATEGORIES.find((c, idx) => (idx + 1) === Number(dto.categoryId)) || D.CATEGORIES[0];
+          const r = { id, ...dto, categoryName: dto.categoryName || cat.key, steps: [] };
+          D.ROUTINES.push(r);
+          saveCustomLocal(r);
+          return { data: normalizeRoutine(r), source: 'mock' };
+        }
+        throw e;
+      }
     },
 
     /** [Thành viên 1 - Admin] PUT /api/routines/{id} */
@@ -487,6 +541,81 @@
       if (session.isOffline()) return { data: { message: 'Đã chấp nhận kết bạn' }, source: 'mock' };
       const d = await request('POST', `/api/friends/${id}/accept`);
       return { data: d, source: 'api' };
+    },
+
+    /* =========================================================
+       GOOGLE GEMINI AI INTEGRATION (LLM Thực Thụ)
+       ========================================================= */
+    gemini: {
+      getKey() {
+        return localStorage.getItem('p9_gemini_key') || 'AQ.Ab8RN6LEMDoBUkbMFqBMOgoRV0ZCgISRdAiNe2bOmlaK14H3WQ';
+      },
+      setKey(k) {
+        if (k) localStorage.setItem('p9_gemini_key', k.trim());
+        else localStorage.removeItem('p9_gemini_key');
+      },
+      async analyzeAndSchedule(userText, routines) {
+        const key = this.getKey();
+        if (!key) throw new Error('Chưa cấu hình Gemini API Key');
+
+        const simplified = (routines || []).map(r => ({
+          id: r.id,
+          title: r.title,
+          category: r.categoryName || r.category?.name,
+          durationMinutes: r.durationMinutes,
+          description: r.description
+        }));
+
+        const prompt = `Bạn là Power9 AI Health Coach - Trợ lý thông thái về sức khỏe văn phòng và 9 trụ cột sống thọ Power9.
+Tin nhắn của người dùng: "${userText}"
+Danh sách bài tập hiện có:
+${JSON.stringify(simplified, null, 2)}
+
+Hãy phân loại tin nhắn của người dùng:
+Trường hợp 1: Nếu người dùng chỉ CHÀO HỎI, XÃ GIAO, HỎI THĂM, HOẶC CHƯA NÊU TRIỆU CHỨNG / YÊU CẦU LÊN LỊCH
+(Ví dụ: "hi", "hello", "chào bạn", "bạn là ai", "hôm nay thế nào", "giúp gì được cho tôi", "power9 là gì"...)
+-> BẮT BUỘC trả về JSON:
+{
+  "type": "chat",
+  "message": "<Lời chào tự nhiên, thân thiện, giải thích bạn có thể giúp gì và hỏi xem hôm nay họ đang cảm thấy thế nào hoặc muốn lên lịch bài tập gì>"
+}
+
+Trường hợp 2: Nếu người dùng MÔ TẢ TRIỆU CHỨNG, TÌNH TRẠNG SỨC KHỎE (mỏi cổ, đau vai gáy, mỏi mắt, stress, khát nước...) HOẶC YÊU CẦU GỢI Ý BÀI TẬP / LÊN LỊCH:
+-> Trả về JSON:
+{
+  "type": "proposal",
+  "routineId": <number id bài tập phù hợp nhất>,
+  "reminderTime": "HH:mm",
+  "daysOfWeek": "Mon,Tue,Wed,Thu,Fri",
+  "reason": "<1-2 câu giải thích lý do chọn bài tập này>",
+  "coachAdvice": "<1-2 câu lời khuyên động viên từ AI Coach>"
+}
+
+BẮT BUỘC trả về định dạng JSON duy nhất không kèm markdown block hay văn bản thừa.`;
+
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: 'application/json',
+              temperature: 0.2
+            }
+          })
+        });
+
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData?.error?.message || `Lỗi gọi Gemini API (Status ${resp.status})`);
+        }
+
+        const data = await resp.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!text) throw new Error('Gemini API không phản hồi nội dung');
+        const parsed = JSON.parse(text);
+        return { data: parsed, source: 'gemini-2.5-flash' };
+      }
     }
   };
 

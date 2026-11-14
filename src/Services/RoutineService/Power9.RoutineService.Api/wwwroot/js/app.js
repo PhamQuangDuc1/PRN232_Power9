@@ -147,17 +147,82 @@
     const bd = document.createElement('div');
     bd.className = 'modal-backdrop';
     bd.innerHTML = `
-      <div class="modal" role="dialog" aria-modal="true">
-        <span class="tag">Lên lịch cá nhân</span>
-        <h3 style="margin-top:10px">Thêm lịch thói quen</h3>
-        <p class="muted small" style="margin:0 0 16px">Cài đặt giờ nhắc tự động hàng ngày hoặc hàng tuần cho vi thói quen Power9.</p>
+      <div class="modal" role="dialog" aria-modal="true" style="max-width:520px; border-radius:24px; max-height:90vh; max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;">
+        <div class="modal-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
+          <div>
+            <span class="tag">Lên lịch cá nhân</span>
+            <h3 style="margin-top:6px; margin-bottom:2px; font-size:20px; font-weight:800;">Thêm lịch thói quen</h3>
+            <p class="muted small" style="margin:0;">Cài đặt giờ nhắc tự động hàng ngày hoặc hàng tuần cho vi thói quen Power9.</p>
+          </div>
+          <button class="modal-close" id="btn-close-sched-modal" title="Đóng">${icon('x')}</button>
+        </div>
 
-        <form id="modal-sched-form">
-          <div class="field">
-            <label for="sc-routine">Chọn vi thói quen</label>
+        <form id="modal-sched-form" class="custom-scrollbar" style="overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:4px;">
+          <div class="field" style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <label for="sc-routine" style="margin-bottom:0; font-weight:700;">Chọn vi thói quen</label>
+              <button type="button" class="btn btn-soft btn-sm" id="btn-toggle-custom-routine" style="font-size:12px; font-weight:700; color:var(--p9-primary); padding:3px 10px; border-radius:8px;">
+                ${icon('plus', 'ic-sm')} Tự tạo thói quen mới
+              </button>
+            </div>
             <select id="sc-routine" class="select" required>
               ${routines.map(r => `<option value="${r.id}" ${r.id === Number(initialRoutineId) ? 'selected' : ''}>${esc(r.title)} (${r.durationMinutes} phút · +${r.rewardPoints}đ)</option>`).join('')}
+              <option value="__create_new__" style="color:#059669; font-weight:700;">✨ + Tạo thói quen riêng nếu chưa có trong danh sách...</option>
             </select>
+          </div>
+
+          <!-- Khung tự tạo thói quen riêng -->
+          <div id="custom-routine-card" class="hidden" style="margin:0 0 16px; padding:14px 16px; background:#f0fdf4; border:1.5px dashed #10b981; border-radius:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div style="font-weight:800; font-size:13.5px; color:#065f46; display:flex; align-items:center; gap:6px;">
+                ✨ Tạo vi thói quen riêng của bạn
+              </div>
+              <button type="button" class="btn btn-ghost btn-sm" id="btn-close-custom-routine" style="font-size:11.5px; padding:2px 6px; color:#64748b;">
+                ✕ Đóng lại
+              </button>
+            </div>
+
+            <div class="field" style="margin-bottom:10px;">
+              <label for="cr-title" style="font-size:12px; font-weight:700;">Tên thói quen của bạn <span style="color:#ef4444">*</span></label>
+              <input type="text" id="cr-title" class="input" placeholder="Ví dụ: Tập yoga nhẹ 10 phút, Uống trà hoa cúc, Đi dạo ban công..." maxlength="120">
+            </div>
+
+            <div class="grid grid-2" style="gap:10px; margin-bottom:10px;">
+              <div>
+                <label for="cr-cat" style="font-size:12px; font-weight:700;">Trụ cột Power9 <span style="color:#ef4444">*</span></label>
+                <select id="cr-cat" class="select" style="font-size:12.5px;">
+                  ${D.CATEGORIES.map((c, i) => `<option value="${i + 1}">${esc(c.vi)} (${esc(c.key)})</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label for="cr-duration" style="font-size:12px; font-weight:700;">Thời lượng (phút) <span style="color:#ef4444">*</span></label>
+                <input type="number" id="cr-duration" class="input" min="1" max="1440" value="5">
+              </div>
+            </div>
+
+            <div class="field" style="margin-bottom:10px;">
+              <label for="cr-desc" style="font-size:12px; font-weight:700;">Mô tả / Hướng dẫn thực hiện (tuỳ chọn)</label>
+              <input type="text" id="cr-desc" class="input" placeholder="Ví dụ: Đứng dậy, uống một ngụm nước và hít thở sâu 5 nhịp..." maxlength="200">
+            </div>
+
+            <div class="grid grid-2" style="gap:10px; margin-bottom:12px;">
+              <div>
+                <label for="cr-energy" style="font-size:12px; font-weight:700;">Mức năng lượng</label>
+                <select id="cr-energy" class="select" style="font-size:12.5px;">
+                  <option value="Low">Thấp (Thư giãn)</option>
+                  <option value="Medium" selected>Vừa (Tiêu chuẩn)</option>
+                  <option value="High">Cao (Sôi nổi)</option>
+                </select>
+              </div>
+              <div>
+                <label for="cr-points" style="font-size:12px; font-weight:700;">Điểm thưởng</label>
+                <input type="number" id="cr-points" class="input" min="0" max="1000" value="50">
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-sm btn-block" id="btn-save-custom-routine-inline" style="background:#059669; border-color:#047857; font-weight:700;">
+              ${icon('check')} Lưu & Chọn thói quen này
+            </button>
           </div>
 
           <div class="field">
@@ -190,7 +255,7 @@
             </div>
           </div>
 
-          <div class="m-actions">
+          <div class="m-actions" style="margin-top:16px; padding-top:14px; border-top:1px solid #e2e8f0; flex-shrink:0;">
             <button type="button" class="btn btn-ghost" data-act="cancel">Huỷ</button>
             <button type="submit" class="btn btn-primary" id="sc-btn-save">${icon('check')} Lưu lịch trình</button>
           </div>
@@ -201,6 +266,96 @@
     const close = () => bd.remove();
     bd.addEventListener('click', (e) => { if (e.target === bd) close(); });
     bd.querySelector('[data-act=cancel]').onclick = close;
+    bd.querySelector('#btn-close-sched-modal').onclick = close;
+
+    const routineSelect = bd.querySelector('#sc-routine');
+    const customCard = bd.querySelector('#custom-routine-card');
+    const toggleBtn = bd.querySelector('#btn-toggle-custom-routine');
+    const closeCustomBtn = bd.querySelector('#btn-close-custom-routine');
+    const saveCustomBtn = bd.querySelector('#btn-save-custom-routine-inline');
+    const titleInput = bd.querySelector('#cr-title');
+
+    const showCustomCard = () => {
+      customCard.classList.remove('hidden');
+      toggleBtn.style.display = 'none';
+      setTimeout(() => titleInput.focus(), 50);
+    };
+
+    const hideCustomCard = () => {
+      customCard.classList.add('hidden');
+      toggleBtn.style.display = '';
+      if (routineSelect.value === '__create_new__') {
+        routineSelect.value = routines[0]?.id || '';
+      }
+    };
+
+    toggleBtn.onclick = showCustomCard;
+    closeCustomBtn.onclick = hideCustomCard;
+
+    routineSelect.onchange = () => {
+      if (routineSelect.value === '__create_new__') {
+        showCustomCard();
+      } else {
+        hideCustomCard();
+      }
+    };
+
+    const createCustomRoutineAsync = async () => {
+      const title = titleInput.value.trim();
+      if (!title) {
+        toast('Vui lòng nhập tên thói quen', '', 'warn');
+        titleInput.focus();
+        return null;
+      }
+      const catId = Number(bd.querySelector('#cr-cat').value);
+      const cat = D.CATEGORIES[catId - 1] || D.CATEGORIES[0];
+      const duration = Number(bd.querySelector('#cr-duration').value) || 5;
+      const desc = bd.querySelector('#cr-desc').value.trim() || `Thói quen cá nhân: ${title}`;
+      const energy = bd.querySelector('#cr-energy').value;
+      const points = Number(bd.querySelector('#cr-points').value) || 50;
+
+      const dto = {
+        categoryId: catId,
+        categoryName: cat.key,
+        title,
+        description: desc,
+        durationMinutes: duration,
+        energyLevel: energy,
+        targetTimeOfDay: 'Anytime',
+        rewardPoints: points,
+        isApproved: true
+      };
+
+      const res = await api.createRoutine(dto);
+      const created = res.data;
+      if (!routines.some(x => x.id === created.id)) {
+        routines.push(created);
+      }
+
+      // Add to select and select it
+      const opt = document.createElement('option');
+      opt.value = created.id;
+      opt.textContent = `${created.title} (${created.durationMinutes} phút · +${created.rewardPoints}đ)`;
+      routineSelect.insertBefore(opt, routineSelect.lastElementChild);
+      routineSelect.value = created.id;
+
+      hideCustomCard();
+      toast('Đã tạo thói quen thành công! 🎉', `"${created.title}" đã được chọn để lên lịch.`, 'success');
+      return created.id;
+    };
+
+    saveCustomBtn.onclick = async () => {
+      saveCustomBtn.disabled = true;
+      saveCustomBtn.innerHTML = '<span class="spinner"></span> Đang tạo...';
+      try {
+        await createCustomRoutineAsync();
+      } catch (err) {
+        toast('Lỗi tạo thói quen', err.message, 'error');
+      } finally {
+        saveCustomBtn.disabled = false;
+        saveCustomBtn.innerHTML = `${icon('check')} Lưu & Chọn thói quen này`;
+      }
+    };
 
     const customDaysWrap = bd.querySelector('#custom-days-wrap');
     bd.querySelectorAll('input[name="freq-type"]').forEach(r => {
@@ -222,7 +377,26 @@
       saveBtn.disabled = true;
       saveBtn.innerHTML = '<span class="spinner"></span> Đang lưu...';
 
-      const routineId = Number(bd.querySelector('#sc-routine').value);
+      let routineId = Number(routineSelect.value);
+
+      // If user selected __create_new__ or has custom routine open with a title
+      if (routineSelect.value === '__create_new__' || (!customCard.classList.contains('hidden') && titleInput.value.trim())) {
+        try {
+          const newId = await createCustomRoutineAsync();
+          if (!newId) {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = `${icon('check')} Lưu lịch trình`;
+            return;
+          }
+          routineId = newId;
+        } catch (err) {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = `${icon('check')} Lưu lịch trình`;
+          toast('Lỗi tạo thói quen', err.message, 'error');
+          return;
+        }
+      }
+
       const reminderTime = bd.querySelector('#sc-time').value || '09:00';
       const freqType = bd.querySelector('input[name="freq-type"]:checked').value;
 
@@ -880,50 +1054,539 @@
   }
 
   /* =========================================================
-     PAGE: Gợi ý thông minh (REST -> gRPC)
+     PAGE: Gợi ý thông minh (REST -> gRPC) + Trợ lý AI Chat & Tự động lên lịch
      ========================================================= */
   async function renderSuggest() {
+    const s = api.session.get();
     const st = { sittingMinutes: 60, timeOfDay: timeOfDayNow(), stressLevel: 'Medium' };
+
     $app.innerHTML = shell('suggest', `
       <div class="page-head">
         <div>
           <div class="eyebrow"><span class="pill pill-red pill-upper">${icon('sparkle', 'ic-sm')} Gợi ý AI theo nhịp sinh học</span></div>
-          <h1>Gợi ý thông minh</h1>
-          <p>Cho chúng tôi biết trạng thái hiện tại của bạn — hệ thống sẽ chọn vi thói quen 1–5 phút phù hợp nhất ngay tại chỗ ngồi.</p>
+          <h1>Gợi ý thông minh & Trợ lý AI</h1>
+          <p>Trò chuyện với AI để nhận gợi ý vi thói quen phù hợp và <b>tự động lên lịch nhắc nhở sẵn</b> — chỉ cần 1 click xác nhận!</p>
         </div>
-        <span class="pill pill-green"><span class="dot"></span> REST → gRPC RecommendationService</span>
+        <span class="pill pill-green"><span class="dot"></span> REST → gRPC & Trợ lý AI Coach</span>
       </div>
-      <div class="grid grid-side" style="grid-template-columns:420px 1fr">
-        <form class="card" id="sg-form">
-          <h3 style="margin:0 0 18px;font-size:19px">Trạng thái của bạn</h3>
-          <div class="field">
-            <label>Thời gian đã ngồi liên tục: <b id="sg-min-label" style="color:var(--p9-primary)"></b></label>
-            <input type="range" id="sg-min" min="0" max="240" step="5" value="${st.sittingMinutes}">
-            <div style="display:flex;justify-content:space-between;padding:0 2px" class="small muted">
-              <span>0'</span><span>60' (1h)</span><span>120' (2h)</span><span>180' (3h)</span><span>240' (4h)</span>
+
+      <!-- TABS -->
+      <div class="suggest-tabs">
+        <button type="button" class="suggest-tab-btn active" id="tab-btn-ai">
+          ${icon('sparkle')} 🤖 Trợ lý AI Chat (Tự động lên lịch)
+        </button>
+        <button type="button" class="suggest-tab-btn" id="tab-btn-manual">
+          ${icon('sliders')} 🎛️ Bộ lọc thông số thủ công
+        </button>
+      </div>
+
+      <!-- VIEW 1: AI CHATBOX -->
+      <div id="view-ai-chat">
+        <div class="ai-chat-container">
+          <div class="ai-chat-head">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="ai-avatar">${icon('sparkle', 'ic-md')}</div>
+              <div>
+                <div style="font-weight:800;font-size:16px;color:#0f172a;display:flex;align-items:center;gap:8px">
+                  Power9 AI Health Coach
+                  <span class="pill pill-green pill-sm" style="font-size:11px;padding:2px 8px"><span class="dot"></span> Google Gemini 2.5 Flash</span>
+                </div>
+                <div class="small muted">Mô hình AI Generative thông minh — Thấu hiểu ngữ cảnh và tự động lên lịch 1-click</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <button class="btn btn-soft btn-sm" id="ai-chat-key-btn" type="button" title="Cài đặt API Key Gemini">
+                ${icon('lock', 'ic-sm')} Gemini API Key
+              </button>
+              <button class="btn btn-ghost btn-sm" id="ai-chat-reset" type="button" title="Bắt đầu lại cuộc trò chuyện">
+                ${icon('refresh', 'ic-sm')} Làm mới
+              </button>
             </div>
           </div>
-          <div class="field"><label>Buổi trong ngày</label>
-            <div class="segmented" data-k="timeOfDay">
-              ${[['Morning', 'Sáng'], ['Afternoon', 'Chiều'], ['Evening', 'Tối']].map(([v, l]) => `<button type="button" data-v="${v}" class="${v === st.timeOfDay ? 'active' : ''}">${l}</button>`).join('')}
-            </div></div>
-          <div class="field"><label>Mức căng thẳng</label>
-            <div class="segmented" data-k="stressLevel">
-              ${[['Low', 'Thấp 😌'], ['Medium', 'Vừa 😐'], ['High', 'Cao 😣']].map(([v, l]) => `<button type="button" data-v="${v}" class="${v === st.stressLevel ? 'active' : ''}">${l}</button>`).join('')}
-            </div></div>
-          <button class="btn btn-primary btn-lg btn-block" type="submit" id="sg-submit">${icon('sparkle')} Nhận gợi ý</button>
-          <p class="small muted" style="margin:14px 0 0"><code>GET /api/recommendations/smart-suggest</code></p>
-        </form>
-        <div id="sg-result">
-          <div class="card empty-state" style="height:100%;display:flex;flex-direction:column;justify-content:center">
-            <div class="e-ic">${icon('brain', 'ic-lg')}</div><b>Chưa có gợi ý</b><p class="small">Điều chỉnh trạng thái bên trái rồi bấm “Nhận gợi ý”.</p>
+
+          <div class="ai-chat-messages" id="ai-chat-messages">
+            <!-- Messages injected here -->
           </div>
+
+          <!-- Quick Prompts Chips -->
+          <div class="ai-quick-prompts">
+            <span class="small muted" style="font-weight:700;white-space:nowrap;display:flex;align-items:center;gap:4px">
+              ${icon('bulb', 'ic-sm')} Gợi ý nhanh:
+            </span>
+            <div class="ai-prompt-chips">
+              <button class="btn chip-ai-prompt" type="button" data-prompt="Tôi bị mỏi cổ vai gáy sau nhiều giờ ngồi máy tính, gợi ý bài tập và lên lịch lúc 15:00">💆 Mỏi cổ vai gáy (15:00)</button>
+              <button class="btn chip-ai-prompt" type="button" data-prompt="Nhắc tôi uống một cốc nước mỗi ngày vào lúc 10h sáng">💧 Nhắc uống nước (10:00)</button>
+              <button class="btn chip-ai-prompt" type="button" data-prompt="Mắt tôi bị khô và nhức mỏi, hãy gợi ý bài nghỉ mắt 20-20-20 lúc 14:30">👀 Thư giãn mắt (14:30)</button>
+              <button class="btn chip-ai-prompt" type="button" data-prompt="Tôi đang cảm thấy căng thẳng deadline và cần hít thở sâu lúc 16:00">🧘 Giảm stress & thở (16:00)</button>
+              <button class="btn chip-ai-prompt" type="button" data-prompt="Tôi muốn đứng dậy đi bộ 5 phút sau giờ nghỉ trưa lúc 13:30">🚶 Đi bộ nhẹ (13:30)</button>
+              <button class="btn chip-ai-prompt" type="button" data-prompt="Nhắc tôi chỉnh lại tư thế ngồi thẳng lưng lúc 9h30 sáng">🪑 Chỉnh tư thế ngồi (09:30)</button>
+            </div>
+          </div>
+
+          <!-- Input Bar -->
+          <form class="ai-chat-input-bar" id="ai-chat-form" autocomplete="off">
+            <input type="text" id="ai-chat-input" class="input" placeholder="Nhập cảm giác hoặc yêu cầu của bạn (VD: tôi bị mỏi lưng lúc 3h chiều, gợi ý bài tập...)" required style="flex:1">
+            <button class="btn btn-primary" type="submit" id="ai-chat-btn-send" style="padding:10px 20px;display:flex;align-items:center;gap:6px">
+              ${icon('arrowRight')} Gửi yêu cầu
+            </button>
+          </form>
         </div>
       </div>
-      <div class="section-head"><div><h2>Lịch sử gợi ý trong phiên</h2><div class="sub">Các bài tập hệ thống đã đề xuất cho bạn</div></div></div>
-      <div class="grid grid-3" id="sg-history"><p class="muted small">Chưa có.</p></div>`);
+
+      <!-- VIEW 2: MANUAL SLIDER & HISTORY -->
+      <div id="view-manual" style="display:none">
+        <div class="grid grid-side" style="grid-template-columns:420px 1fr">
+          <form class="card" id="sg-form">
+            <h3 style="margin:0 0 18px;font-size:19px">Trạng thái của bạn</h3>
+            <div class="field">
+              <label>Thời gian đã ngồi liên tục: <b id="sg-min-label" style="color:var(--p9-primary)"></b></label>
+              <input type="range" id="sg-min" min="0" max="240" step="5" value="${st.sittingMinutes}">
+              <div style="display:flex;justify-content:space-between;padding:0 2px" class="small muted">
+                <span>0'</span><span>60' (1h)</span><span>120' (2h)</span><span>180' (3h)</span><span>240' (4h)</span>
+              </div>
+            </div>
+            <div class="field"><label>Buổi trong ngày</label>
+              <div class="segmented" data-k="timeOfDay">
+                ${[['Morning', 'Sáng'], ['Afternoon', 'Chiều'], ['Evening', 'Tối']].map(([v, l]) => `<button type="button" data-v="${v}" class="${v === st.timeOfDay ? 'active' : ''}">${l}</button>`).join('')}
+              </div></div>
+            <div class="field"><label>Mức căng thẳng</label>
+              <div class="segmented" data-k="stressLevel">
+                ${[['Low', 'Thấp 😌'], ['Medium', 'Vừa 😐'], ['High', 'Cao 😣']].map(([v, l]) => `<button type="button" data-v="${v}" class="${v === st.stressLevel ? 'active' : ''}">${l}</button>`).join('')}
+              </div></div>
+            <button class="btn btn-primary btn-lg btn-block" type="submit" id="sg-submit">${icon('sparkle')} Nhận gợi ý</button>
+            <p class="small muted" style="margin:14px 0 0"><code>GET /api/recommendations/smart-suggest</code></p>
+          </form>
+          <div id="sg-result">
+            <div class="card empty-state" style="height:100%;display:flex;flex-direction:column;justify-content:center">
+              <div class="e-ic">${icon('brain', 'ic-lg')}</div><b>Chưa có gợi ý</b><p class="small">Điều chỉnh trạng thái bên trái rồi bấm “Nhận gợi ý”.</p>
+            </div>
+          </div>
+        </div>
+        <div class="section-head"><div><h2>Lịch sử gợi ý trong phiên</h2><div class="sub">Các bài tập hệ thống đã đề xuất cho bạn</div></div></div>
+        <div class="grid grid-3" id="sg-history"><p class="muted small">Chưa có.</p></div>
+      </div>`);
     bindShell();
 
+    /* Tab switcher */
+    const tabBtnAi = document.getElementById('tab-btn-ai');
+    const tabBtnManual = document.getElementById('tab-btn-manual');
+    const viewAiChat = document.getElementById('view-ai-chat');
+    const viewManual = document.getElementById('view-manual');
+
+    tabBtnAi.onclick = () => {
+      tabBtnAi.classList.add('active');
+      tabBtnManual.classList.remove('active');
+      viewAiChat.style.display = 'block';
+      viewManual.style.display = 'none';
+    };
+    tabBtnManual.onclick = () => {
+      tabBtnManual.classList.add('active');
+      tabBtnAi.classList.remove('active');
+      viewAiChat.style.display = 'none';
+      viewManual.style.display = 'block';
+    };
+
+    /* ==================== AI CHAT ASSISTANT LOGIC ==================== */
+    const msgsEl = document.getElementById('ai-chat-messages');
+    const inputEl = document.getElementById('ai-chat-input');
+    const sendBtn = document.getElementById('ai-chat-btn-send');
+    const formEl = document.getElementById('ai-chat-form');
+    const resetBtn = document.getElementById('ai-chat-reset');
+
+    function parseReminderTime(text) {
+      const lower = (text || '').toLowerCase();
+      const pmMatch = lower.match(/(\d{1,2})(?:h| giờ|g)?(?:\s*(?:rưỡi|30))?\s*(?:chiều|tối)/i);
+      if (pmMatch) {
+        let h = parseInt(pmMatch[1], 10);
+        if (h < 12) h += 12;
+        const isHalf = lower.includes('rưỡi') || lower.includes('30');
+        return `${String(Math.min(23, h)).padStart(2, '0')}:${isHalf ? '30' : '00'}`;
+      }
+      const amMatch = lower.match(/(\d{1,2})(?:h| giờ|g)?(?:\s*(?:rưỡi|30))?\s*(?:sáng|trưa)/i);
+      if (amMatch) {
+        let h = parseInt(amMatch[1], 10);
+        const isHalf = lower.includes('rưỡi') || lower.includes('30');
+        return `${String(Math.min(12, h)).padStart(2, '0')}:${isHalf ? '30' : '00'}`;
+      }
+      const fullMatch = lower.match(/(\d{1,2})[:hg](\d{2})/);
+      if (fullMatch) {
+        const h = Math.min(23, Math.max(0, parseInt(fullMatch[1], 10)));
+        const m = Math.min(59, Math.max(0, parseInt(fullMatch[2], 10)));
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+      }
+      const hourMatch = lower.match(/(\d{1,2})\s*(?:h|giờ|g)\b/);
+      if (hourMatch) {
+        let h = parseInt(hourMatch[1], 10);
+        if (h <= 5 && !lower.includes('sáng')) h += 12;
+        return `${String(Math.min(23, h)).padStart(2, '0')}:00`;
+      }
+      const now = new Date();
+      const nextHour = (now.getHours() + 1) % 24;
+      const targetHour = nextHour >= 8 && nextHour <= 17 ? nextHour : 15;
+      return `${String(targetHour).padStart(2, '0')}:00`;
+    }
+
+    function parseDaysOfWeek(text) {
+      const lower = (text || '').toLowerCase();
+      if (lower.includes('mỗi ngày') || lower.includes('hàng ngày') || lower.includes('suốt tuần') || lower.includes('cả tuần') || lower.includes('tất cả các ngày')) {
+        return 'Mon,Tue,Wed,Thu,Fri,Sat,Sun';
+      }
+      if (lower.includes('2, 4, 6') || lower.includes('2 4 6') || lower.includes('hai bốn sáu')) {
+        return 'Mon,Wed,Fri';
+      }
+      if (lower.includes('3, 5') || lower.includes('3 5') || lower.includes('ba năm')) {
+        return 'Tue,Thu';
+      }
+      return 'Mon,Tue,Wed,Thu,Fri';
+    }
+
+    function matchRoutineAndReason(text, allRoutines) {
+      const lower = (text || '').trim().toLowerCase();
+
+      // Check Greeting / Chit-chat
+      const isGreeting = /^(hi|hello|hey|chào|chao|alo|xin chào|xin chao|yo|hê lô|helo)\b/i.test(lower) && lower.split(/\s+/).length <= 4;
+      if (isGreeting) {
+        return {
+          type: 'chat',
+          message: 'Chào bạn! Tôi là Power9 AI Health Coach. Hôm nay bạn đang cảm thấy thế nào? Bạn có thể chia sẻ các triệu chứng như mỏi vai gáy, khô mắt, stress... hoặc nhờ tôi lên lịch nhắc nhở bài tập nhé!'
+        };
+      }
+
+      // Check custom routine by title
+      for (const r of allRoutines) {
+        if (r.isCustom && r.title && lower.includes(r.title.toLowerCase())) {
+          return { type: 'proposal', routine: r, reason: `bạn đã chỉ định trực tiếp thói quen tùy chỉnh "${r.title}"` };
+        }
+      }
+
+      // Neck / Shoulder / Spine / Posture
+      if (lower.includes('cổ') || lower.includes('vai') || lower.includes('gáy') || lower.includes('lưng') || lower.includes('ngồi') || lower.includes('tư thế') || lower.includes('mỏi')) {
+        const r = allRoutines.find(x => {
+          const t = x.title.toLowerCase();
+          return t.includes('posture') || t.includes('tư thế') || t.includes('vai') || t.includes('cổ') || t.includes('lưng') || t.includes('giãn');
+        }) || allRoutines.find(x => x.categoryName === 'Sit Smart') || allRoutines.find(x => x.categoryName === 'Move Often');
+        if (r) return { routine: r, reason: 'bạn đang bị mỏi cơ, sai tư thế hoặc ngồi quá lâu một chỗ' };
+      }
+
+      // Eye strain / Screen
+      if (lower.includes('mắt') || lower.includes('màn hình') || lower.includes('chói') || lower.includes('20-20-20') || lower.includes('khô')) {
+        const r = allRoutines.find(x => {
+          const t = (x.title + ' ' + (x.description || '')).toLowerCase();
+          return t.includes('mắt') || t.includes('20-20-20') || t.includes('eye');
+        }) || allRoutines.find(x => x.categoryName === 'Sit Smart');
+        if (r) return { routine: r, reason: 'mắt của bạn cần được thư giãn sau thời gian dài nhìn màn hình thiết bị' };
+      }
+
+      // Hydration / Water
+      if (lower.includes('nước') || lower.includes('uống') || lower.includes('khát') || lower.includes('ly') || lower.includes('cốc')) {
+        const r = allRoutines.find(x => {
+          const t = x.title.toLowerCase();
+          return t.includes('nước') || t.includes('water') || t.includes('drink');
+        }) || allRoutines.find(x => x.categoryName === 'Eat Well');
+        if (r) return { routine: r, reason: 'cơ thể bạn cần được bổ sung nước định kỳ để tăng cường tập trung' };
+      }
+
+      // Stress / Breathing / Meditation
+      if (lower.includes('stress') || lower.includes('thở') || lower.includes('căng thẳng') || lower.includes('áp lực') || lower.includes('deadline') || lower.includes('mệt') || lower.includes('thiền') || lower.includes('lo')) {
+        const r = allRoutines.find(x => {
+          const t = x.title.toLowerCase();
+          return t.includes('breathing') || t.includes('thở') || t.includes('4-7-8') || t.includes('mindfulness') || t.includes('thiền');
+        }) || allRoutines.find(x => x.categoryName === 'Manage Stress');
+        if (r) return { routine: r, reason: 'bạn đang căng thẳng và cần điều hòa hơi thở để giải tỏa áp lực thần kinh' };
+      }
+
+      // Walking / Movement
+      if (lower.includes('đi bộ') || lower.includes('vận động') || lower.includes('chân') || lower.includes('đứng dậy') || lower.includes('walk') || lower.includes('bước')) {
+        const r = allRoutines.find(x => {
+          const t = x.title.toLowerCase();
+          return t.includes('walk') || t.includes('đi bộ') || t.includes('bước');
+        }) || allRoutines.find(x => x.categoryName === 'Move Often');
+        if (r) return { routine: r, reason: 'bạn muốn kích hoạt cơ thể, tăng cường tuần hoàn máu bằng vài phút vận động' };
+      }
+
+      // Connect / Kindness / Team
+      if (lower.includes('đồng nghiệp') || lower.includes('bạn bè') || lower.includes('nhắn tin') || lower.includes('giúp') || lower.includes('kết nối')) {
+        const r = allRoutines.find(x => {
+          const t = x.title.toLowerCase();
+          return t.includes('message') || t.includes('teammate') || t.includes('kind') || t.includes('nhắn');
+        }) || allRoutines.find(x => x.categoryName === 'Connect');
+        if (r) return { routine: r, reason: 'bạn muốn lan tỏa năng lượng tích cực và gắn kết đồng nghiệp' };
+      }
+
+      // Fallback routine
+      const routine = allRoutines[0] || D.ROUTINES[0];
+      return { routine, reason: 'bạn muốn tìm một thói quen tích cực để phục hồi năng lượng trong ngày' };
+    }
+
+    function initWelcomeChat() {
+      const userName = s?.displayName || 'bạn';
+      msgsEl.innerHTML = `
+        <div class="chat-msg chat-ai">
+          <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
+          <div class="chat-bubble ai-bubble">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+              <span class="pill pill-green pill-sm"><span class="dot"></span> Google Gemini 2.5 Flash</span>
+              <span class="small muted">Mô hình AI Generative trực tuyến</span>
+            </div>
+            <div>Xin chào <b>${esc(userName)}</b>! 👋 Tôi là <b>Power9 AI Health Coach</b> kết nối trực tiếp với <b>Google Gemini 2.5 Flash</b>.</div>
+            <div style="margin-top:8px">
+              Hãy trò chuyện tự nhiên với tôi về cảm giác hoặc mong muốn của bạn (ví dụ: <i>"tôi ngồi từ sáng bị mỏi cổ vai gáy lúc 3h chiều"</i>, <i>"nhắc tôi uống nước mỗi ngày lúc 10h sáng"</i>, <i>"cần nghỉ mắt lúc 14:30"</i>, <i>"áp lực deadline quá"</i>...).
+            </div>
+            <div style="margin-top:8px;color:#047857;font-weight:600">
+              🎯 <b>Tự động tạo lịch sẵn:</b> Gemini AI sẽ phân tích ngữ cảnh, chọn bài tập tối ưu và tạo sẵn lịch trình ngay trong khung chat. Bạn chỉ cần bấm <b>[✅ Xác nhận & Tạo lịch luôn]</b> là lịch sẽ được kích hoạt ngay lập tức!
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function handleSendPrompt(userPrompt) {
+      const text = (userPrompt || '').trim();
+      if (!text) return;
+
+      if (inputEl) inputEl.value = '';
+
+      // 1. Render User Bubble
+      const userMsgDiv = document.createElement('div');
+      userMsgDiv.className = 'chat-msg chat-user';
+      userMsgDiv.innerHTML = `<div class="chat-bubble user-bubble">${esc(text)}</div>`;
+      msgsEl.appendChild(userMsgDiv);
+      msgsEl.scrollTop = msgsEl.scrollHeight;
+
+      // 2. Render Typing Indicator
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'chat-msg chat-ai';
+      typingDiv.id = 'ai-typing-temp';
+      typingDiv.innerHTML = `
+        <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
+        <div class="chat-bubble ai-bubble" style="display:flex;align-items:center;gap:8px">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+          <span style="font-size:13px;color:#047857;font-weight:600">Google Gemini 2.5 Flash đang phân tích & lên lịch trình...</span>
+        </div>
+      `;
+      msgsEl.appendChild(typingDiv);
+      msgsEl.scrollTop = msgsEl.scrollHeight;
+      sendBtn.disabled = true;
+
+      try {
+        let allRoutines = [];
+        try {
+          const res = await api.getRoutines();
+          allRoutines = res.data || [];
+        } catch {
+          allRoutines = [...D.ROUTINES];
+        }
+        if (!allRoutines.length) allRoutines = [...D.ROUTINES];
+
+        let isChatOnly = false;
+        let chatMessage = '';
+        let routine, reason, parsedTime, parsedDays, coachAdvice, aiSource;
+
+        // Try calling real Google Gemini AI first
+        try {
+          const geminiRes = await api.gemini.analyzeAndSchedule(text, allRoutines);
+          const gData = geminiRes.data;
+          aiSource = 'Google Gemini 2.5 Flash (AI Thật)';
+
+          if (gData.type === 'chat' || (!gData.routineId && gData.message)) {
+            isChatOnly = true;
+            chatMessage = gData.message || 'Chào bạn! Tôi có thể giúp gì cho bạn hôm nay?';
+          } else {
+            routine = allRoutines.find(r => r.id === Number(gData.routineId)) || allRoutines[0];
+            parsedTime = gData.reminderTime || parseReminderTime(text);
+            parsedDays = gData.daysOfWeek || parseDaysOfWeek(text);
+            reason = gData.reason || 'Dựa trên phân tích thể trạng của bạn';
+            coachAdvice = gData.coachAdvice || '';
+          }
+        } catch (geminiErr) {
+          console.warn('Gemini API call failed, falling back to heuristic engine:', geminiErr);
+          aiSource = 'Heuristic Rule Engine (Dự phòng)';
+          const fallback = matchRoutineAndReason(text, allRoutines);
+          if (fallback.type === 'chat') {
+            isChatOnly = true;
+            chatMessage = fallback.message;
+          } else {
+            routine = fallback.routine;
+            reason = fallback.reason;
+            parsedTime = parseReminderTime(text);
+            parsedDays = parseDaysOfWeek(text);
+            coachAdvice = 'Thực hiện vi thói quen này đều đặn sẽ giúp cải thiện đáng kể năng lượng và sức khỏe thể chất nơi công sở.';
+          }
+        }
+
+        const typingEl = document.getElementById('ai-typing-temp');
+        if (typingEl) typingEl.remove();
+
+        // If simple conversation / greeting: reply nicely WITHOUT generating routine schedule card
+        if (isChatOnly) {
+          const aiChatDiv = document.createElement('div');
+          aiChatDiv.className = 'chat-msg chat-ai';
+          aiChatDiv.innerHTML = `
+            <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
+            <div class="chat-bubble ai-bubble" style="max-width:85%">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+                <span class="pill ${aiSource.includes('Gemini') ? 'pill-green' : 'pill-amber'} pill-sm">
+                  <span class="dot"></span> ${esc(aiSource)}
+                </span>
+              </div>
+              <div style="font-size:14.5px;line-height:1.6;color:#1e293b">${esc(chatMessage)}</div>
+            </div>
+          `;
+          msgsEl.appendChild(aiChatDiv);
+          msgsEl.scrollTop = msgsEl.scrollHeight;
+          return;
+        }
+
+        const proposalId = 'prop_' + Date.now();
+        const catObj = D.category(routine.categoryName);
+        const aiMsgDiv = document.createElement('div');
+        aiMsgDiv.className = 'chat-msg chat-ai';
+        aiMsgDiv.innerHTML = `
+          <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
+          <div class="chat-bubble ai-bubble" style="width:100%">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+              <span class="pill ${aiSource.includes('Gemini') ? 'pill-green' : 'pill-amber'} pill-sm">
+                <span class="dot"></span> ${esc(aiSource)}
+              </span>
+            </div>
+            <div>Tôi đã phân tích: <b>${esc(reason)}</b>.</div>
+            <div style="margin-top:6px">
+              Gợi ý bài tập phù hợp nhất: <b>"${esc(routine.title)}"</b> (${routine.durationMinutes} phút · ${esc(catObj.vi || routine.categoryName)}).
+            </div>
+            ${coachAdvice ? `<div class="note-box" style="margin:10px 0;padding:9px 12px;background:#f0fdf4;border-color:#bbf7d0;color:#166534;font-size:13.5px">${icon('bulb', 'ic-sm')}<div><b>Lời khuyên từ AI Coach:</b> ${esc(coachAdvice)}</div></div>` : ''}
+            <div style="margin-top:6px;color:#047857;font-weight:600">
+              📅 Kế hoạch lịch trình được AI tự động lên sẵn bên dưới. Bạn chỉ cần bấm xác nhận là tạo lịch ngay:
+            </div>
+
+            <!-- Proposal Card -->
+            <div class="ai-schedule-proposal" id="box-${proposalId}">
+              <div class="proposal-header">
+                <span class="proposal-badge">${icon('sparkle', 'ic-sm')} Kế hoạch lịch trình tự động</span>
+                <span class="pill pill-green pill-sm"><span class="dot"></span> Đã điền sẵn</span>
+              </div>
+              <div class="proposal-routine-title">${esc(routine.title)}</div>
+              <div class="proposal-routine-desc">${esc(routine.description || 'Thực hiện 1-5 phút giúp cân bằng thể chất và tinh thần.')}</div>
+
+              <div class="proposal-meta-grid">
+                <div class="meta-item">
+                  <span class="meta-lbl">Giờ nhắc nhở</span>
+                  <input type="time" class="meta-val" id="time-${proposalId}" value="${parsedTime}" style="border:1.5px solid #a7f3d0;border-radius:6px;padding:4px 8px;font-family:inherit;font-weight:700;background:#fff;max-width:115px;color:#0f172a">
+                </div>
+                <div class="meta-item">
+                  <span class="meta-lbl">Tần suất lặp lại</span>
+                  <select class="meta-val" id="days-${proposalId}" style="border:1.5px solid #a7f3d0;border-radius:6px;padding:5px 8px;font-family:inherit;font-weight:700;background:#fff;color:#0f172a">
+                    <option value="Mon,Tue,Wed,Thu,Fri" ${parsedDays === 'Mon,Tue,Wed,Thu,Fri' ? 'selected' : ''}>Ngày làm việc (T2 - T6)</option>
+                    <option value="Mon,Tue,Wed,Thu,Fri,Sat,Sun" ${parsedDays === 'Mon,Tue,Wed,Thu,Fri,Sat,Sun' ? 'selected' : ''}>Mỗi ngày (T2 - CN)</option>
+                    <option value="Mon,Wed,Fri">Thứ 2, Thứ 4, Thứ 6</option>
+                    <option value="Tue,Thu">Thứ 3, Thứ 5</option>
+                  </select>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-lbl">Thời lượng</span>
+                  <span class="meta-val">⏱️ ${routine.durationMinutes} phút</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-lbl">Điểm thưởng</span>
+                  <span class="meta-val">🏆 +${routine.rewardPoints || 10} điểm / lần</span>
+                </div>
+              </div>
+
+              <div class="proposal-actions">
+                <button class="btn btn-confirm-ai-sched" type="button" id="btn-confirm-${proposalId}">
+                  ${icon('calendar')} ✅ Xác nhận & Tạo lịch luôn
+                </button>
+                <a class="btn btn-soft btn-sm" href="#/routine/${routine.id}">Chi tiết bài tập ${icon('arrowRight', 'ic-sm')}</a>
+              </div>
+            </div>
+          </div>
+        `;
+        msgsEl.appendChild(aiMsgDiv);
+        msgsEl.scrollTop = msgsEl.scrollHeight;
+
+        const confirmBtn = document.getElementById(`btn-confirm-${proposalId}`);
+        if (confirmBtn) {
+          confirmBtn.onclick = async () => {
+            const finalTime = document.getElementById(`time-${proposalId}`)?.value || parsedTime;
+            const finalDays = document.getElementById(`days-${proposalId}`)?.value || parsedDays;
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<span class="spinner"></span> Đang tạo lịch...';
+
+            try {
+              await api.createSchedule({
+                routineId: routine.id,
+                reminderTime: finalTime,
+                daysOfWeek: finalDays,
+                isActive: true
+              }, allRoutines);
+
+              confirmBtn.className = 'btn btn-confirm-ai-sched scheduled';
+              confirmBtn.innerHTML = '🎉 Đã tạo lịch thành công!';
+              toast('Đã tạo lịch thành công!', `Lịch nhắc "${routine.title}" vào lúc ${finalTime} đã sẵn sàng.`, 'success');
+
+              const followUpDiv = document.createElement('div');
+              followUpDiv.className = 'chat-msg chat-ai';
+              followUpDiv.innerHTML = `
+                <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
+                <div class="chat-bubble ai-bubble">
+                  <div style="font-weight:700;color:#047857;display:flex;align-items:center;gap:6px">
+                    ${icon('checkCircle', 'ic-sm')} Hoàn tất!
+                  </div>
+                  <div style="margin-top:4px">
+                    Tôi đã kích hoạt lịch nhắc bài <b>"${esc(routine.title)}"</b> vào lúc <b>${finalTime}</b> (${formatDays(finalDays)}). Bạn có thể kiểm tra danh sách lịch tại <a href="#/" style="font-weight:700;color:var(--p9-primary);text-decoration:underline">trang Hôm nay</a>. Chúc bạn một ngày làm việc sảng khoái! 💪
+                  </div>
+                </div>
+              `;
+              msgsEl.appendChild(followUpDiv);
+              msgsEl.scrollTop = msgsEl.scrollHeight;
+            } catch (err) {
+              confirmBtn.disabled = false;
+              confirmBtn.innerHTML = '❌ Thử lại';
+              toast('Không tạo được lịch', err.message, 'error');
+            }
+          };
+        }
+      } catch (err) {
+        const typingEl = document.getElementById('ai-typing-temp');
+        if (typingEl) typingEl.remove();
+        toast('Lỗi AI Chat', err.message, 'error');
+      } finally {
+        sendBtn.disabled = false;
+        if (inputEl) inputEl.focus();
+      }
+    }
+
+    formEl.onsubmit = (e) => {
+      e.preventDefault();
+      handleSendPrompt(inputEl.value);
+    };
+
+    resetBtn.onclick = () => {
+      initWelcomeChat();
+      if (inputEl) inputEl.value = '';
+    };
+
+    const keyBtn = document.getElementById('ai-chat-key-btn');
+    if (keyBtn) {
+      keyBtn.onclick = () => {
+        const cur = api.gemini.getKey();
+        const entered = prompt('Nhập hoặc đổi Google Gemini API Key của bạn:', cur);
+        if (entered !== null) {
+          api.gemini.setKey(entered);
+          toast('Đã lưu Gemini API Key', 'Key được áp dụng ngay lập tức cho các cuộc hội thoại!', 'success');
+        }
+      };
+    };
+
+    document.querySelectorAll('.chip-ai-prompt').forEach(chip => {
+      chip.onclick = () => {
+        const p = chip.dataset.prompt;
+        handleSendPrompt(p);
+      };
+    });
+
+    initWelcomeChat();
+
+    /* ==================== MANUAL SLIDER FORM LOGIC ==================== */
     const minEl = document.getElementById('sg-min'), minLbl = document.getElementById('sg-min-label');
     const syncMin = () => { st.sittingMinutes = Number(minEl.value); minLbl.textContent = `${st.sittingMinutes} phút`; };
     minEl.oninput = syncMin; syncMin();
@@ -994,7 +1657,10 @@
           <h1>Thư viện thói quen</h1>
           <p>Dành 1 – 5 phút điều chỉnh cơ thể, hồi phục năng lượng và cải thiện công thái học ngay tại chỗ ngồi.</p>
         </div>
-        <a class="btn btn-primary" href="#/suggest">${icon('sparkle')} Gợi ý cho tôi</a>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-secondary" id="btn-user-create-routine">${icon('plus')} Tạo thói quen riêng</button>
+          <a class="btn btn-primary" href="#/suggest">${icon('sparkle')} Gợi ý cho tôi</a>
+        </div>
       </div>
       <div class="card">
         <div class="input-icon search-lg">${icon('search')}<input id="lib-q" class="input" placeholder="Tìm hoạt động theo tên hoặc từ khóa (ví dụ: vai gáy, mắt, nước...)"></div>
@@ -1018,6 +1684,13 @@
     try { const r = await api.getRoutines(); routines = r.data; document.getElementById('lib-src').innerHTML = sourcePill(r.source, 'GET /api/routines'); }
     catch (e) { toast('Không tải được thư viện', e.message, 'error'); }
 
+    const openUserRoutineCreate = async () => {
+      const cRes = await (api.getCategories ? api.getCategories() : Promise.resolve({ data: [] }));
+      openRoutineModal(null, cRes.data || [], () => renderLibrary());
+    };
+    const btnUserCreate = document.getElementById('btn-user-create-routine');
+    if (btnUserCreate) btnUserCreate.onclick = openUserRoutineCreate;
+
     const f = { q: '', c: '', d: 0 };
     const norm = (s) => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').toLowerCase();
     const paint = () => {
@@ -1039,7 +1712,11 @@
             </div>
           </div>
         </div>`;
-      }).join('') : `<div class="card empty-state" style="grid-column:1/-1"><div class="e-ic">${icon('search', 'ic-lg')}</div><b>Không tìm thấy hoạt động phù hợp</b><p class="small">Thử bỏ bớt bộ lọc hoặc đổi từ khóa.</p></div>`;
+      }).join('') : `<div class="card empty-state" style="grid-column:1/-1"><div class="e-ic">${icon('search', 'ic-lg')}</div><b>Không tìm thấy hoạt động phù hợp</b><p class="small">Chưa có thói quen bạn muốn? Bạn có thể tự tạo thói quen của riêng mình!</p><button class="btn btn-primary btn-sm" id="btn-empty-create-routine" style="margin-top:10px">${icon('plus')} Tạo thói quen mới ngay</button></div>`;
+      
+      const btnEmptyCreate = document.getElementById('btn-empty-create-routine');
+      if (btnEmptyCreate) btnEmptyCreate.onclick = openUserRoutineCreate;
+
       document.querySelectorAll('[data-lib-sched]').forEach(b => {
         b.onclick = (e) => {
           e.stopPropagation();
@@ -1131,11 +1808,13 @@
   }
 
   /* =========================================================
-     MODAL: Thêm / Sửa Routine (Admin)
+     MODAL: Thêm / Sửa Routine (Admin & Người dùng tự tạo)
      ========================================================= */
   function openRoutineModal(routineToEdit, categories, onDone) {
     const isEdit = !!routineToEdit;
-    const title = isEdit ? `Chỉnh sửa hoạt động #${routineToEdit.id}` : 'Thêm hoạt động mới vào hệ thống';
+    const s = api.session.get();
+    const isAdmin = s?.role === 'Admin' || s?.role === 'Administrator';
+    const title = isEdit ? `Chỉnh sửa hoạt động #${routineToEdit.id}` : (isAdmin ? 'Thêm hoạt động mới vào hệ thống' : 'Tạo vi thói quen mới của bạn');
     const cats = (categories && categories.length) ? categories : [
       { id: 1, name: 'Move Often', description: 'Vận động tự nhiên' },
       { id: 2, name: 'Sit Smart', description: 'Tư thế ngồi' },
@@ -1160,17 +1839,17 @@
     const modal = document.createElement('div');
     modal.className = 'modal-backdrop active';
     modal.innerHTML = `
-      <div class="modal" style="max-width:620px">
-        <div class="modal-header">
+      <div class="modal" style="max-width:620px; border-radius:24px; max-height:90vh; max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;">
+        <div class="modal-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
           <div>
-            <h3 class="modal-title">${esc(title)}</h3>
+            <h3 class="modal-title" style="margin:0; font-size:20px; font-weight:800;">${esc(title)}</h3>
             <p class="modal-desc" style="margin:2px 0 0;font-size:13px;color:var(--p9-text-muted)">
-              ${isEdit ? 'Cập nhật nội dung và cấu hình hoạt động trong cơ sở dữ liệu' : 'Tạo mới một hoạt động theo 9 trụ cột Blue Zones cho toàn công ty'}
+              ${isEdit ? 'Cập nhật nội dung và cấu hình hoạt động trong cơ sở dữ liệu' : (isAdmin ? 'Tạo mới một hoạt động theo 9 trụ cột Blue Zones cho toàn công ty' : 'Tự tạo vi thói quen lành mạnh theo 9 trụ cột Blue Zones để rèn luyện mỗi ngày')}
             </p>
           </div>
-          <button class="modal-close" id="btn-close-rmodal">${icon('x', 'ic-sm')}</button>
+          <button class="modal-close" id="btn-close-rmodal" title="Đóng">${icon('x', 'ic-sm')}</button>
         </div>
-        <form id="form-routine" class="modal-body" style="padding:16px 20px 20px;display:flex;flex-direction:column;gap:14px">
+        <form id="form-routine" class="modal-body custom-scrollbar" style="padding:16px 20px 20px; display:flex; flex-direction:column; gap:14px; overflow-y:auto; flex:1 1 auto; min-height:0;">
           <div>
             <label class="label-upper" for="rm-title" style="display:block;margin-bottom:6px">Tên hoạt động <span style="color:#ef4444">*</span></label>
             <input type="text" id="rm-title" class="input" placeholder="Ví dụ: Vươn vai & xoay khớp cổ 5 phút" value="${esc(routineToEdit?.title || '')}" required maxlength="120" />
@@ -1218,12 +1897,16 @@
             </div>
           </div>
 
+          ${isAdmin ? `
           <div style="background:var(--p9-surface-2);padding:10px 14px;border-radius:10px;display:flex;align-items:center;gap:10px">
             <input type="checkbox" id="rm-approved" style="width:18px;height:18px;accent-color:var(--p9-primary)" ${curApproved ? 'checked' : ''} />
             <label for="rm-approved" style="font-size:13px;font-weight:600;cursor:pointer">Phê duyệt & cho phép người dùng hiển thị ngay trên hệ thống</label>
           </div>
+          ` : `
+          <input type="hidden" id="rm-approved" value="true" />
+          `}
 
-          <div class="modal-actions" style="margin-top:8px">
+          <div class="modal-actions" style="margin-top:8px; padding-top:14px; border-top:1px solid #e2e8f0; flex-shrink:0;">
             <button type="button" class="btn btn-outline" id="btn-cancel-rmodal">Hủy bỏ</button>
             <button type="submit" class="btn btn-primary" id="btn-save-rmodal">
               ${icon('checkCircle')} ${isEdit ? 'Lưu thay đổi' : 'Tạo hoạt động mới'}
@@ -1251,6 +1934,9 @@
       saveBtn.disabled = true;
       saveBtn.innerHTML = '<span class="spinner"></span> Đang lưu...';
 
+      const isApprovedEl = document.getElementById('rm-approved');
+      const isApproved = isApprovedEl ? (isApprovedEl.type === 'checkbox' ? isApprovedEl.checked : true) : true;
+
       const dto = {
         categoryId: Number(document.getElementById('rm-cat').value),
         title: document.getElementById('rm-title').value.trim(),
@@ -1259,7 +1945,7 @@
         energyLevel: document.getElementById('rm-energy').value,
         targetTimeOfDay: document.getElementById('rm-time').value,
         rewardPoints: Number(document.getElementById('rm-points').value),
-        isApproved: document.getElementById('rm-approved').checked
+        isApproved
       };
 
       try {
@@ -1995,9 +2681,9 @@
       ];
 
       const modalHtml = `
-        <div class="modal-backdrop">
-          <div class="modal" style="max-width:540px; border-radius:24px;">
-            <div class="modal-head">
+        <div class="modal-backdrop" id="landmark-modal-backdrop">
+          <div class="modal" style="max-width:540px; border-radius:24px; max-height:90vh; max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;">
+            <div class="modal-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
               <div>
                 <h3 style="margin:0; font-size:20px; font-weight:800; color:#065f46;">
                   🏛️ Công Trình Trung Tâm Đô Thị
@@ -2006,10 +2692,10 @@
                   Cấp hiện tại: <strong>Cấp ${currentRoom.landmarkLevel} — ${esc(currentRoom.landmarkName)}</strong>
                 </div>
               </div>
-              <button class="modal-close" id="btn-close-landmark-modal">${icon('plus')}</button>
+              <button class="modal-close" id="btn-close-landmark-modal" title="Đóng">${icon('x')}</button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body custom-scrollbar" style="overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:8px;">
               <div style="background:radial-gradient(circle, #f0fdf4 0%, #ecfdf5 100%); border-radius:18px; padding:20px; text-align:center; margin-bottom:18px; border:1.5px solid #a7f3d0;">
                 <img src="${landmarkSprite}" style="max-height:160px; object-fit:contain; filter:drop-shadow(0 10px 16px rgba(0,0,0,0.15)); margin-bottom:12px;">
                 <div style="font-size:18px; font-weight:800; color:#065f46;">${esc(currentRoom.landmarkName)}</div>
@@ -2064,7 +2750,7 @@
               ` : ''}
             </div>
 
-            <div class="modal-foot">
+            <div class="modal-foot" style="margin-top:14px; padding-top:12px; border-top:1px solid #e2e8f0; flex-shrink:0;">
               <button class="btn btn-secondary btn-block" id="btn-cancel-landmark-modal">Đóng</button>
             </div>
           </div>
@@ -2078,6 +2764,9 @@
       const close = () => div.remove();
       document.getElementById('btn-close-landmark-modal').onclick = close;
       document.getElementById('btn-cancel-landmark-modal').onclick = close;
+      div.addEventListener('click', (e) => {
+        if (e.target.id === 'landmark-modal-backdrop') close();
+      });
 
       if (isAdminUser) {
         div.querySelectorAll('.btn-quick-lm-lvl').forEach(b => {
@@ -2105,8 +2794,8 @@
 
       const modalHtml = `
         <div class="modal-backdrop" id="resident-modal-backdrop">
-          <div class="modal" style="max-width:520px; border-radius:24px;">
-            <div class="modal-head" style="border-bottom:none; padding-bottom:0;">
+          <div class="modal" style="max-width:520px; border-radius:24px; max-height:90vh; max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;">
+            <div class="modal-head" style="border-bottom:none; padding-bottom:0; display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
               <div>
                 <h3 style="margin:0; font-size:20px; font-weight:800; color:#065f46;">
                   ${isSelf ? '🏠 Ngôi Nhà Của Bạn' : `🏡 Nhà Của ${esc(resident.fullName)}`}
@@ -2115,10 +2804,10 @@
                   Lô đất #${resident.slotIndex + 1} &bull; Cấp ${resident.houseFloors} / 4
                 </div>
               </div>
-              <button class="modal-close" id="btn-close-resident-modal">${icon('plus')}</button>
+              <button class="modal-close" id="btn-close-resident-modal" title="Đóng">${icon('x')}</button>
             </div>
 
-            <div class="modal-body" style="padding-top:10px;">
+            <div class="modal-body custom-scrollbar" style="padding-top:10px; overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:8px;">
               <!-- House Showcase Preview -->
               <div style="background:radial-gradient(circle, #ecfdf5 0%, #f0fdf4 100%); border-radius:18px; padding:20px; text-align:center; margin-bottom:18px; border:1px solid #a7f3d0; position:relative;">
                 ${resident.isMvp ? `<div class="mvp-crown-tag">👑 Thị trưởng năng nổ (MVP)</div>` : ''}
@@ -2209,7 +2898,7 @@
               ` : ''}
             </div>
 
-            <div class="modal-foot">
+            <div class="modal-foot" style="margin-top:14px; padding-top:12px; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px; flex-shrink:0;">
               ${isSelf ? `
                 <button class="btn btn-secondary" id="btn-cancel-resident">Đóng</button>
                 <button class="btn btn-primary" id="btn-save-rooftop">Lưu Thay Đổi</button>
@@ -2229,6 +2918,9 @@
       const close = () => div.remove();
       document.getElementById('btn-close-resident-modal').onclick = close;
       document.getElementById('btn-cancel-resident').onclick = close;
+      div.addEventListener('click', (e) => {
+        if (e.target.id === 'resident-modal-backdrop') close();
+      });
 
       if (isSelf) {
         div.querySelectorAll('.theme-option-btn').forEach(b => {
@@ -2363,8 +3055,8 @@
 
       const modalHtml = `
         <div class="modal-backdrop" id="admin-city-modal-backdrop">
-          <div class="modal" style="max-width:580px; border-radius:24px; max-height:90vh; overflow-y:auto;">
-            <div class="modal-head" style="border-bottom: 1.5px solid #e0e7ff; background: #eef2ff; border-radius: 24px 24px 0 0; padding:16px 20px;">
+          <div class="modal" style="max-width:580px; border-radius:24px; max-height:90vh; max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;">
+            <div class="modal-head" style="border-bottom: 1.5px solid #e0e7ff; background: #eef2ff; border-radius: 24px 24px 0 0; padding:16px 20px; display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
               <div>
                 <h3 style="margin:0; font-size:20px; font-weight:800; color:#3730a3; display:flex; align-items:center; gap:8px;">
                   👑 Bảng Tuỳ Chỉnh Dành Cho Quản Trị Viên (Admin)
@@ -2373,10 +3065,10 @@
                   Tuỳ ý nâng cấp công viên & điều chỉnh tầng nhà, kiến trúc, rêu mốc cho từng cư dân
                 </div>
               </div>
-              <button class="modal-close" id="btn-close-admin-city">${icon('plus')}</button>
+              <button class="modal-close" id="btn-close-admin-city" title="Đóng">${icon('x')}</button>
             </div>
 
-            <div class="modal-body" style="padding:20px;">
+            <div class="modal-body custom-scrollbar" style="padding:20px; overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:12px;">
               <!-- Section 1: Công viên trung tâm -->
               <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:16px; padding:16px; margin-bottom:20px;">
                 <div style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
@@ -2447,6 +3139,9 @@
       const close = () => div.remove();
       document.getElementById('btn-close-admin-city').onclick = close;
       document.getElementById('btn-cancel-admin-city').onclick = close;
+      div.addEventListener('click', (e) => {
+        if (e.target.id === 'admin-city-modal-backdrop') close();
+      });
 
       let selectedLandmarkLvl = currentRoom.landmarkLevel;
       div.querySelectorAll('.btn-admin-landmark').forEach(b => {
@@ -2589,17 +3284,17 @@
     function openInviteModal() {
       const shareUrl = `${location.origin}${location.pathname}#/city?join=${currentRoom?.roomCode || ''}`;
       const modalHtml = `
-        <div class="modal-backdrop">
-          <div class="modal" style="max-width:480px; border-radius:24px;">
-            <div class="modal-head">
+        <div class="modal-backdrop" id="invite-modal-backdrop">
+          <div class="modal" style="max-width:480px; border-radius:24px; max-height:90vh; max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;">
+            <div class="modal-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
               <div>
                 <h3 style="margin:0; font-size:18px; font-weight:800;">Mời Bạn Bè Vào Thành Phố</h3>
                 <div class="muted" style="font-size:12.5px;">Phòng còn ${12 - (currentRoom?.residents?.length || 0)}/12 lô đất trống</div>
               </div>
-              <button class="modal-close" id="btn-close-invite">${icon('plus')}</button>
+              <button class="modal-close" id="btn-close-invite" title="Đóng">${icon('x')}</button>
             </div>
             
-            <div class="modal-body">
+            <div class="modal-body custom-scrollbar" style="overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:8px;">
               <div style="background:#ecfdf5; border:1px solid #10b981; border-radius:14px; padding:16px; margin-bottom:18px; text-align:center;">
                 <div class="muted" style="font-size:12px; margin-bottom:4px;">Mã phòng 6 ký tự</div>
                 <div style="font-size:28px; font-weight:800; font-family:monospace; color:#065f46; letter-spacing:2px; margin-bottom:10px;">
@@ -2640,7 +3335,7 @@
               </div>
             </div>
 
-            <div class="modal-foot">
+            <div class="modal-foot" style="margin-top:14px; padding-top:12px; border-top:1px solid #e2e8f0; flex-shrink:0;">
               <button class="btn btn-secondary btn-block" id="btn-cancel-invite">Đóng</button>
             </div>
           </div>
@@ -2654,6 +3349,9 @@
       const close = () => div.remove();
       document.getElementById('btn-close-invite').onclick = close;
       document.getElementById('btn-cancel-invite').onclick = close;
+      div.addEventListener('click', (e) => {
+        if (e.target.id === 'invite-modal-backdrop') close();
+      });
 
       document.getElementById('btn-copy-invite-code').onclick = () => {
         navigator.clipboard.writeText(currentRoom.roomCode);
@@ -2759,17 +3457,17 @@
     function openQuickCheckInModal() {
       const routines = P9Data.ROUTINES;
       const modalHtml = `
-        <div class="modal-backdrop">
-          <div class="modal" style="max-width:500px; border-radius:24px;">
-            <div class="modal-head">
+        <div class="modal-backdrop" id="checkin-modal-backdrop">
+          <div class="modal" style="max-width:500px; border-radius:24px; max-height:90vh; max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;">
+            <div class="modal-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
               <div>
                 <h3 style="margin:0; font-size:18px; font-weight:800; color:#065f46;">Check-in Thói Quen Nhận Gạch</h3>
                 <div class="muted" style="font-size:12.5px;">Mỗi thói quen hoàn thành thưởng ngay <strong>+50 Vật liệu</strong> xây thành phố!</div>
               </div>
-              <button class="modal-close" id="btn-close-checkin-modal">${icon('plus')}</button>
+              <button class="modal-close" id="btn-close-checkin-modal" title="Đóng">${icon('x')}</button>
             </div>
-            <div class="modal-body">
-              <div style="display:flex; flex-direction:column; gap:10px; max-height:360px; overflow-y:auto;">
+            <div class="modal-body custom-scrollbar" style="overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:8px;">
+              <div style="display:flex; flex-direction:column; gap:10px;">
                 ${routines.slice(0, 6).map(r => `
                   <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 14px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">
                     <div>
@@ -2783,7 +3481,7 @@
                 `).join('')}
               </div>
             </div>
-            <div class="modal-foot">
+            <div class="modal-foot" style="margin-top:14px; padding-top:12px; border-top:1px solid #e2e8f0; flex-shrink:0;">
               <button class="btn btn-secondary btn-block" id="btn-cancel-checkin-modal">Đóng</button>
             </div>
           </div>
@@ -2797,6 +3495,9 @@
       const close = () => div.remove();
       document.getElementById('btn-close-checkin-modal').onclick = close;
       document.getElementById('btn-cancel-checkin-modal').onclick = close;
+      div.addEventListener('click', (e) => {
+        if (e.target.id === 'checkin-modal-backdrop') close();
+      });
 
       div.querySelectorAll('.btn-do-quick-checkin').forEach(b => {
         b.onclick = async () => {
@@ -2823,18 +3524,18 @@
     function openCreateCityModal() {
       let selectedTheme = 'modern';
       const modalHtml = `
-        <div class="modal-backdrop">
-          <div class="modal" style="max-width:500px; border-radius:24px;">
-            <div class="modal-head">
+        <div class="modal-backdrop" id="create-city-modal-backdrop">
+          <div class="modal" style="max-width:500px; border-radius:24px; max-height:90vh; max-height:90dvh; display:flex; flex-direction:column; overflow:hidden;">
+            <div class="modal-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;">
               <div>
                 <h3 style="margin:0; font-size:18px; font-weight:800; color:#065f46;">Khởi Tạo Thành Phố 7 Ngày</h3>
                 <div class="muted" style="font-size:12.5px;">Bạn sẽ là Chủ phòng (Host) với lô đất số 1</div>
               </div>
-              <button class="modal-close" id="btn-close-create-city">${icon('plus')}</button>
+              <button class="modal-close" id="btn-close-create-city" title="Đóng">${icon('x')}</button>
             </div>
             
-            <form id="form-create-city">
-              <div class="modal-body">
+            <form id="form-create-city" style="display:flex; flex-direction:column; flex:1 1 auto; min-height:0; overflow:hidden;">
+              <div class="modal-body custom-scrollbar" style="overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:8px;">
                 <div class="field" style="margin-bottom:14px;">
                   <label for="input-new-city-name">Tên Thành Phố</label>
                   <input id="input-new-city-name" class="input" placeholder="Ví dụ: Thành Phố Chiến Binh Marketing" required value="Thành Phố Xanh Của ${esc(s?.displayName || 'Tôi')}">
@@ -2866,7 +3567,7 @@
                 </div>
               </div>
 
-              <div class="modal-foot">
+              <div class="modal-foot" style="margin-top:14px; padding-top:12px; border-top:1px solid #e2e8f0; flex-shrink:0;">
                 <button type="button" class="btn btn-secondary" id="btn-cancel-create-city">Hủy</button>
                 <button type="submit" class="btn btn-primary" id="btn-submit-create-city">Khởi Tạo & Nhận Đất</button>
               </div>
@@ -2882,6 +3583,9 @@
       const close = () => div.remove();
       document.getElementById('btn-close-create-city').onclick = close;
       document.getElementById('btn-cancel-create-city').onclick = close;
+      div.addEventListener('click', (e) => {
+        if (e.target.id === 'create-city-modal-backdrop') close();
+      });
 
       div.querySelectorAll('.theme-option-btn').forEach(b => {
         b.onclick = () => {
