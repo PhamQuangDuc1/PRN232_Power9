@@ -1,3 +1,4 @@
+// Xử lý nghiệp vụ phòng, ghép phòng, lô đất, vật liệu và nâng cấp của Tribe City.
 using Microsoft.EntityFrameworkCore;
 using Power9.RoutineService.Application.DTOs;
 using Power9.RoutineService.Application.Interfaces;
@@ -142,6 +143,7 @@ public sealed class CityService : ICityService
         return (await GetRoomByIdAsync(room.Id, userId, ct))!;
     }
 
+    // Tìm phòng phù hợp để vào nhanh, tạo phòng mới nếu cần.
     public async Task<CityRoomResponse> QuickMatchAsync(int userId, CancellationToken ct = default)
     {
         // Check if already in an active room
@@ -314,6 +316,7 @@ public sealed class CityService : ICityService
         return true;
     }
 
+    // Kiểm tra chi phí vật liệu trước khi tăng cấp nhà của cư dân.
     public async Task<UpgradeResult> UpgradeHouseAsync(int roomId, int userId, CancellationToken ct = default)
     {
         var resident = await _db.CityResidents.FirstOrDefaultAsync(r => r.RoomId == roomId && r.UserId == userId && r.IsActive, ct);
@@ -422,6 +425,7 @@ public sealed class CityService : ICityService
         await _db.SaveChangesAsync(ct);
     }
 
+    // Ghép dữ liệu phòng, cư dân và tiến độ thành phản hồi cho bảng thành phố.
     private static CityRoomResponse MapRoom(CityRoom room, int? currentUserId)
     {
         var (lvl, name, progress) = CalcLandmark(room.TotalCityScore);

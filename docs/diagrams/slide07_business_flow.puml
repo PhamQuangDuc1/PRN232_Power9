@@ -1,4 +1,5 @@
 @startuml Slide07_Business_Flow_Power9
+' Sơ đồ luồng người dùng xem, lên lịch và hoàn thành thói quen.
 !theme plain
 skinparam backgroundColor #FFFFFF
 skinparam defaultFontName "Segoe UI", "Inter", Arial

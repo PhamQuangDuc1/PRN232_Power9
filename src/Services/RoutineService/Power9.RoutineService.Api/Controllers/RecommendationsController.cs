@@ -1,3 +1,4 @@
+// Nhận yêu cầu gợi ý REST từ giao diện rồi chuyển sang dịch vụ Recommendation qua gRPC.
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using GrpcStatusCode = Grpc.Core.StatusCode;
@@ -56,6 +57,7 @@ public sealed class RecommendationsController : ControllerBase
 
         try
         {
+            // Chờ gRPC trả gợi ý để chuyển kết quả về JSON cho trình duyệt.
             var reply = await _client.GetRoutineRecommendationAsync(request,
                 deadline: DateTime.UtcNow.AddSeconds(5), cancellationToken: cancellationToken);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Migration đầu tiên tạo các bảng tài khoản, thói quen, lịch nhắc và nhật ký.
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -175,6 +176,7 @@ namespace Power9.RoutineService.Infrastructure.Migrations
                 columns: new[] { "UserId", "IsActive" });
         }
 
+        // Hoàn tác migration bằng cách xóa bảng theo thứ tự phụ thuộc.
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {

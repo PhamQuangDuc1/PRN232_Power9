@@ -1,3 +1,4 @@
+// Các kiểu dữ liệu tạo lịch và trả giờ nhắc, ngày lặp, trạng thái của lịch.
 using System.ComponentModel.DataAnnotations;
 
 namespace Power9.RoutineService.Application.DTOs;

@@ -1,3 +1,4 @@
+<!-- Định nghĩa REST API, Swagger và các tham chiếu đến nghiệp vụ, dữ liệu và dịch vụ phân tán. -->
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>

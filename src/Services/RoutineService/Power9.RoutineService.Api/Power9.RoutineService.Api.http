@@ -1,3 +1,4 @@
+# Các yêu cầu mẫu để gọi thử Routine API từ trình soạn thảo.
 @Power9_HostAddress = http://localhost:5000
 @token = REPLACE_WITH_JWT
 

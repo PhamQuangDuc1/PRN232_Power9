@@ -1,3 +1,4 @@
+// Tính chuỗi ngày hoạt động và chuyển mốc UTC sang ngày địa phương ở Việt Nam.
 namespace Power9.NotificationWorker.Domain;
 
 public static class StreakCalculator

@@ -1,3 +1,4 @@
+// Nhận check-in, thưởng vật liệu cho Tribe City và chuyển việc ghi nhận điểm, chuỗi ngày sang worker qua Kafka.
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -82,6 +83,7 @@ public sealed class CheckInsController : ControllerBase
             _ = Task.Run(() => SendDirectCheckInEmailAsync(targetEmail, User.Identity?.Name ?? "Bạn", routineId, body?.Note), CancellationToken.None);
         }
 
+        // HTTP 202 cho phép giao diện phản hồi ngay. Điểm và chuỗi ngày được worker cập nhật qua Kafka.
         return Accepted(new CheckInAcceptedResponse(evt.EventId, "Check-in đã được ghi nhận, nhận +50 vật liệu Tribe City"));
     }
 

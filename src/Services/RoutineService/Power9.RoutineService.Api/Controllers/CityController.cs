@@ -1,3 +1,4 @@
+// Cung cấp các endpoint cho sảnh phòng, cư dân, công trình và thao tác quản trị trong Tribe City.
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Power9.RoutineService.Api.Extensions;

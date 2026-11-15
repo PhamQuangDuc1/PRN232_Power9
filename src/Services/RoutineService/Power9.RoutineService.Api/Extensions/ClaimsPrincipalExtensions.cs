@@ -1,3 +1,4 @@
+// Đọc mã người dùng từ claims xác thực để controller xác định người đang thực hiện thao tác.
 using System.Security.Claims;
 
 namespace Power9.RoutineService.Api.Extensions;

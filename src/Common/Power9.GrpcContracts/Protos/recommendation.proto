@@ -1,3 +1,4 @@
+// Hợp đồng Protobuf dùng chung để sinh gRPC client và kiểu dữ liệu phản hồi cho hai dịch vụ.
 syntax = "proto3";
 
 option csharp_namespace = "Power9.GrpcContracts";
@@ -8,6 +9,7 @@ service RecommendationProtoService {
   rpc GetRoutineRecommendation (RecommendationRequest) returns (RecommendationReply);
 }
 
+// REST API gửi mã người dùng và trạng thái hiện tại để chọn thói quen.
 message RecommendationRequest {
   int32 user_id = 1;
   int32 sitting_minutes = 2;
@@ -15,6 +17,7 @@ message RecommendationRequest {
   string stress_level = 4;        // "Low", "Medium", "High"
 }
 
+// Dịch vụ gRPC trả thông tin thói quen đã chọn cho giao diện.
 message RecommendationReply {
   int32 routine_id = 1;
   string title = 2;

@@ -1,3 +1,4 @@
+// Lấy mã người dùng từ JWT để xem, tạo, sửa hoặc xóa lịch nhắc cá nhân.
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

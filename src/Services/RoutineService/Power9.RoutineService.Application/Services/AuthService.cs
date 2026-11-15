@@ -1,3 +1,4 @@
+// Kiểm tra tài khoản, băm mật khẩu khi đăng ký và cấp JWT sau khi xác thực thành công.
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -37,6 +38,7 @@ public sealed class AuthService(IUserRepository users, IConfiguration configurat
         return CreateResponse(user);
     }
 
+    // Đóng gói mã người dùng và vai trò vào JWT, rồi trả kèm thời điểm hết hạn và hồ sơ.
     private AuthResponseDto CreateResponse(User user)
     {
         var keyText = configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key is not configured.");

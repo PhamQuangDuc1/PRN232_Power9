@@ -1,3 +1,4 @@
+// Các trạng thái xử lý của một lời mời kết bạn.
 namespace Power9.RoutineService.Domain.Enums;
 
 public enum FriendshipStatus

@@ -1,3 +1,4 @@
+// Điểm vào của Routine API. Tệp này cấu hình JWT, Swagger, SQL Server, các dịch vụ nội bộ và web tĩnh.
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -33,9 +34,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Database & Repositories (Thành viên 1 - nhánh Vinh)
+// Routine API đọc cấu hình SQL Server để khởi tạo DbContext và truy cập dữ liệu.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is not configured.");
 builder.Services.AddDbContext<Power9DbContext>(options => options.UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure()));
+// Mỗi yêu cầu HTTP có bộ repository và service riêng, dùng cùng DbContext theo scope.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoutineRepository, RoutineRepository>();
 builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
@@ -69,6 +72,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 builder.Services.AddAuthorization();
 
+// Hoàn tất đăng ký thành phần và bắt đầu dựng pipeline nhận yêu cầu HTTP.
 var app = builder.Build();
 
 // Tự động Migrate & Seed khi khởi động (nếu DB sẵn sàng, tránh crash khi dev offline)

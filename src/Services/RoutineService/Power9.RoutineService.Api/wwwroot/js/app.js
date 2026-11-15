@@ -45,6 +45,7 @@
   const viDate = () => { const d = new Date(); const w = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'][d.getDay()]; return `${w}, ${d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}`; };
 
   /* ---------------- Check-in modal ---------------- */
+  // Mở hộp xác nhận và gửi check-in từ thói quen đang hiển thị.
   function openCheckIn(routine, onDone) {
     const bd = document.createElement('div');
     bd.className = 'modal-backdrop';
@@ -143,6 +144,7 @@
     return parts.includes(today) || parts.length >= 7;
   }
 
+  // Dựng form tạo hoặc sửa lịch. Sau khi lưu, hàm gọi lại phần giao diện mở hộp thoại.
   function openScheduleModal(routines, initialRoutineId, onDone) {
     const bd = document.createElement('div');
     bd.className = 'modal-backdrop';
@@ -524,15 +526,15 @@
       const perm = this.getPermission();
       if (perm === 'granted') {
         btn.className = 'pill pill-green';
-        btn.innerHTML = `<span style="font-size:13px">🔔</span> Thông báo: Bật`;
+        btn.innerHTML = `<span class="notify-icon" aria-hidden="true">🔔</span><span class="notify-label">Thông báo: Bật</span>`;
         btn.title = 'Thông báo trình duyệt đang BẬT. Bấm để gửi thử thông báo mẫu.';
       } else if (perm === 'denied') {
         btn.className = 'pill pill-red';
-        btn.innerHTML = `<span style="font-size:13px">🔕</span> Thông báo: Chặn`;
+        btn.innerHTML = `<span class="notify-icon" aria-hidden="true">🔕</span><span class="notify-label">Thông báo: Chặn</span>`;
         btn.title = 'Thông báo đang bị chặn trong trình duyệt. Bấm để xem hướng dẫn.';
       } else {
         btn.className = 'pill pill-amber';
-        btn.innerHTML = `<span style="font-size:13px">🔔</span> Bật thông báo`;
+        btn.innerHTML = `<span class="notify-icon" aria-hidden="true">🔔</span><span class="notify-label">Bật thông báo</span>`;
         btn.title = 'Bấm để cấp quyền nhận thông báo khi đến giờ nhắc nhở!';
       }
     },
@@ -627,6 +629,7 @@
   };
 
   /* ---------------- Shell ---------------- */
+  // Khung dùng chung cho các trang sau đăng nhập: header, nội dung và footer.
   function shell(active, content) {
     const s = api.session.get();
     const isAdmin = s?.role === 'Admin';
@@ -636,6 +639,7 @@
       { href: '#/suggest', label: 'Gợi ý AI', key: 'suggest' },
       { href: '#/library', label: 'Thư viện', key: 'library' }
     ];
+    // Thêm mục Quản trị vào menu theo vai trò của phiên hiện tại.
     if (isAdmin) {
       navItems.push({ href: '#/admin', label: 'Quản trị', key: 'admin', badge: 'Admin' });
     }
@@ -644,13 +648,12 @@
       <header class="topbar"><div class="container">
         <a class="brand" href="${isAdmin ? '#/admin' : '#/today'}"><div class="brand-logo">P9</div>
           <div><div class="brand-name">Power9</div><div class="brand-sub">OFFICE ROUTINE</div></div></a>
-        <nav class="nav">${navItems.map(n => `<a href="${n.href}" class="${n.key === active ? 'active' : ''}">${n.label}${n.badge ? ` <span class="nav-badge">${n.badge}</span>` : ''}</a>`).join('')}</nav>
+        <nav class="nav" aria-label="Điều hướng chính">${navItems.map(n => `<a href="${n.href}"${n.key === active ? ' class="active" aria-current="page"' : ''}>${n.label}${n.badge ? ` <span class="nav-badge">${n.badge}</span>` : ''}</a>`).join('')}</nav>
         <div class="topbar-right">
-          <button id="btn-notify-toggle" class="pill pill-amber" style="cursor:pointer;border:none;background:var(--p9-bg-card);font-family:inherit;font-size:12px;padding:6px 12px;display:inline-flex;align-items:center;gap:6px;">
-            <span style="font-size:13px">🔔</span> Bật thông báo
+          <button type="button" id="btn-notify-toggle" class="pill pill-amber">
+            <span class="notify-icon" aria-hidden="true">🔔</span><span class="notify-label">Bật thông báo</span>
           </button>
-          <span id="api-status" class="pill">${icon('refresh', 'ic-sm')} Đang kiểm tra</span>
-          <button class="user-chip" id="user-chip">
+          <button type="button" class="user-chip" id="user-chip" aria-label="Tài khoản: ${esc(s.displayName)}">
             <div class="u-text"><div class="u-name">${esc(s.displayName)}</div><div class="u-role">${s.role === 'Admin' ? 'Quản trị viên' : 'Người dùng'}</div></div>
             <div class="avatar">${icon('user')}</div>
           </button>
@@ -663,6 +666,7 @@
       </div></footer>`;
   }
 
+  // Mỗi lần shell render lại, gắn sự kiện cho nút thông báo và menu tài khoản mới.
   function bindShell() {
     NotificationManager.init();
     NotificationManager.updateUi();
@@ -732,16 +736,6 @@
         };
       }
     };
-    updateApiStatus();
-  }
-
-  async function updateApiStatus() {
-    const el = document.getElementById('api-status');
-    if (!el) return;
-    if (api.session.isOffline()) { el.className = 'pill pill-amber'; el.innerHTML = `${icon('cloudOff', 'ic-sm')} Demo offline`; return; }
-    const ok = await api.ping();
-    el.className = 'pill ' + (ok ? 'pill-green' : 'pill-red');
-    el.innerHTML = ok ? `<span class="dot"></span> Đã kết nối API` : `${icon('cloudOff', 'ic-sm')} Mất kết nối API`;
   }
 
   document.addEventListener('click', () => document.querySelector('.dropdown')?.remove());
@@ -757,6 +751,7 @@
   /* =========================================================
      PAGE: Login
      ========================================================= */
+  // Dựng các tab đăng nhập, đăng ký và chế độ chạy thử.
   function renderLogin() {
     let currentTab = 'login'; // 'login' | 'register' | 'dev'
 
@@ -775,7 +770,7 @@
             <div class="note-box" style="margin-top:24px;background:#fff;border:1px solid var(--p9-border)">${icon('bulb')}<div>Mẹo công sở: 20 phút nhìn xa 6m trong 20 giây giúp giảm mỏi mắt (Quy tắc 20-20-20).</div></div>
           </section>
 
-          <section>
+          <section class="login-panel">
             <div class="card login-card">
               <h2 id="card-title">Đăng nhập tài khoản</h2>
               <div class="sub" id="card-sub">Truy cập lịch thói quen và gợi ý lành mạnh của bạn</div>
@@ -1100,7 +1095,7 @@
     $app.innerHTML = shell('today', `
       <div class="page-head">
         <div>
-          <div class="eyebrow"><span class="pill pill-primary pill-upper"><span class="dot"></span> Nhịp sinh học văn phòng</span><span id="sync-pill"></span></div>
+          <div class="eyebrow"><span class="pill pill-primary pill-upper"><span class="dot"></span> Nhịp sinh học văn phòng</span></div>
           <h1>${greet()}, ${esc(s.displayName)} 👋</h1>
           <p>Hôm nay là ${viDate()} — Giữ tư thế thẳng và thư giãn mắt giữa ca làm việc.</p>
         </div>
@@ -1143,18 +1138,17 @@
       </div>`);
     bindShell();
 
-    let filter = 'today', schedules = [], allRoutines = [], schedSource = 'mock';
+    let filter = 'today', schedules = [], allRoutines = [];
 
+    // Ghép lịch cá nhân với danh mục thói quen để trang Hôm nay hiển thị tên và chi tiết từng mục.
     const loadData = async () => {
       try {
         const r = await api.getRoutines();
         allRoutines = r.data;
         const sc = await api.getMySchedules(r.data);
-        schedules = sc.data; schedSource = sc.source;
+        schedules = sc.data;
       } catch (e) { toast('Không tải được lịch', e.message, 'error'); }
 
-      const syncEl = document.getElementById('sync-pill');
-      if (syncEl) syncEl.innerHTML = sourcePill(schedSource, 'Đã đồng bộ');
       paint();
     };
 
@@ -1298,6 +1292,12 @@
   /* =========================================================
      PAGE: Gợi ý thông minh (REST -> gRPC) + Trợ lý AI Chat & Tự động lên lịch
      ========================================================= */
+  // Theo dõi các yêu cầu đang chạy để tránh gửi hoặc tạo lịch lặp khi đổi cuộc trò chuyện.
+  const pendingChatReplies = new Set();
+  const pendingChatSchedules = new Set();
+  // Trỏ đến vùng chat đang mở, để phản hồi đến muộn cập nhật đúng giao diện sau khi chuyển trang.
+  let refreshChatView;
+
   async function renderSuggest() {
     const s = api.session.get();
     const st = { sittingMinutes: 60, timeOfDay: timeOfDayNow(), stressLevel: 'Medium' };
@@ -1309,46 +1309,35 @@
           <h1>Gợi ý thông minh & Trợ lý AI</h1>
           <p>Trò chuyện với AI để nhận gợi ý vi thói quen phù hợp và <b>tự động lên lịch nhắc nhở sẵn</b> — chỉ cần 1 click xác nhận!</p>
         </div>
-        <span class="pill pill-green"><span class="dot"></span> REST → gRPC & Trợ lý AI Coach</span>
       </div>
 
       <!-- TABS -->
       <div class="suggest-tabs">
         <button type="button" class="suggest-tab-btn active" id="tab-btn-ai">
-          ${icon('sparkle')} 🤖 Trợ lý AI Chat (Tự động lên lịch)
+          ${icon('sparkle')} Trợ lý AI
         </button>
         <button type="button" class="suggest-tab-btn" id="tab-btn-manual">
-          ${icon('sliders')} 🎛️ Bộ lọc thông số thủ công
+          ${icon('sliders')} Gợi ý thủ công
         </button>
       </div>
 
       <!-- VIEW 1: AI CHATBOX -->
-      <div id="view-ai-chat">
+      <div id="view-ai-chat" class="ai-chat-layout">
         <div class="ai-chat-container">
           <div class="ai-chat-head">
             <div style="display:flex;align-items:center;gap:12px">
               <div class="ai-avatar">${icon('sparkle', 'ic-md')}</div>
               <div>
-                <div style="font-weight:800;font-size:16px;color:#0f172a;display:flex;align-items:center;gap:8px">
+                <div class="ai-chat-title">
                   Power9 AI Health Coach
                   <span class="pill pill-green pill-sm" style="font-size:11px;padding:2px 8px"><span class="dot"></span> Google Gemini 2.5 Flash</span>
                 </div>
                 <div class="small muted">Mô hình AI Generative thông minh — Thấu hiểu ngữ cảnh và tự động lên lịch 1-click</div>
               </div>
             </div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <button class="btn btn-soft btn-sm" id="ai-chat-key-btn" type="button" title="Cài đặt API Key Gemini">
-                ${icon('lock', 'ic-sm')} Gemini API Key
-              </button>
-              <button class="btn btn-ghost btn-sm" id="ai-chat-reset" type="button" title="Bắt đầu lại cuộc trò chuyện">
-                ${icon('refresh', 'ic-sm')} Làm mới
-              </button>
-            </div>
           </div>
 
-          <div class="ai-chat-messages" id="ai-chat-messages">
-            <!-- Messages injected here -->
-          </div>
+          <div class="ai-chat-messages" id="ai-chat-messages"></div>
 
           <!-- Quick Prompts Chips -->
           <div class="ai-quick-prompts">
@@ -1373,11 +1362,18 @@
             </button>
           </form>
         </div>
+        <aside class="ai-chat-history" aria-labelledby="ai-chat-history-title">
+          <div class="ai-chat-history-head">
+            <h2 id="ai-chat-history-title">Lịch sử chat</h2>
+            <button class="btn btn-soft btn-sm" id="ai-chat-new" type="button">${icon('plus', 'ic-sm')} Chat mới</button>
+          </div>
+          <div class="ai-chat-history-list" id="ai-chat-history-list"></div>
+        </aside>
       </div>
 
       <!-- VIEW 2: MANUAL SLIDER & HISTORY -->
       <div id="view-manual" style="display:none">
-        <div class="grid grid-side" style="grid-template-columns:420px 1fr">
+        <div class="grid suggest-manual">
           <form class="card" id="sg-form">
             <h3 style="margin:0 0 18px;font-size:19px">Trạng thái của bạn</h3>
             <div class="field">
@@ -1418,7 +1414,7 @@
     tabBtnAi.onclick = () => {
       tabBtnAi.classList.add('active');
       tabBtnManual.classList.remove('active');
-      viewAiChat.style.display = 'block';
+      viewAiChat.style.display = '';
       viewManual.style.display = 'none';
     };
     tabBtnManual.onclick = () => {
@@ -1433,7 +1429,88 @@
     const inputEl = document.getElementById('ai-chat-input');
     const sendBtn = document.getElementById('ai-chat-btn-send');
     const formEl = document.getElementById('ai-chat-form');
-    const resetBtn = document.getElementById('ai-chat-reset');
+    const historyEl = document.getElementById('ai-chat-history-list');
+    // Lưu lịch sử trên trình duyệt, theo tài khoản và chế độ online hoặc demo.
+    const chatStorageKey = 'p9_ai_chats_' + (s.mode || 'online') + '_' + s.userId;
+    let activeChatId = loadChats()[0]?.id ?? null;
+
+    function loadChats() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(chatStorageKey));
+        return Array.isArray(saved) ? saved : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveChats(chats, changedId, refresh = true) {
+      localStorage.setItem(chatStorageKey, JSON.stringify(chats));
+      if (refresh) refreshChatView?.(chatStorageKey, changedId);
+    }
+
+    // Đọc lại dữ liệu trước khi cập nhật. Phản hồi đến sau khi xóa chat sẽ không khôi phục chat đó.
+    function updateChat(id, update, refresh = true) {
+      const chats = loadChats();
+      const chat = chats.find(item => item.id === id);
+      if (!chat) return;
+      update(chat);
+      saveChats(chats, id, refresh);
+    }
+
+    function selectChat(id) {
+      activeChatId = id;
+      inputEl.value = '';
+      refreshChatView(chatStorageKey, id);
+    }
+
+    // Cập nhật danh sách bên cạnh, chỉ dựng lại khung tin nhắn nếu cuộc đang mở thay đổi.
+    refreshChatView = (key, changedId) => {
+      if (key !== chatStorageKey || !msgsEl.isConnected) return;
+      const chats = loadChats();
+      const activeChat = chats.find(chat => chat.id === activeChatId);
+      const removedActiveChat = activeChatId !== null && !activeChat;
+      if (removedActiveChat) activeChatId = null;
+      historyEl.innerHTML = chats.length ? chats.map(({ id, title }) => `
+        <div class="ai-history-row">
+          <button class="ai-history-open" data-open-chat="${esc(id)}" type="button"${id === activeChatId ? ' aria-current="true"' : ''} title="${esc(title)}">${esc(title)}</button>
+          <button class="ai-history-delete" data-delete-chat="${esc(id)}" type="button" aria-label="Xóa chat: ${esc(title)}" title="Xóa chat">${icon('trash', 'ic-sm')}</button>
+        </div>
+      `).join('') : '<p class="small muted">Chưa có cuộc trò chuyện.</p>';
+
+      if (changedId === activeChatId || removedActiveChat) renderChat(activeChat);
+    };
+
+    // Dùng một sự kiện cho cả nút mở và nút xóa vì danh sách được dựng lại sau mỗi thay đổi.
+    historyEl.onclick = (event) => {
+      const open = event.target.closest('[data-open-chat]');
+      if (open) {
+        selectChat(open.dataset.openChat);
+        historyEl.querySelector('[aria-current="true"]')?.focus();
+        return;
+      }
+      const button = event.target.closest('[data-delete-chat]');
+      if (!button) return;
+      openConfirmModal({
+        title: 'Xóa cuộc trò chuyện?',
+        message: 'Cuộc trò chuyện này sẽ bị xóa khỏi lịch sử trên trình duyệt.',
+        confirmText: 'Xóa chat',
+        onConfirm: () => {
+          const id = button.dataset.deleteChat;
+          const chats = loadChats().filter(chat => chat.id !== id);
+          const wasActive = id === activeChatId;
+          if (wasActive) activeChatId = chats[0]?.id ?? null;
+          saveChats(chats, wasActive ? activeChatId : id);
+          (historyEl.querySelector('[aria-current="true"]') || newChatBtn).focus();
+        }
+      });
+    };
+
+    const newChatBtn = document.getElementById('ai-chat-new');
+    // Bắt đầu khung chat trống. Mục lịch sử mới xuất hiện khi người dùng gửi tin nhắn đầu tiên.
+    newChatBtn.onclick = () => {
+      selectChat(null);
+      inputEl.focus();
+    };
 
     function parseReminderTime(text) {
       const lower = (text || '').toLowerCase();
@@ -1582,35 +1659,190 @@
       `;
     }
 
-    async function handleSendPrompt(userPrompt) {
-      const text = (userPrompt || '').trim();
-      if (!text) return;
+    // Dựng lại tin nhắn từ dữ liệu đã lưu, gồm câu hỏi, câu trả lời và thẻ đề xuất lịch.
+    function renderChatMessage(message, chatId) {
+      if (message.type === 'proposal') {
+        renderScheduleProposal(message, chatId);
+        return;
+      }
+      const messageEl = document.createElement('div');
+      messageEl.className = message.type === 'user' ? 'chat-msg chat-user' : 'chat-msg chat-ai';
+      let content;
+      if (message.type === 'user') {
+        content = `<div class="chat-bubble user-bubble">${esc(message.text)}</div>`;
+      } else if (message.type === 'reply') {
+        const { text: chatMessage, source: aiSource } = message;
+        content = `
+            <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
+            <div class="chat-bubble ai-bubble" style="max-width:85%">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+                <span class="pill ${aiSource.includes('Gemini') ? 'pill-green' : 'pill-amber'} pill-sm">
+                  <span class="dot"></span> ${esc(aiSource)}
+                </span>
+              </div>
+              <div style="font-size:14.5px;line-height:1.6;color:#1e293b">${esc(chatMessage)}</div>
+            </div>
+          `;
+      } else if (message.type === 'confirmation') {
+        const { title, time, days } = message;
+        content = `
+          <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
+          <div class="chat-bubble ai-bubble">
+            <b>Đã tạo lịch nhắc</b>
+            <div><b>${esc(title)}</b> lúc <b>${esc(time)}</b> (${esc(formatDays(days))}). Xem lịch ở <a href="#/today">Hôm nay</a>.</div>
+          </div>`;
+      }
+      if (content) {
+        messageEl.innerHTML = content;
+        msgsEl.appendChild(messageEl);
+      }
+    }
 
-      if (inputEl) inputEl.value = '';
-
-      // 1. Render User Bubble
-      const userMsgDiv = document.createElement('div');
-      userMsgDiv.className = 'chat-msg chat-user';
-      userMsgDiv.innerHTML = `<div class="chat-bubble user-bubble">${esc(text)}</div>`;
-      msgsEl.appendChild(userMsgDiv);
-      msgsEl.scrollTop = msgsEl.scrollHeight;
-
-      // 2. Render Typing Indicator
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'chat-msg chat-ai';
-      typingDiv.id = 'ai-typing-temp';
-      typingDiv.innerHTML = `
+    function renderScheduleProposal(proposal, chatId) {
+      const { id: proposalId, routine, reason, parsedTime, parsedDays, coachAdvice, aiSource, scheduled } = proposal;
+      const catObj = D.category(routine.categoryName);
+      const aiMsgDiv = document.createElement('div');
+      aiMsgDiv.className = 'chat-msg chat-ai';
+      aiMsgDiv.innerHTML = `
         <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
-        <div class="chat-bubble ai-bubble" style="display:flex;align-items:center;gap:8px">
-          <div class="typing-dots"><span></span><span></span><span></span></div>
-          <span style="font-size:13px;color:#047857;font-weight:600">Google Gemini 2.5 Flash đang phân tích & lên lịch trình...</span>
+        <div class="chat-bubble ai-bubble" style="width:100%">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+            <span class="pill ${aiSource.includes('Gemini') ? 'pill-green' : 'pill-amber'} pill-sm">
+              <span class="dot"></span> ${esc(aiSource)}
+            </span>
+          </div>
+          <div>Tôi đã phân tích: <b>${esc(reason)}</b>.</div>
+          <div style="margin-top:6px">
+            Gợi ý bài tập phù hợp nhất: <b>"${esc(routine.title)}"</b> (${esc(routine.durationMinutes)} phút · ${esc(catObj.vi || routine.categoryName)}).
+          </div>
+          ${coachAdvice ? `<div class="note-box" style="margin:10px 0;padding:9px 12px;background:#f0fdf4;border-color:#bbf7d0;color:#166534;font-size:13.5px">${icon('bulb', 'ic-sm')}<div><b>Lời khuyên từ AI Coach:</b> ${esc(coachAdvice)}</div></div>` : ''}
+          <div style="margin-top:6px;color:#047857;font-weight:600">
+            📅 Kế hoạch lịch trình được AI tự động lên sẵn bên dưới. Bạn chỉ cần bấm xác nhận là tạo lịch ngay:
+          </div>
+
+          <!-- Proposal Card -->
+          <div class="ai-schedule-proposal">
+            <div class="proposal-header">
+              <span class="proposal-badge">${icon('sparkle', 'ic-sm')} Kế hoạch lịch trình tự động</span>
+              <span class="pill pill-green pill-sm"><span class="dot"></span> Đã điền sẵn</span>
+            </div>
+            <div class="proposal-routine-title">${esc(routine.title)}</div>
+            <div class="proposal-routine-desc">${esc(routine.description || 'Thực hiện 1-5 phút giúp cân bằng thể chất và tinh thần.')}</div>
+
+            <div class="proposal-meta-grid">
+              <div class="meta-item">
+                <span class="meta-lbl">Giờ nhắc nhở</span>
+                <input type="time" class="meta-val" aria-label="Giờ nhắc nhở" value="${esc(parsedTime)}" style="border:1.5px solid #a7f3d0;border-radius:6px;padding:4px 8px;font-family:inherit;font-weight:700;background:#fff;max-width:115px;color:#0f172a">
+              </div>
+              <div class="meta-item">
+                <span class="meta-lbl">Tần suất lặp lại</span>
+                <select class="meta-val" aria-label="Tần suất lặp lại" style="border:1.5px solid #a7f3d0;border-radius:6px;padding:5px 8px;font-family:inherit;font-weight:700;background:#fff;color:#0f172a">
+                  <option value="Mon,Tue,Wed,Thu,Fri" ${parsedDays === 'Mon,Tue,Wed,Thu,Fri' ? 'selected' : ''}>Ngày làm việc (T2 - T6)</option>
+                  <option value="Mon,Tue,Wed,Thu,Fri,Sat,Sun" ${parsedDays === 'Mon,Tue,Wed,Thu,Fri,Sat,Sun' ? 'selected' : ''}>Mỗi ngày (T2 - CN)</option>
+                  <option value="Mon,Wed,Fri" ${parsedDays === 'Mon,Wed,Fri' ? 'selected' : ''}>Thứ 2, Thứ 4, Thứ 6</option>
+                  <option value="Tue,Thu" ${parsedDays === 'Tue,Thu' ? 'selected' : ''}>Thứ 3, Thứ 5</option>
+                </select>
+              </div>
+              <div class="meta-item">
+                <span class="meta-lbl">Thời lượng</span>
+                <span class="meta-val">⏱️ ${esc(routine.durationMinutes)} phút</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-lbl">Điểm thưởng</span>
+                <span class="meta-val">🏆 +${esc(routine.rewardPoints || 10)} điểm / lần</span>
+              </div>
+            </div>
+
+            <div class="proposal-actions">
+              <button class="btn btn-confirm-ai-sched${scheduled ? ' scheduled' : ''}" type="button"${scheduled || pendingChatSchedules.has(proposalId) ? ' disabled' : ''}>
+                ${scheduled ? 'Đã tạo lịch thành công' : pendingChatSchedules.has(proposalId) ? 'Đang tạo lịch…' : icon('calendar') + ' Xác nhận & Tạo lịch luôn'}
+              </button>
+              <a class="btn btn-soft btn-sm" href="#/routine/${esc(routine.id)}">Chi tiết bài tập ${icon('arrowRight', 'ic-sm')}</a>
+            </div>
+          </div>
         </div>
       `;
-      msgsEl.appendChild(typingDiv);
+      msgsEl.appendChild(aiMsgDiv);
+      const timeInput = aiMsgDiv.querySelector('input[type="time"]');
+      const dayInput = aiMsgDiv.querySelector('select');
+      const confirmBtn = aiMsgDiv.querySelector('.btn-confirm-ai-sched');
+      timeInput.disabled = dayInput.disabled = confirmBtn.disabled;
+      // Lưu giờ và ngày người dùng chỉnh trên thẻ để lần mở lại vẫn thấy bản nháp.
+      const saveDraft = () => {
+        updateChat(chatId, chat => {
+          const item = chat.messages.find(message => message.id === proposalId);
+          item.parsedTime = timeInput.value;
+          item.parsedDays = dayInput.value;
+        }, false);
+      };
+      timeInput.onchange = dayInput.onchange = saveDraft;
+      // Chỉ tạo lịch nhắc sau khi người dùng xác nhận đề xuất.
+      confirmBtn.onclick = async () => {
+        if (scheduled || pendingChatSchedules.has(proposalId)) return;
+        const finalTime = timeInput.value || parsedTime;
+        const finalDays = dayInput.value || parsedDays;
+        pendingChatSchedules.add(proposalId);
+        confirmBtn.disabled = timeInput.disabled = dayInput.disabled = true;
+        confirmBtn.textContent = 'Đang tạo lịch…';
+        try {
+          await api.createSchedule({ routineId: routine.id, reminderTime: finalTime, daysOfWeek: finalDays, isActive: true }, [routine]);
+          updateChat(chatId, chat => {
+            const item = chat.messages.find(message => message.id === proposalId);
+            Object.assign(item, { scheduled: true, parsedTime: finalTime, parsedDays: finalDays });
+            chat.messages.push({ type: 'confirmation', title: routine.title, time: finalTime, days: finalDays });
+          }, false);
+          toast('Đã tạo lịch thành công!', `Lịch nhắc "${routine.title}" vào lúc ${finalTime} đã sẵn sàng.`, 'success');
+        } catch (err) {
+          toast('Không tạo được lịch', err.message, 'error');
+        } finally {
+          pendingChatSchedules.delete(proposalId);
+          refreshChatView?.(chatStorageKey, chatId);
+        }
+      };
+    }
+
+    const quickPrompts = viewAiChat.querySelectorAll('.chip-ai-prompt');
+
+    function renderChat(chat) {
+      initWelcomeChat();
+      chat?.messages.forEach(message => renderChatMessage(message, chat.id));
+      const pending = pendingChatReplies.has(chat?.id);
+      if (pending) {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'chat-msg chat-ai';
+        typingDiv.innerHTML = `
+          <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
+          <div class="chat-bubble ai-bubble" style="display:flex;align-items:center;gap:8px">
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+            <span style="font-size:13px;color:#047857;font-weight:600">Google Gemini 2.5 Flash đang phân tích & lên lịch trình...</span>
+          </div>
+        `;
+        msgsEl.appendChild(typingDiv);
+      }
+      sendBtn.disabled = pending;
+      quickPrompts.forEach(chip => { chip.disabled = pending; });
       msgsEl.scrollTop = msgsEl.scrollHeight;
-      sendBtn.disabled = true;
+    }
+
+    // Lưu câu hỏi, tạo phản hồi bằng AI hoặc bộ quy tắc dự phòng, rồi ghi vào đúng cuộc chat.
+    async function handleSendPrompt(userPrompt) {
+      const text = (userPrompt || '').trim();
+      if (!text || pendingChatReplies.has(activeChatId)) return;
+
+      const chats = loadChats();
+      let chat = chats.find(item => item.id === activeChatId);
+      if (!chat) {
+        chat = { id: `chat-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`, title: text.slice(0, 100), messages: [] };
+        chats.unshift(chat);
+        activeChatId = chat.id;
+      }
+      const chatId = chat.id;
+      chat.messages.push({ type: 'user', text });
+      inputEl.value = '';
+      pendingChatReplies.add(chatId);
 
       try {
+        saveChats(chats, chatId);
         let allRoutines = [];
         try {
           const res = await api.getRoutines();
@@ -1656,177 +1888,27 @@
           }
         }
 
-        const typingEl = document.getElementById('ai-typing-temp');
-        if (typingEl) typingEl.remove();
-
-        // If simple conversation / greeting: reply nicely WITHOUT generating routine schedule card
-        if (isChatOnly) {
-          const aiChatDiv = document.createElement('div');
-          aiChatDiv.className = 'chat-msg chat-ai';
-          aiChatDiv.innerHTML = `
-            <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
-            <div class="chat-bubble ai-bubble" style="max-width:85%">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-                <span class="pill ${aiSource.includes('Gemini') ? 'pill-green' : 'pill-amber'} pill-sm">
-                  <span class="dot"></span> ${esc(aiSource)}
-                </span>
-              </div>
-              <div style="font-size:14.5px;line-height:1.6;color:#1e293b">${esc(chatMessage)}</div>
-            </div>
-          `;
-          msgsEl.appendChild(aiChatDiv);
-          msgsEl.scrollTop = msgsEl.scrollHeight;
-          return;
-        }
-
-        const proposalId = 'prop_' + Date.now();
-        const catObj = D.category(routine.categoryName);
-        const aiMsgDiv = document.createElement('div');
-        aiMsgDiv.className = 'chat-msg chat-ai';
-        aiMsgDiv.innerHTML = `
-          <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
-          <div class="chat-bubble ai-bubble" style="width:100%">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
-              <span class="pill ${aiSource.includes('Gemini') ? 'pill-green' : 'pill-amber'} pill-sm">
-                <span class="dot"></span> ${esc(aiSource)}
-              </span>
-            </div>
-            <div>Tôi đã phân tích: <b>${esc(reason)}</b>.</div>
-            <div style="margin-top:6px">
-              Gợi ý bài tập phù hợp nhất: <b>"${esc(routine.title)}"</b> (${routine.durationMinutes} phút · ${esc(catObj.vi || routine.categoryName)}).
-            </div>
-            ${coachAdvice ? `<div class="note-box" style="margin:10px 0;padding:9px 12px;background:#f0fdf4;border-color:#bbf7d0;color:#166534;font-size:13.5px">${icon('bulb', 'ic-sm')}<div><b>Lời khuyên từ AI Coach:</b> ${esc(coachAdvice)}</div></div>` : ''}
-            <div style="margin-top:6px;color:#047857;font-weight:600">
-              📅 Kế hoạch lịch trình được AI tự động lên sẵn bên dưới. Bạn chỉ cần bấm xác nhận là tạo lịch ngay:
-            </div>
-
-            <!-- Proposal Card -->
-            <div class="ai-schedule-proposal" id="box-${proposalId}">
-              <div class="proposal-header">
-                <span class="proposal-badge">${icon('sparkle', 'ic-sm')} Kế hoạch lịch trình tự động</span>
-                <span class="pill pill-green pill-sm"><span class="dot"></span> Đã điền sẵn</span>
-              </div>
-              <div class="proposal-routine-title">${esc(routine.title)}</div>
-              <div class="proposal-routine-desc">${esc(routine.description || 'Thực hiện 1-5 phút giúp cân bằng thể chất và tinh thần.')}</div>
-
-              <div class="proposal-meta-grid">
-                <div class="meta-item">
-                  <span class="meta-lbl">Giờ nhắc nhở</span>
-                  <input type="time" class="meta-val" id="time-${proposalId}" value="${parsedTime}" style="border:1.5px solid #a7f3d0;border-radius:6px;padding:4px 8px;font-family:inherit;font-weight:700;background:#fff;max-width:115px;color:#0f172a">
-                </div>
-                <div class="meta-item">
-                  <span class="meta-lbl">Tần suất lặp lại</span>
-                  <select class="meta-val" id="days-${proposalId}" style="border:1.5px solid #a7f3d0;border-radius:6px;padding:5px 8px;font-family:inherit;font-weight:700;background:#fff;color:#0f172a">
-                    <option value="Mon,Tue,Wed,Thu,Fri" ${parsedDays === 'Mon,Tue,Wed,Thu,Fri' ? 'selected' : ''}>Ngày làm việc (T2 - T6)</option>
-                    <option value="Mon,Tue,Wed,Thu,Fri,Sat,Sun" ${parsedDays === 'Mon,Tue,Wed,Thu,Fri,Sat,Sun' ? 'selected' : ''}>Mỗi ngày (T2 - CN)</option>
-                    <option value="Mon,Wed,Fri">Thứ 2, Thứ 4, Thứ 6</option>
-                    <option value="Tue,Thu">Thứ 3, Thứ 5</option>
-                  </select>
-                </div>
-                <div class="meta-item">
-                  <span class="meta-lbl">Thời lượng</span>
-                  <span class="meta-val">⏱️ ${routine.durationMinutes} phút</span>
-                </div>
-                <div class="meta-item">
-                  <span class="meta-lbl">Điểm thưởng</span>
-                  <span class="meta-val">🏆 +${routine.rewardPoints || 10} điểm / lần</span>
-                </div>
-              </div>
-
-              <div class="proposal-actions">
-                <button class="btn btn-confirm-ai-sched" type="button" id="btn-confirm-${proposalId}">
-                  ${icon('calendar')} ✅ Xác nhận & Tạo lịch luôn
-                </button>
-                <a class="btn btn-soft btn-sm" href="#/routine/${routine.id}">Chi tiết bài tập ${icon('arrowRight', 'ic-sm')}</a>
-              </div>
-            </div>
-          </div>
-        `;
-        msgsEl.appendChild(aiMsgDiv);
-        msgsEl.scrollTop = msgsEl.scrollHeight;
-
-        const confirmBtn = document.getElementById(`btn-confirm-${proposalId}`);
-        if (confirmBtn) {
-          confirmBtn.onclick = async () => {
-            const finalTime = document.getElementById(`time-${proposalId}`)?.value || parsedTime;
-            const finalDays = document.getElementById(`days-${proposalId}`)?.value || parsedDays;
-            confirmBtn.disabled = true;
-            confirmBtn.innerHTML = '<span class="spinner"></span> Đang tạo lịch...';
-
-            try {
-              await api.createSchedule({
-                routineId: routine.id,
-                reminderTime: finalTime,
-                daysOfWeek: finalDays,
-                isActive: true
-              }, allRoutines);
-
-              confirmBtn.className = 'btn btn-confirm-ai-sched scheduled';
-              confirmBtn.innerHTML = '🎉 Đã tạo lịch thành công!';
-              toast('Đã tạo lịch thành công!', `Lịch nhắc "${routine.title}" vào lúc ${finalTime} đã sẵn sàng.`, 'success');
-
-              const followUpDiv = document.createElement('div');
-              followUpDiv.className = 'chat-msg chat-ai';
-              followUpDiv.innerHTML = `
-                <div class="ai-avatar-sm">${icon('sparkle', 'ic-sm')}</div>
-                <div class="chat-bubble ai-bubble">
-                  <div style="font-weight:700;color:#047857;display:flex;align-items:center;gap:6px">
-                    ${icon('checkCircle', 'ic-sm')} Hoàn tất!
-                  </div>
-                  <div style="margin-top:4px">
-                    Tôi đã kích hoạt lịch nhắc bài <b>"${esc(routine.title)}"</b> vào lúc <b>${finalTime}</b> (${formatDays(finalDays)}). Bạn có thể kiểm tra danh sách lịch tại <a href="#/" style="font-weight:700;color:var(--p9-primary);text-decoration:underline">trang Hôm nay</a>. Chúc bạn một ngày làm việc sảng khoái! 💪
-                  </div>
-                </div>
-              `;
-              msgsEl.appendChild(followUpDiv);
-              msgsEl.scrollTop = msgsEl.scrollHeight;
-            } catch (err) {
-              confirmBtn.disabled = false;
-              confirmBtn.innerHTML = '❌ Thử lại';
-              toast('Không tạo được lịch', err.message, 'error');
-            }
-          };
-        }
+        const reply = isChatOnly
+          ? { type: 'reply', text: chatMessage, source: aiSource }
+          : { type: 'proposal', id: `prop-${chatId}-${chat.messages.length}`, routine, reason, parsedTime, parsedDays, coachAdvice, aiSource };
+        updateChat(chatId, conversation => conversation.messages.push(reply), false);
       } catch (err) {
-        const typingEl = document.getElementById('ai-typing-temp');
-        if (typingEl) typingEl.remove();
         toast('Lỗi AI Chat', err.message, 'error');
       } finally {
-        sendBtn.disabled = false;
-        if (inputEl) inputEl.focus();
+        pendingChatReplies.delete(chatId);
+        refreshChatView?.(chatStorageKey, chatId);
+        if (activeChatId === chatId && msgsEl.isConnected && viewAiChat.style.display !== 'none') inputEl.focus();
       }
     }
 
-    formEl.onsubmit = (e) => {
-      e.preventDefault();
+    formEl.onsubmit = (event) => {
+      event.preventDefault();
       handleSendPrompt(inputEl.value);
     };
-
-    resetBtn.onclick = () => {
-      initWelcomeChat();
-      if (inputEl) inputEl.value = '';
-    };
-
-    const keyBtn = document.getElementById('ai-chat-key-btn');
-    if (keyBtn) {
-      keyBtn.onclick = () => {
-        const cur = api.gemini.getKey();
-        const entered = prompt('Nhập hoặc đổi Google Gemini API Key của bạn:', cur);
-        if (entered !== null) {
-          api.gemini.setKey(entered);
-          toast('Đã lưu Gemini API Key', 'Key được áp dụng ngay lập tức cho các cuộc hội thoại!', 'success');
-        }
-      };
-    };
-
-    document.querySelectorAll('.chip-ai-prompt').forEach(chip => {
-      chip.onclick = () => {
-        const p = chip.dataset.prompt;
-        handleSendPrompt(p);
-      };
+    quickPrompts.forEach(chip => {
+      chip.onclick = () => handleSendPrompt(chip.dataset.prompt);
     });
-
-    initWelcomeChat();
+    refreshChatView(chatStorageKey, activeChatId);
 
     /* ==================== MANUAL SLIDER FORM LOGIC ==================== */
     const minEl = document.getElementById('sg-min'), minLbl = document.getElementById('sg-min-label');
@@ -1891,11 +1973,12 @@
   /* =========================================================
      PAGE: Thư viện thói quen (9 nhóm Power9)
      ========================================================= */
+  // Tải danh mục thói quen để tìm kiếm theo tên và lọc theo trụ cột hoặc thời lượng.
   async function renderLibrary() {
     $app.innerHTML = shell('library', `
       <div class="page-head">
         <div>
-          <div class="eyebrow"><span class="pill pill-primary pill-upper">${icon('compass', 'ic-sm')} Kho thư viện Power9</span><span id="lib-src"></span></div>
+          <div class="eyebrow"><span class="pill pill-primary pill-upper">${icon('compass', 'ic-sm')} Kho thư viện Power9</span></div>
           <h1>Thư viện thói quen</h1>
           <p>Dành 1 – 5 phút điều chỉnh cơ thể, hồi phục năng lượng và cải thiện công thái học ngay tại chỗ ngồi.</p>
         </div>
@@ -1923,7 +2006,7 @@
     bindShell();
 
     let routines = [];
-    try { const r = await api.getRoutines(); routines = r.data; document.getElementById('lib-src').innerHTML = sourcePill(r.source, 'GET /api/routines'); }
+    try { const r = await api.getRoutines(); routines = r.data; }
     catch (e) { toast('Không tải được thư viện', e.message, 'error'); }
 
     const openUserRoutineCreate = async () => {
@@ -2016,8 +2099,8 @@
               <p class="muted" style="margin:0">${esc(r.description)}</p>
             </div>
             ${r.steps.length ? `<div class="card" style="margin-top:20px">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3 style="margin:0;font-size:20px">Các bước thực hiện</h3><span class="pill">${r.steps.length} bước tuần tự</span></div>
-              ${r.steps.map(([t, desc, dur], i) => `<div class="step"><div class="num">${i + 1}</div><div style="flex:1"><div style="display:flex;justify-content:space-between;gap:8px"><h4>${esc(t)}</h4><span class="pill pill-primary">${esc(dur)}</span></div><p>${esc(desc)}</p></div></div>`).join('')}
+              <div class="steps-heading"><h3>Các bước thực hiện</h3><span class="pill">${r.steps.length} bước tuần tự</span></div>
+              ${r.steps.map(([t, desc, dur], i) => `<div class="step"><div class="num">${i + 1}</div><div class="step-body"><div class="step-heading"><h4>${esc(t)}</h4><span class="pill pill-primary">${esc(dur)}</span></div><p>${esc(desc)}</p></div></div>`).join('')}
             </div>` : ''}
           </div>
           <aside class="side-sticky">
@@ -2218,7 +2301,6 @@
     const s = api.session.get();
     let routines = [];
     let categories = [];
-    let source = 'API';
 
     try {
       const [rRes, cRes] = await Promise.all([
@@ -2226,7 +2308,6 @@
         api.getCategories ? api.getCategories() : Promise.resolve({ data: [] })
       ]);
       routines = rRes.data || [];
-      source = rRes.source || 'API';
       categories = cRes.data || [];
     } catch (e) {
       toast('Lỗi tải dữ liệu', e.message, 'error');
@@ -2246,10 +2327,9 @@
       main.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:24px">
           <div>
-            <div class="eyebrow" style="display:flex;gap:8px;align-items:center">
+            <div class="admin-eyebrow">
               <span class="pill pill-primary">${icon('shield', 'ic-sm')} Khu vực Quản trị</span>
               <span class="pill">Cổng điều hành & Dữ liệu tập trung</span>
-              ${sourcePill(source, 'API')}
             </div>
             <h1 class="page-title" style="margin-top:6px">Trung tâm Quản trị viên</h1>
             <p class="page-sub" style="margin:0">Quản lý danh mục thói quen công sở, cấu hình vi thói quen và phân quyền hệ thống Power9.</p>
@@ -2301,24 +2381,24 @@
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:18px">
             <div>
               <h3 style="margin:0;font-size:18px;font-weight:700">Danh mục thói quen công sở (${filtered.length} / ${routines.length})</h3>
-              <p class="small muted" style="margin:2px 0 0">Toàn bộ dữ liệu do Admin quản lý qua các API RESTful <code>/api/routines</code> có kiểm tra JWT Admin.</p>
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-              <div class="search-box" style="width:240px">
-                <span class="search-icon">${icon('search', 'ic-sm')}</span>
-                <input type="text" id="admin-search" class="input input-sm" placeholder="Tìm theo tên/mô tả..." value="${esc(searchQuery)}" />
+            <div class="admin-filters">
+              <div class="input-icon">
+                ${icon('search', 'ic-sm')}
+                <input type="search" id="admin-search" class="input input-sm" aria-label="Tìm hoạt động" placeholder="Tìm theo tên/mô tả..." value="${esc(searchQuery)}" />
               </div>
-              <select id="admin-cat-filter" class="select select-sm" style="width:180px">
+              <select id="admin-cat-filter" class="select select-sm" aria-label="Lọc theo trụ cột">
                 <option value="all">Tất cả trụ cột (9)</option>
                 ${categories.map(c => `<option value="${c.id}" ${String(c.id) === filterCategory ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}
               </select>
             </div>
           </div>
 
-          <div class="admin-table-wrap">
-            <table class="admin-table">
-              <thead>
-                <tr>
+          <!-- Dùng cùng dữ liệu và nút thao tác cho bảng desktop và thẻ trên điện thoại. -->
+          <div class="admin-table-wrap" role="region" aria-label="Danh mục thói quen công sở" tabindex="0">
+            <table class="admin-table" role="table">
+              <thead role="rowgroup">
+                <tr role="row">
                   <th style="width:60px">ID</th>
                   <th>Tên hoạt động & Mô tả</th>
                   <th style="width:140px">Trụ cột Power9</th>
@@ -2329,10 +2409,10 @@
                   <th style="width:100px;text-align:right">Thao tác</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody role="rowgroup">
                 ${filtered.length === 0 ? `
-                  <tr>
-                    <td colspan="8" style="text-align:center;padding:40px 16px" class="muted">
+                  <tr class="admin-table-empty" role="row">
+                    <td colspan="8" role="cell" style="text-align:center;padding:40px 16px" class="muted">
                       ${icon('info', 'ic-md')}
                       <div style="margin-top:8px">Không tìm thấy hoạt động nào phù hợp với bộ lọc.</div>
                     </td>
@@ -2341,28 +2421,28 @@
                   const cat = D.category(r.categoryName);
                   const energyMap = { Low: 'Thấp', Med: 'Vừa', Medium: 'Vừa', High: 'Cao' };
                   return `
-                    <tr>
-                      <td style="font-weight:700;color:var(--p9-text-muted)">#${r.id}</td>
-                      <td>
+                    <tr role="row">
+                      <td role="cell" data-label="ID" style="font-weight:700;color:var(--p9-text-muted)">#${r.id}</td>
+                      <td role="cell" class="admin-routine-summary">
                         <a href="#/routine/${r.id}" style="font-weight:700;color:var(--p9-text);text-decoration:none">${esc(r.title)}</a>
-                        <div class="small muted" style="margin-top:3px;max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.description || 'Chưa có mô tả chi tiết.')}</div>
+                        <div class="small muted admin-routine-description">${esc(r.description || 'Chưa có mô tả chi tiết.')}</div>
                       </td>
-                      <td><span class="pill pill-primary" style="font-size:11px">${esc(cat.vi || r.categoryName)}</span></td>
-                      <td><b>${r.durationMinutes}</b> phút</td>
-                      <td>
+                      <td role="cell" data-label="Trụ cột"><span class="pill pill-primary" style="font-size:11px">${esc(cat.vi || r.categoryName)}</span></td>
+                      <td role="cell" data-label="Thời lượng"><b>${r.durationMinutes}</b> phút</td>
+                      <td role="cell" data-label="Năng lượng">
                         <span class="small">${esc(energyMap[r.energyLevel] || r.energyLevel || 'Vừa')}</span>
                         <div class="small muted">${esc(r.targetTimeOfDay || 'Bất kỳ')}</div>
                       </td>
-                      <td><span style="font-weight:700;color:var(--p9-primary)">+${r.rewardPoints}đ</span></td>
-                      <td>
+                      <td role="cell" data-label="Điểm"><span style="font-weight:700;color:var(--p9-primary)">+${r.rewardPoints}đ</span></td>
+                      <td role="cell" class="admin-routine-status" data-label="Trạng thái">
                         ${r.isApproved !== false 
                           ? `<span class="pill" style="background:#ecfdf5;color:#047857;border-color:#a7f3d0">Đã duyệt</span>`
                           : `<span class="pill" style="background:#fffbeb;color:#b45309;border-color:#fde68a">Chờ duyệt</span>`}
                       </td>
-                      <td style="text-align:right">
-                        <div style="display:inline-flex;gap:6px">
-                          <button class="btn btn-sm btn-outline btn-edit-rt" data-id="${r.id}" title="Chỉnh sửa hoạt động" style="padding:4px 8px">${icon('edit', 'ic-sm')}</button>
-                          <button class="btn btn-sm btn-outline btn-del-rt" data-id="${r.id}" title="Xóa hoạt động" style="padding:4px 8px;color:#ef4444;border-color:#fca5a5">${icon('trash', 'ic-sm')}</button>
+                      <td role="cell" class="admin-routine-actions">
+                        <div>
+                          <button class="btn btn-sm btn-outline btn-edit-rt" data-id="${r.id}" aria-label="Chỉnh sửa hoạt động" title="Chỉnh sửa hoạt động">${icon('edit', 'ic-sm')}</button>
+                          <button class="btn btn-sm btn-outline btn-del-rt" data-id="${r.id}" aria-label="Xóa hoạt động" title="Xóa hoạt động">${icon('trash', 'ic-sm')}</button>
                         </div>
                       </td>
                     </tr>
@@ -2434,6 +2514,7 @@
   /* ==========================================================================
      TRIBE CITY: 7-DAY MINI-GAME (NGUYÊN LÝ RIGHT TRIBE)
      ========================================================================== */
+  // Tải phòng và dựng sảnh, bản đồ hoặc khu lưu trữ theo chế độ đang chọn.
   async function renderCity() {
     const s = api.session.get();
     let currentRoom = null;
@@ -3870,6 +3951,7 @@
   }
 
   /* ---------------- Router ---------------- */
+  // Chọn trang dựa vào phần sau dấu #, phiên đăng nhập và vai trò người dùng.
   function route() {
     const s = api.session.get();
     const logged = !!s;

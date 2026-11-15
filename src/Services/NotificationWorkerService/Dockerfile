@@ -1,3 +1,4 @@
+# Build Notification Worker và đóng gói phần publish vào image .NET runtime.
 FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
 WORKDIR /app
 

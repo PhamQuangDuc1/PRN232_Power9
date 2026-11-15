@@ -1,3 +1,4 @@
+// Lưu một lượt tương tác giữa cư dân trong cùng phòng Tribe City.
 using Power9.RoutineService.Domain.Enums;
 
 namespace Power9.RoutineService.Domain.Entities;

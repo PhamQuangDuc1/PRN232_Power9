@@ -1,3 +1,4 @@
+<!-- Định nghĩa project worker và các phụ thuộc xử lý Kafka, SQL Server và email. -->
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>

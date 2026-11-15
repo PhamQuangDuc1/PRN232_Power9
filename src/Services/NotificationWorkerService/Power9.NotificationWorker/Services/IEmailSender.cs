@@ -1,3 +1,4 @@
+// Hợp đồng gửi email để các worker gọi mà không phụ thuộc trực tiếp vào SMTP.
 namespace Power9.NotificationWorker.Services;
 
 public interface IEmailSender

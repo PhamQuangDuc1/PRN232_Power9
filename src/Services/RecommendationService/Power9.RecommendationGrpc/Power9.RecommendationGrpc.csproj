@@ -1,3 +1,4 @@
+<!-- Định nghĩa project ASP.NET Core phục vụ gRPC cho tính năng gợi ý. -->
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>

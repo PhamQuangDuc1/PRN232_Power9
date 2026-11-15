@@ -1,3 +1,4 @@
+// Quản lý truy vấn và thay đổi trạng thái lời mời kết bạn trong SQL Server.
 using Microsoft.EntityFrameworkCore;
 using Power9.RoutineService.Application.DTOs;
 using Power9.RoutineService.Application.Interfaces;

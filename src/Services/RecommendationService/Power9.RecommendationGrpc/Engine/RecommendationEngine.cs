@@ -1,3 +1,4 @@
+// Áp dụng các quy tắc theo thời gian ngồi, buổi trong ngày và mức căng thẳng để chọn một thói quen.
 namespace Power9.RecommendationGrpc.Engine;
 
 public interface IRecommendationEngine

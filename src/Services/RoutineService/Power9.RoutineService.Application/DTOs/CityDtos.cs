@@ -1,3 +1,4 @@
+// Các kiểu dữ liệu trao đổi giữa giao diện Tribe City và API, gồm phòng, cư dân và tương tác.
 namespace Power9.RoutineService.Application.DTOs;
 
 public class CityResidentDto

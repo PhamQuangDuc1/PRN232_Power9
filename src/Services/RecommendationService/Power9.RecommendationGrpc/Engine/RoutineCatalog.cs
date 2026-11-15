@@ -1,3 +1,4 @@
+// Danh mục thói quen mẫu dùng làm đầu ra cho bộ máy gợi ý gRPC.
 namespace Power9.RecommendationGrpc.Engine;
 
 /// <summary>

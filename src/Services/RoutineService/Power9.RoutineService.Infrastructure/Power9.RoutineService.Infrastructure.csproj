@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<!-- Định nghĩa project triển khai EF Core, migration và các dịch vụ lưu trữ. -->
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\Power9.RoutineService.Application\Power9.RoutineService.Application.csproj" />

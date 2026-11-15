@@ -1,3 +1,4 @@
+// Nhận yêu cầu gRPC, gọi bộ máy gợi ý và ánh xạ kết quả sang kiểu dữ liệu Protobuf.
 using Grpc.Core;
 using Power9.GrpcContracts;
 using Power9.RecommendationGrpc.Engine;

@@ -1,3 +1,4 @@
+// Lưu một trụ cột Power9 và liên kết tới các thói quen thuộc trụ cột đó.
 namespace Power9.RoutineService.Domain.Entities;
 
 public class RoutineCategory

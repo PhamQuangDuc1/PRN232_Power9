@@ -1,3 +1,4 @@
+// Nhận yêu cầu đăng nhập và đăng ký rồi chuyển vào lớp nghiệp vụ xác thực.
 using Microsoft.AspNetCore.Mvc;
 using Power9.RoutineService.Application.DTOs;
 using Power9.RoutineService.Application.Interfaces;

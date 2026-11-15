@@ -1,3 +1,4 @@
+// Các kiểu dữ liệu cho thói quen, danh mục, bộ lọc và kết quả phân trang.
 using System.ComponentModel.DataAnnotations;
 
 namespace Power9.RoutineService.Application.DTOs;

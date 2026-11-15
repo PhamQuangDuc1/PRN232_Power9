@@ -1,3 +1,4 @@
+// JavaScript của giao diện Power9 cũ ở thư mục gốc. index.html hiện nạp js/app.js.
 const API = '';
 const tokenKey = 'power9.jwt';
 const userKey = 'power9.user';
@@ -11,6 +12,7 @@ let searchTimer;
 const $ = (selector) => document.querySelector(selector);
 const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+// Gửi yêu cầu từ giao diện cũ tới REST API và gắn token của phiên đang dùng.
 async function api(path, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -45,6 +47,7 @@ async function loadCategories() {
   } catch (error) { $('#category-grid').innerHTML = `<p class="muted">${escapeHtml(error.message)}. Hãy kiểm tra kết nối API.</p>`; }
 }
 
+// Tải danh mục theo trang, trụ cột và từ khóa của giao diện cũ.
 async function loadRoutines() {
   const params = new URLSearchParams({ pageNumber: String(page), pageSize: String(pageSize) });
   const keyword = $('#search').value.trim();

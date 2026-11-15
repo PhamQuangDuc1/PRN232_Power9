@@ -1,3 +1,4 @@
+// Cung cấp các endpoint xem danh sách bạn bè, gửi lời mời và chấp nhận lời mời.
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Power9.RoutineService.Api.Extensions;

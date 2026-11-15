@@ -1,3 +1,4 @@
+// Ánh xạ các bảng SQL Server mà worker cần đọc hoặc cập nhật khi xử lý nhắc lịch, check-in và Tribe City.
 using Microsoft.EntityFrameworkCore;
 
 namespace Power9.NotificationWorker.Data;

@@ -1,3 +1,4 @@
+// Kiểm tra các quy tắc liên quan đến cư dân, vật liệu và tiến trình trong Tribe City.
 using Xunit;
 
 namespace Power9.NotificationWorker.Tests;
