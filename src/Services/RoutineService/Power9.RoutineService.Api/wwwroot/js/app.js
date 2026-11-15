@@ -13,13 +13,13 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   /* ---------------- Local check-in store ---------------- */
-  const todayKey = () => new Date().toLocaleDateString('sv-SE');
+  const todayKey = (d = new Date()) => (d instanceof Date ? d : new Date(d)).toLocaleDateString('sv-SE');
   const store = {
     key() { return 'p9_checkins_' + (api.session.get()?.userId ?? 'anon'); },
     all() { try { return JSON.parse(localStorage.getItem(this.key())) || []; } catch { return []; } },
     add(item) { const a = this.all(); a.unshift(item); localStorage.setItem(this.key(), JSON.stringify(a.slice(0, 200))); },
-    today() { return this.all().filter(x => x.at.slice(0, 10) === todayKey()); },
-    doneToday(routineId) { return this.today().find(x => x.routineId === routineId); }
+    today() { const tk = todayKey(); return this.all().filter(x => x.at && todayKey(x.at) === tk); },
+    doneToday(routineId) { return this.today().find(x => Number(x.routineId) === Number(routineId)); }
   };
 
   /* ---------------- UI helpers ---------------- */
@@ -559,7 +559,7 @@
         const currentHH = String(now.getHours()).padStart(2, '0');
         const currentMM = String(now.getMinutes()).padStart(2, '0');
         const currentTimeStr = `${currentHH}:${currentMM}`;
-        const todayDateStr = now.toISOString().slice(0, 10);
+        const todayDateStr = todayKey(now);
         const dayCodes = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         const currentDayCode = dayCodes[now.getDay()];
 
