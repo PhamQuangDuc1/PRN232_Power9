@@ -92,6 +92,8 @@ Power9.RoutineService.Domain          → Entities & Enums
 | Testing | xUnit |
 | Frontend | HTML / CSS / JavaScript thuần (phục vụ từ `wwwroot`) |
 
+Xem [công nghệ và lý do lựa chọn trong Power9](docs/cong_nghe_va_ly_do_su_dung.md) để biết từng thành phần được dùng ở đâu trong luồng gợi ý, nhắc lịch và check-in.
+
 ## 4. Cấu trúc thư mục
 
 ```
