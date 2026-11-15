@@ -1,3 +1,4 @@
+// Cấp JWT thử nghiệm cho Swagger và chế độ demo trong môi trường Development.
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

@@ -19,6 +19,7 @@
     isOffline() { return this.get()?.mode === 'offline'; }
   };
 
+  // Gắn JWT khi cần, giới hạn thời gian chờ và chuyển lỗi HTTP thành lỗi cho giao diện.
   async function request(method, path, { body, auth = true, timeout = 6000 } = {}) {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeout);
@@ -47,6 +48,7 @@
 
   const unwrapList = (d) => Array.isArray(d) ? d : (d?.items || d?.data || d?.results || []);
 
+  // Chuẩn hóa dữ liệu thói quen trước khi trang danh mục và chi tiết sử dụng.
   function normalizeRoutine(r) {
     const local = D.ROUTINES.find(x => x.id === (r.id ?? r.routineId));
     return {
@@ -64,6 +66,7 @@
     };
   }
 
+  // Ghép dữ liệu lịch với danh mục thói quen để giao diện có đủ thông tin hiển thị.
   function normalizeSchedule(s, routines) {
     const routineId = s.routineId ?? s.routine?.id;
     const routine = s.routine ? normalizeRoutine(s.routine) : (routines.find(r => r.id === routineId) || normalizeRoutine({ id: routineId }));

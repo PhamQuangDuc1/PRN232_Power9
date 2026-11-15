@@ -1,3 +1,4 @@
+// Cung cấp danh mục thói quen có phân trang, trang chi tiết và các thao tác quản lý thói quen.
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Power9.RoutineService.Application.DTOs;

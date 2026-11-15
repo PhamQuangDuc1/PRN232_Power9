@@ -1,3 +1,4 @@
+// Khai báo các nghiệp vụ mà controller được gọi qua cơ chế dependency injection.
 using Power9.RoutineService.Application.DTOs;
 
 namespace Power9.RoutineService.Application.Interfaces;

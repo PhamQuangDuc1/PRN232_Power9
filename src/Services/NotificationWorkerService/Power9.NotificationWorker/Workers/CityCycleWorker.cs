@@ -1,3 +1,4 @@
+// Kiểm tra các phòng Tribe City định kỳ và cập nhật trạng thái khi chu kỳ kết thúc.
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Power9.NotificationWorker.Data;
@@ -42,6 +43,7 @@ public sealed class CityCycleWorker : BackgroundService
         }
     }
 
+    // Tách bước cập nhật phòng hết hạn khỏi vòng lặp định kỳ của worker.
     private async Task ProcessExpiredRoomsAsync(CancellationToken ct)
     {
         using var scope = _scopeFactory.CreateScope();

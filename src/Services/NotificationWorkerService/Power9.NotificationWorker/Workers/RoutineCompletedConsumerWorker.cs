@@ -1,3 +1,4 @@
+// Nhận sự kiện check-in từ Kafka, cập nhật nhật ký và điểm, sau đó gửi thông báo.
 using System.Text.Json;
 using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
@@ -74,6 +75,7 @@ public sealed class RoutineCompletedConsumerWorker : BackgroundService
 
                 try
                 {
+                    // Xử lý sự kiện xong mới commit offset để Kafka có thể phát lại nếu thao tác bị gián đoạn.
                     await HandleAsync(result.Message.Value, stoppingToken);
                     consumer.Commit(result);
                 }
@@ -101,6 +103,7 @@ public sealed class RoutineCompletedConsumerWorker : BackgroundService
         }
     }
 
+    // Từ một thông điệp check-in, kiểm tra sự kiện đã xử lý rồi cập nhật dữ liệu và gửi thông báo.
     private async Task HandleAsync(string payload, CancellationToken ct)
     {
         var evt = JsonSerializer.Deserialize<RoutineCompletedEvent>(payload)
@@ -109,6 +112,7 @@ public sealed class RoutineCompletedConsumerWorker : BackgroundService
         using var scope = _scopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<WorkerDbContext>();
 
+        // Kafka có thể phát lại thông điệp. Nếu EventId đã có trong nhật ký thì bỏ qua để tránh cộng điểm lặp.
         if (await db.DailyLogs.AnyAsync(l => l.EventId == evt.EventId, ct))
         {
             _logger.LogInformation("[KAFKA CONSUMER] Event {EventId} đã xử lý trước đó -> bỏ qua", evt.EventId);
@@ -130,6 +134,7 @@ public sealed class RoutineCompletedConsumerWorker : BackgroundService
             .Select(l => (DateTime?)l.CompletedAt)
             .FirstOrDefaultAsync(ct);
 
+        // Tính chuỗi ngày theo ngày tại Việt Nam, vì sự kiện trong Kafka lưu thời điểm UTC.
         var today = VietnamTime.ToLocalDate(evt.CompletedAt);
         DateOnly? lastDate = lastCompletedUtc is null ? null : VietnamTime.ToLocalDate(lastCompletedUtc.Value);
 
@@ -177,6 +182,7 @@ public sealed class RoutineCompletedConsumerWorker : BackgroundService
             }
         }
 
+        // Ghi nhật ký, điểm, chuỗi ngày và tiến độ phòng xuống SQL Server trước khi gửi email.
         await db.SaveChangesAsync(ct);
 
         _logger.LogInformation(

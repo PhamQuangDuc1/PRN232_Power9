@@ -1,4 +1,5 @@
 @startuml slide15_logical_physical_db
+' Sơ đồ bảng dữ liệu, khóa và quan hệ ở mức logic hoặc vật lý.
 !theme plain
 skinparam backgroundColor #FFFFFF
 skinparam defaultFontName "Segoe UI"

@@ -1,3 +1,4 @@
+// Lưu thông tin phòng Tribe City, thời hạn chu kỳ, cư dân và công trình chung.
 using Power9.RoutineService.Domain.Enums;
 
 namespace Power9.RoutineService.Domain.Entities;

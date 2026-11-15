@@ -1,3 +1,4 @@
+// Quét lịch đã bật theo cửa sổ thời gian và gửi email cho các lịch đến hạn.
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Power9.NotificationWorker.Data;
@@ -55,6 +56,7 @@ public sealed class DailyScheduleReminderJob : BackgroundService
         var db = scope.ServiceProvider.GetRequiredService<WorkerDbContext>();
 
         var schedules = await db.UserSchedules.AsNoTracking().Where(s => s.IsActive).ToListAsync(ct);
+        // Chọn lịch có giờ nhắc rơi vào cửa sổ quét hiện tại theo giờ Việt Nam.
         var due = schedules.Where(s => IsDue(s, fromLocal, toLocal)).ToList();
         if (due.Count == 0) return;
 

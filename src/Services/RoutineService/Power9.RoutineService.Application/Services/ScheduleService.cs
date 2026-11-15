@@ -1,3 +1,4 @@
+// Kiểm tra thói quen, ngày lặp và quyền sở hữu trước khi lưu hoặc sửa lịch nhắc.
 using Power9.RoutineService.Application.DTOs;
 using Power9.RoutineService.Application.Interfaces;
 using Power9.RoutineService.Domain.Entities;
@@ -39,6 +40,7 @@ public sealed class ScheduleService(IScheduleRepository schedules) : IScheduleSe
         return true;
     }
 
+    // Kiểm tra giờ, danh sách ngày lặp và thói quen trước khi ghi lịch.
     private async Task<bool> IsValidAsync(CreateScheduleDto dto, CancellationToken ct) =>
         dto.ReminderTime >= TimeSpan.Zero && dto.ReminderTime < TimeSpan.FromDays(1) &&
         await schedules.RoutineExistsAsync(dto.RoutineId, ct) &&

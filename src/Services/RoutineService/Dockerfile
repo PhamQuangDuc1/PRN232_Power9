@@ -1,3 +1,4 @@
+# Build và publish Routine API cùng giao diện web, sau đó sao chép kết quả vào image ASP.NET Core.
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 8080

@@ -115,6 +115,7 @@
   ];
 
   /** Bản sao RecommendationEngine.cs — chỉ chạy khi gRPC không khả dụng. */
+  // Chọn gợi ý theo bộ quy tắc cục bộ khi dịch vụ gợi ý không sẵn sàng.
   function localRecommend(sittingMinutes, timeOfDay, stressLevel) {
     const stress = (stressLevel || '').toLowerCase();
     const time = (timeOfDay || '').toLowerCase();
@@ -223,6 +224,7 @@
     }
   };
 
+  // Chọn ảnh nhà theo chủ đề, cấp nhà và tình trạng phủ rêu.
   function getBuildingSprite(theme, floors, isMossy) {
     const t = CITY_ASSETS.buildings[theme] || CITY_ASSETS.buildings.modern;
     const lvl = Math.min(Math.max(1, floors || 1), 4);

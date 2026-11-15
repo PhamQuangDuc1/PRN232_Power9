@@ -1,3 +1,4 @@
+# Chạy hệ thống Power9 bằng Docker, nối các dịch vụ nội bộ và công bố các cổng cần dùng.
 name: power9
 
 x-dotnet-common: &dotnet-common

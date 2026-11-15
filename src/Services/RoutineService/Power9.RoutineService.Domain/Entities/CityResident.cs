@@ -1,3 +1,4 @@
+// Lưu vị trí lô đất, nhà, trạng thái mái và vật liệu của một cư dân trong phòng.
 namespace Power9.RoutineService.Domain.Entities;
 
 public class CityResident

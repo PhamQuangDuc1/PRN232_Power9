@@ -1,3 +1,4 @@
+// Chuyển dữ liệu sự kiện thành thông điệp Kafka và gửi tới broker cho các worker xử lý.
 using System.Text.Json;
 using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;

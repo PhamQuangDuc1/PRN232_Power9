@@ -1,3 +1,4 @@
+// Lưu tài khoản, vai trò, điểm tích lũy, chuỗi ngày và các quan hệ tới lịch, nhật ký.
 using Power9.RoutineService.Domain.Enums;
 
 namespace Power9.RoutineService.Domain.Entities;

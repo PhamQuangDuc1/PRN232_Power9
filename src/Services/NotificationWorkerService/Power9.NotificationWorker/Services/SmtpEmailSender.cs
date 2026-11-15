@@ -1,3 +1,4 @@
+// Gửi thư qua Gmail khi có cấu hình phù hợp và chuyển bản sao thử nghiệm tới Mailpit.
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;

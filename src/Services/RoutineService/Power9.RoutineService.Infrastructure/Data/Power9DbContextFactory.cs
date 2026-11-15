@@ -1,3 +1,4 @@
+// Tạo DbContext cho lệnh dotnet ef khi chạy công cụ migration ngoài tiến trình API.
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

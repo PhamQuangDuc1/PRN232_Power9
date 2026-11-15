@@ -1,3 +1,4 @@
+// Khai báo tên topic dùng chung để Routine API và Notification Worker cùng đọc đúng kênh Kafka.
 namespace Power9.Common.Constants;
 
 public static class KafkaTopics

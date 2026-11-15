@@ -1,3 +1,4 @@
+// Kiểm tra cách tính chuỗi ngày và cách xác định lịch đến hạn trong worker.
 using Power9.NotificationWorker.Data;
 using Power9.NotificationWorker.Domain;
 using Power9.NotificationWorker.Workers;
@@ -15,6 +16,7 @@ public class StreakCalculatorTests
     [Fact] public void Gap_Resets() => Assert.Equal(1, StreakCalculator.Next(9, Today.AddDays(-3), Today));
 }
 
+// Dùng các cửa sổ quét mẫu để kiểm tra ranh giới giờ nhắc và lịch sang ngày mới.
 public class ReminderWindowTests
 {
     // 13/11/2026 là thứ Sáu (Fri)

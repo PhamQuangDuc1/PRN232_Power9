@@ -1,3 +1,4 @@
+// Dữ liệu sự kiện check-in gửi qua Kafka. Worker dùng EventId để nhận biết sự kiện đã xử lý.
 namespace Power9.Common.Events;
 
 /// <summary>

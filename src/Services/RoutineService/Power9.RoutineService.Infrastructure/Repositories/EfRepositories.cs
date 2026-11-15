@@ -1,3 +1,4 @@
+// Hiện thực các repository bằng truy vấn EF Core tới SQL Server.
 using Microsoft.EntityFrameworkCore;
 using Power9.RoutineService.Application.Interfaces;
 using Power9.RoutineService.Domain.Entities;
@@ -14,6 +15,7 @@ public sealed class UserRepository(Power9DbContext db) : IUserRepository
     public Task SaveChangesAsync(CancellationToken ct = default) => db.SaveChangesAsync(ct);
 }
 
+// Tập trung truy vấn danh mục, phân trang và các thao tác ghi thói quen.
 public sealed class RoutineRepository(Power9DbContext db) : IRoutineRepository
 {
     public async Task<IReadOnlyList<RoutineCategory>> GetCategoriesAsync(CancellationToken ct = default) => await db.RoutineCategories.AsNoTracking().OrderBy(x => x.DisplayOrder).ToListAsync(ct);
@@ -33,6 +35,7 @@ public sealed class RoutineRepository(Power9DbContext db) : IRoutineRepository
     public Task SaveChangesAsync(CancellationToken ct = default) => db.SaveChangesAsync(ct);
 }
 
+// Giới hạn truy vấn lịch theo người dùng để lớp nghiệp vụ thao tác trên đúng lịch cá nhân.
 public sealed class ScheduleRepository(Power9DbContext db) : IScheduleRepository
 {
     public async Task<IReadOnlyList<UserSchedule>> GetByUserAsync(int userId, CancellationToken ct = default) => await db.UserSchedules.AsNoTracking().Include(x => x.Routine).Where(x => x.UserId == userId).OrderBy(x => x.ReminderTime).ToListAsync(ct);

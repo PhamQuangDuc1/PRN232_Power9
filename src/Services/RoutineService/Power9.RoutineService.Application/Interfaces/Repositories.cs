@@ -1,3 +1,4 @@
+// Khai báo các thao tác lưu và truy vấn mà lớp nghiệp vụ cần từ tầng dữ liệu.
 using Power9.RoutineService.Domain.Entities;
 
 namespace Power9.RoutineService.Application.Interfaces;

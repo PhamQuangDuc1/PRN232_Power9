@@ -1,3 +1,4 @@
+// Thêm dữ liệu khởi tạo cho SQL Server để có sẵn tài khoản và danh mục chạy thử.
 using Microsoft.EntityFrameworkCore;
 using Power9.RoutineService.Application.Services;
 using Power9.RoutineService.Domain.Entities;

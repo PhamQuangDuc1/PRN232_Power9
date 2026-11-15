@@ -1,3 +1,4 @@
+// Lưu bản ghi hoàn thành thói quen và mã sự kiện dùng để chống ghi nhận trùng.
 namespace Power9.RoutineService.Domain.Entities;
 
 public class DailyLog

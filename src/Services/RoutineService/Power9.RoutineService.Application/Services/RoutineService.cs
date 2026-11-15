@@ -1,3 +1,4 @@
+// Áp dụng quy tắc nghiệp vụ cho danh mục thói quen và chuyển entity sang dữ liệu API.
 using Power9.RoutineService.Application.DTOs;
 using Power9.RoutineService.Application.Interfaces;
 using Power9.RoutineService.Domain.Entities;
@@ -46,6 +47,7 @@ public sealed class RoutineService(IRoutineRepository routines) : IRoutineServic
         return true;
     }
 
+    // Dùng cùng cách chép các trường từ DTO cho cả thao tác tạo và cập nhật.
     private static void Apply(Routine routine, CreateRoutineDto dto)
     {
         routine.CategoryId = dto.CategoryId;

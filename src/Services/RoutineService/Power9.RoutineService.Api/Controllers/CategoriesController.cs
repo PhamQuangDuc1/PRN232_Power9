@@ -1,3 +1,4 @@
+// Trả danh sách trụ cột Power9 cho bộ lọc và form quản lý thói quen.
 using Microsoft.AspNetCore.Mvc;
 using Power9.RoutineService.Application.DTOs;
 using Power9.RoutineService.Application.Interfaces;

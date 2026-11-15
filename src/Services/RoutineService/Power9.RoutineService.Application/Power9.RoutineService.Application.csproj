@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<!-- Định nghĩa project chứa DTO, hợp đồng và nghiệp vụ của Routine Service. -->
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\Power9.RoutineService.Domain\Power9.RoutineService.Domain.csproj" />

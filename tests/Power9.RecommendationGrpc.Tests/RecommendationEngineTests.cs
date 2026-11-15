@@ -1,3 +1,4 @@
+// Kiểm tra kết quả gợi ý cho các tổ hợp thời gian ngồi, buổi trong ngày và mức căng thẳng.
 using Power9.RecommendationGrpc.Engine;
 
 namespace Power9.RecommendationGrpc.Tests;
@@ -6,6 +7,7 @@ public class RecommendationEngineTests
 {
     private readonly RecommendationEngine _engine = new();
 
+    // Nhiều bộ đầu vào kiểm tra thứ tự ưu tiên khi có hơn một điều kiện gợi ý phù hợp.
     [Theory]
     [InlineData(90, "Morning", "High", 3)]   // stress cao + ngồi lâu -> hít thở 4-7-8
     [InlineData(10, "Morning", "High", 4)]   // stress cao, mới ngồi -> thiền

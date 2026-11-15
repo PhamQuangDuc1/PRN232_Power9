@@ -1,3 +1,4 @@
+// Các kiểu dữ liệu đầu vào đăng nhập, đăng ký và phản hồi chứa phiên JWT.
 using System.ComponentModel.DataAnnotations;
 
 namespace Power9.RoutineService.Application.DTOs;

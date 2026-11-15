@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<!-- Sinh mã gRPC từ recommendation.proto để REST API và dịch vụ gợi ý dùng cùng hợp đồng. -->
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>

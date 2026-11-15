@@ -1,3 +1,4 @@
+// Khai báo bảng, quan hệ, khóa và ràng buộc của mô hình dữ liệu EF Core.
 using Microsoft.EntityFrameworkCore;
 using Power9.RoutineService.Domain.Entities;
 
@@ -78,6 +79,7 @@ public class Power9DbContext(DbContextOptions<Power9DbContext> options) : DbCont
             entity.Property(x => x.Theme).HasMaxLength(30);
             entity.HasOne(x => x.Room).WithMany(x => x.Residents).HasForeignKey(x => x.RoomId).OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            // Mỗi lô đất trong một phòng chỉ có một bản ghi cư dân tại cùng chỉ số.
             entity.HasIndex(x => new { x.RoomId, x.SlotIndex }).IsUnique();
         });
         modelBuilder.Entity<CityInteraction>(entity =>

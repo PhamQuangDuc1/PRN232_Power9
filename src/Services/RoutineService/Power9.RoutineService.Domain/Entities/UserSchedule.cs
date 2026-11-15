@@ -1,3 +1,4 @@
+// Lưu thói quen được nhắc, giờ nhắc, ngày lặp và trạng thái bật của từng người dùng.
 namespace Power9.RoutineService.Domain.Entities;
 
 public class UserSchedule

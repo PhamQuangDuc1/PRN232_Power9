@@ -1,4 +1,5 @@
 @startuml Slide09_System_Architecture_Power9
+' Sơ đồ kiến trúc các dịch vụ và kết nối REST, gRPC, Kafka, SQL Server.
 !theme plain
 skinparam backgroundColor #FFFFFF
 skinparam defaultFontName "Segoe UI", "Inter", Arial

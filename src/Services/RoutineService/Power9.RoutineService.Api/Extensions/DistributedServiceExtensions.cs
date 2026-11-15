@@ -1,3 +1,4 @@
+// Đăng ký Kafka producer và gRPC client mà Routine API dùng để gọi các dịch vụ khác.
 using Power9.Common.Kafka;
 using Power9.GrpcContracts;
 

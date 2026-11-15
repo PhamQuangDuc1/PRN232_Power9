@@ -1,3 +1,4 @@
+// Lưu mối quan hệ giữa hai người dùng và trạng thái lời mời kết bạn.
 using Power9.RoutineService.Domain.Enums;
 
 namespace Power9.RoutineService.Domain.Entities;

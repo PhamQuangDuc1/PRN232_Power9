@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Migration bổ sung các bảng phòng, cư dân, tương tác Tribe City và kết bạn.
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -184,6 +185,7 @@ namespace Power9.RoutineService.Infrastructure.Migrations
                 unique: true);
         }
 
+        // Hoàn tác phần mở rộng Tribe City và kết bạn.
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {

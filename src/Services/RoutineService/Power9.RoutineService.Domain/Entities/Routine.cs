@@ -1,3 +1,4 @@
+// Lưu thông tin thói quen, cách thực hiện, điểm thưởng và trạng thái duyệt.
 namespace Power9.RoutineService.Domain.Entities;
 
 public class Routine

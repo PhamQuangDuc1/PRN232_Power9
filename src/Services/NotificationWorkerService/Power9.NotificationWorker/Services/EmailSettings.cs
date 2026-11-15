@@ -1,3 +1,4 @@
+// Các tùy chọn SMTP được nạp từ cấu hình của worker để gửi email thông báo.
 namespace Power9.NotificationWorker.Services;
 
 public sealed class EmailSettings
