@@ -1,0 +1,204 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%" style="background:#F8FAFC; font-family: 'Segoe UI', Inter, Roboto, Arial, sans-serif;">
+  <defs>
+    <marker id="arrowPurpleFull" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8.5 5 L 0 8.5 z" fill="#A78BFA"/>
+    </marker>
+  </defs>
+
+  <!-- Header -->
+  <text x="48" y="58" fill="#7C3AED" font-size="34" font-weight="800">Slide 15 <tspan fill="#1E293B">Database Design 2/2 — từ logic đến vật lý</tspan></text>
+  <text x="48" y="92" fill="#64748B" font-size="18">Từ cấu trúc logic sang database SQL Server 2022 (Power9Db) đang chạy, có minh chứng EF Core Migration &amp; Unique Index bảo vệ.</text>
+
+  <!-- Top Info Pills -->
+  <g transform="translate(48, 114)">
+    <rect x="0" y="0" width="740" height="74" rx="10" fill="#EDE9FE"/>
+    <text x="20" y="28" fill="#7C3AED" font-size="12" font-weight="700">CÂU HỎI HỘI ĐỒNG</text>
+    <text x="20" y="54" fill="#1E293B" font-size="17" font-style="italic" font-weight="600">Dữ liệu được hiện thực đúng và có ràng buộc bảo vệ chưa?</text>
+
+    <rect x="760" y="0" width="180" height="74" rx="10" fill="#EDE9FE"/>
+    <text x="780" y="28" fill="#7C3AED" font-size="12" font-weight="700">THỜI LƯỢNG</text>
+    <text x="780" y="56" fill="#1E293B" font-size="24" font-weight="800">30 s</text>
+
+    <rect x="960" y="0" width="592" height="74" rx="10" fill="#EDE9FE"/>
+    <text x="980" y="28" fill="#7C3AED" font-size="12" font-weight="700">MINH CHỨNG BẮT BUỘC</text>
+    <text x="980" y="54" fill="#1E293B" font-size="16" font-weight="600">EF Core Migrations (20261114...) &amp; FluentAPI Power9DbContext.cs</text>
+  </g>
+
+  <!-- Left Column: NỘI DUNG CẦN TRÌNH BÀY -->
+  <g transform="translate(48, 222)">
+    <text x="0" y="0" fill="#7C3AED" font-size="14" font-weight="700" letter-spacing="1">NỘI DUNG CẦN TRÌNH BÀY</text>
+
+    <!-- Point 1 -->
+    <circle cx="18" cy="42" r="16" fill="#EDE9FE"/>
+    <text x="18" y="47" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">1</text>
+    <text x="48" y="36" fill="#0F172A" font-size="15.5" font-weight="700">Logical (Chuẩn hóa 3NF):</text>
+    <text x="48" y="58" fill="#334155" font-size="14">Tách khóa định danh (ID) và khóa tham chiếu (RoomID,</text>
+    <text x="48" y="78" fill="#334155" font-size="14">UserID, RoutineID); chuẩn hóa bảng nối CITY_RESIDENT.</text>
+
+    <!-- Point 2 -->
+    <circle cx="18" cy="128" r="16" fill="#EDE9FE"/>
+    <text x="18" y="133" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">2</text>
+    <text x="48" y="122" fill="#0F172A" font-size="15.5" font-weight="700">Physical (SQL Server 2022 — Power9Db):</text>
+    <text x="48" y="144" fill="#334155" font-size="14">7 bảng vật lý: Users, Categories, Routines, DailyLogs,</text>
+    <text x="48" y="164" fill="#334155" font-size="14">CityRooms, CityResidents &amp; NotificationLogs (DATETIME2).</text>
+
+    <!-- Point 3 -->
+    <circle cx="18" cy="214" r="16" fill="#EDE9FE"/>
+    <text x="18" y="219" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">3</text>
+    <text x="48" y="208" fill="#0F172A" font-size="15.5" font-weight="700">Ràng buộc &amp; Unique Index bảo vệ:</text>
+    <text x="48" y="230" fill="#334155" font-size="14">• UNIQUE(RoomId, SlotIndex): Chống trùng lô đất (BR-03).</text>
+    <text x="48" y="250" fill="#334155" font-size="14">• Filtered UNIQUE(EventId): Chống cộng trùng Kafka (BR-02).</text>
+    <text x="48" y="270" fill="#334155" font-size="14">• ON DELETE RESTRICT ở Routines → DailyLogs giữ lịch sử.</text>
+
+    <!-- Point 4 -->
+    <circle cx="18" cy="316" r="16" fill="#EDE9FE"/>
+    <text x="18" y="321" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">4</text>
+    <text x="48" y="310" fill="#0F172A" font-size="15.5" font-weight="700">Minh chứng triển khai thật trong Code:</text>
+    <text x="48" y="332" fill="#334155" font-size="14">• Migration 1: 20261114070221_InitialCreate.cs</text>
+    <text x="48" y="352" fill="#334155" font-size="14">• Migration 2: 20261114145748_AddTribeCityEntities.cs</text>
+    <text x="48" y="372" fill="#334155" font-size="14">• Tự động Migrate() + Seed 100+ bản ghi khi khởi động.</text>
+
+    <!-- Bottom Left Box: ĐỐI CHIẾU RÀNG BUỘC VỚI BR -->
+    <rect x="0" y="410" width="490" height="190" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1.2"/>
+    <text x="20" y="440" fill="#B45309" font-size="14" font-weight="700">ĐỐI CHIẾU RÀNG BUỘC VẬT LÝ VỚI BUSINESS RULES</text>
+    <text x="20" y="468" fill="#78350F" font-size="13.5">• BR-01 / BR-02: IX_DailyLogs_UserId_CompletedAt + EventId UNIQUE</text>
+    <text x="20" y="494" fill="#78350F" font-size="13.5">• BR-03 (Tối đa 12 lô): IX_CityResidents_RoomId_SlotIndex UNIQUE</text>
+    <text x="20" y="520" fill="#78350F" font-size="13.5">• BR-04 (Phủ rêu 24h): LastCheckInAt DATETIME2 (UTC) NOT NULL/NULL</text>
+    <text x="20" y="546" fill="#78350F" font-size="13.5">• BR-05 (Nâng nhà 1..4): HouseFloors DEFAULT 1, BuildingMaterials ≥ 0</text>
+    <text x="20" y="572" fill="#78350F" font-size="13.5">• BR-06 (Bảo tàng 7 ngày): CityRooms.ExpiredAt DATETIME2 + Status</text>
+  </g>
+
+  <!-- Right Panel: Embed exact MẪU BỐ CỤC layout -->
+  <g transform="translate(560, 206) scale(0.93)">
+    <rect x="8" y="8" width="1104" height="664" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <text x="32" y="42" fill="#64748B" font-size="13" font-weight="700" letter-spacing="1.2">MẪU BỐ CỤC • TỪ LOGIC SANG VẬT LÝ (POWER9DB — SQL SERVER 2022)</text>
+
+    <!-- LEFT LOGICAL BOX 1 -->
+    <g transform="translate(32, 66)">
+      <rect x="0" y="0" width="290" height="238" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.2"/>
+      <rect x="0" y="0" width="290" height="42" rx="6" fill="#E3F5F2"/>
+      <text x="145" y="26" text-anchor="middle" fill="#0D8A7B" font-size="14" font-weight="700">CITY_RESIDENT (logical)</text>
+      <text x="16" y="68" fill="#334155" font-size="13" font-weight="600">ResidentID (ID)</text>
+      <text x="16" y="92" fill="#334155" font-size="13">RoomID (ref → CITY_ROOM)</text>
+      <text x="16" y="116" fill="#334155" font-size="13">UserID (ref → USER)</text>
+      <text x="16" y="140" fill="#334155" font-size="13">SlotIndex (Vị trí lô đất 0..11)</text>
+      <text x="16" y="164" fill="#334155" font-size="13">HouseFloors (Số tầng 1..4)</text>
+      <text x="16" y="188" fill="#334155" font-size="13">BuildingMaterials (Vật liệu)</text>
+      <text x="16" y="212" fill="#334155" font-size="13">LastCheckInAt &amp; IsActive</text>
+    </g>
+
+    <line x1="330" y1="185" x2="382" y2="185" stroke="#A78BFA" stroke-width="2" marker-end="url(#arrowPurpleFull)"/>
+
+    <!-- RIGHT PHYSICAL TABLE 1 -->
+    <g transform="translate(392, 66)">
+      <rect x="0" y="0" width="692" height="38" fill="#0F172A"/>
+      <text x="14" y="24" fill="#FFFFFF" font-size="13" font-weight="700">CityResidents · SQL Server</text>
+      <text x="228" y="24" fill="#FFFFFF" font-size="13" font-weight="700">Kiểu</text>
+      <text x="388" y="24" fill="#FFFFFF" font-size="13" font-weight="700">Ràng buộc</text>
+
+      <rect x="0" y="38" width="692" height="28.5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="57" fill="#0F172A" font-size="12.5" font-weight="700">Id</text>
+      <text x="228" y="57" fill="#334155" font-size="12.5">INT IDENTITY(1,1)</text>
+      <text x="388" y="57" fill="#0D8A7B" font-size="12.5" font-weight="600">PK</text>
+
+      <rect x="0" y="66.5" width="692" height="28.5" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="85.5" fill="#0F172A" font-size="12.5" font-weight="700">RoomId, UserId</text>
+      <text x="228" y="85.5" fill="#334155" font-size="12.5">INT</text>
+      <text x="388" y="85.5" fill="#334155" font-size="12.5">FK → CityRooms / Users (CASCADE), NOT NULL</text>
+
+      <rect x="0" y="95" width="692" height="28.5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="114" fill="#0F172A" font-size="12.5" font-weight="700">SlotIndex</text>
+      <text x="228" y="114" fill="#334155" font-size="12.5">INT</text>
+      <text x="388" y="114" fill="#0F172A" font-size="12.5" font-weight="600">NOT NULL, UNIQUE(RoomId, SlotIndex), 0..11 (BR-03)</text>
+
+      <rect x="0" y="123.5" width="692" height="28.5" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="142.5" fill="#0F172A" font-size="12.5" font-weight="700">HouseFloors</text>
+      <text x="228" y="142.5" fill="#334155" font-size="12.5">INT</text>
+      <text x="388" y="142.5" fill="#334155" font-size="12.5">NOT NULL, DEFAULT 1, CHECK 1..4 (BR-05)</text>
+
+      <rect x="0" y="152" width="692" height="28.5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="171" fill="#0F172A" font-size="12.5" font-weight="700">BuildingMaterials</text>
+      <text x="228" y="171" fill="#334155" font-size="12.5">INT</text>
+      <text x="388" y="171" fill="#334155" font-size="12.5">NOT NULL, DEFAULT 0, CHECK &gt;= 0</text>
+
+      <rect x="0" y="180.5" width="692" height="28.5" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="199.5" fill="#0F172A" font-size="12.5" font-weight="700">LastCheckInAt</text>
+      <text x="228" y="199.5" fill="#334155" font-size="12.5">DATETIME2</text>
+      <text x="388" y="199.5" fill="#334155" font-size="12.5">NULL (UTC — Dùng tính phủ rêu ≥ 24h BR-04)</text>
+
+      <rect x="0" y="209" width="692" height="29" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="228" fill="#0F172A" font-size="12.5" font-weight="700">RooftopStatus, IsActive</text>
+      <text x="228" y="228" fill="#334155" font-size="12.5">NVARCHAR(100), BIT</text>
+      <text x="388" y="228" fill="#334155" font-size="12.5">NOT NULL, DEFAULT 'Basic Solar', IsActive = 1</text>
+
+      <line x1="215" y1="0" x2="215" y2="238" stroke="#CBD5E1" stroke-width="1"/>
+      <line x1="375" y1="0" x2="375" y2="238" stroke="#CBD5E1" stroke-width="1"/>
+    </g>
+
+    <!-- LEFT LOGICAL BOX 2 -->
+    <g transform="translate(32, 324)">
+      <rect x="0" y="0" width="290" height="195" rx="6" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.2"/>
+      <rect x="0" y="0" width="290" height="40" rx="6" fill="#E3F5F2"/>
+      <text x="145" y="25" text-anchor="middle" fill="#0D8A7B" font-size="14" font-weight="700">DAILY_LOG (logical)</text>
+      <text x="16" y="66" fill="#334155" font-size="13" font-weight="600">LogID (ID)</text>
+      <text x="16" y="90" fill="#334155" font-size="13">UserID (ref → USER)</text>
+      <text x="16" y="114" fill="#334155" font-size="13">RoutineID (ref → ROUTINE)</text>
+      <text x="16" y="138" fill="#334155" font-size="13">EventID (Idempotency Key)</text>
+      <text x="16" y="162" fill="#334155" font-size="13">CompletedAt &amp; PointsEarned</text>
+      <text x="16" y="184" fill="#334155" font-size="13">Note (Ghi chú hoàn thành)</text>
+    </g>
+
+    <line x1="330" y1="422" x2="382" y2="422" stroke="#A78BFA" stroke-width="2" marker-end="url(#arrowPurpleFull)"/>
+
+    <!-- RIGHT PHYSICAL TABLE 2 -->
+    <g transform="translate(392, 324)">
+      <rect x="0" y="0" width="692" height="36" fill="#0F172A"/>
+      <text x="14" y="23" fill="#FFFFFF" font-size="13" font-weight="700">DailyLogs · SQL Server</text>
+      <text x="228" y="23" fill="#FFFFFF" font-size="13" font-weight="700">Kiểu</text>
+      <text x="388" y="23" fill="#FFFFFF" font-size="13" font-weight="700">Ràng buộc</text>
+
+      <rect x="0" y="36" width="692" height="31.5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="56" fill="#0F172A" font-size="12.5" font-weight="700">Id</text>
+      <text x="228" y="56" fill="#334155" font-size="12.5">INT IDENTITY(1,1)</text>
+      <text x="388" y="56" fill="#0D8A7B" font-size="12.5" font-weight="600">PK</text>
+
+      <rect x="0" y="67.5" width="692" height="31.5" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="87.5" fill="#0F172A" font-size="12.5" font-weight="700">UserId, RoutineId</text>
+      <text x="228" y="87.5" fill="#334155" font-size="12.5">INT</text>
+      <text x="388" y="87.5" fill="#334155" font-size="12.5">FK → Users (CASCADE) / Routines (RESTRICT), NOT NULL</text>
+
+      <rect x="0" y="99" width="692" height="31.5" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="119" fill="#0F172A" font-size="12.5" font-weight="700">EventId</text>
+      <text x="228" y="119" fill="#334155" font-size="12.5">UNIQUEIDENTIFIER</text>
+      <text x="388" y="119" fill="#0F172A" font-size="12.5" font-weight="600">Filtered UNIQUE INDEX (Chống cộng trùng Kafka BR-02)</text>
+
+      <rect x="0" y="130.5" width="692" height="31.5" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="150.5" fill="#0F172A" font-size="12.5" font-weight="700">CompletedAt, PointsEarned</text>
+      <text x="228" y="150.5" fill="#334155" font-size="12.5">DATETIME2, INT</text>
+      <text x="388" y="150.5" fill="#334155" font-size="12.5">NOT NULL (UTC Timestamp &amp; Điểm thưởng &gt; 0)</text>
+
+      <rect x="0" y="162" width="692" height="33" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+      <text x="14" y="182.5" fill="#0F172A" font-size="12.5" font-weight="700">Note</text>
+      <text x="228" y="182.5" fill="#334155" font-size="12.5">NVARCHAR(1000)</text>
+      <text x="388" y="182.5" fill="#334155" font-size="12.5">NOT NULL, MAXLENGTH(1000)</text>
+
+      <line x1="215" y1="0" x2="215" y2="195" stroke="#CBD5E1" stroke-width="1"/>
+      <line x1="375" y1="0" x2="375" y2="195" stroke="#CBD5E1" stroke-width="1"/>
+    </g>
+
+    <!-- BOTTOM INDEX BANNER -->
+    <g transform="translate(32, 540)">
+      <rect x="0" y="0" width="1052" height="82" rx="8" fill="#E3F5F2"/>
+      <text x="18" y="30" fill="#0D8A7B" font-size="13.5" font-weight="700">INDEX</text>
+      <text x="72" y="30" fill="#1E293B" font-size="13" font-weight="600">
+        CityResidents(RoomId, SlotIndex) UNIQUE • CityRooms(RoomCode) UNIQUE • DailyLogs(UserId, CompletedAt) • DailyLogs(EventId) UNIQUE
+      </text>
+      <text x="18" y="58" fill="#0D8A7B" font-size="13.5" font-weight="700">MIGRATION</text>
+      <text x="108" y="58" fill="#1E293B" font-size="13">
+        20261114070221_InitialCreate.cs &amp; 20261114145748_AddTribeCityEntities.cs (FluentAPI: Power9DbContext.cs)
+      </text>
+    </g>
+
+    <text x="32" y="650" fill="#64748B" font-size="12.5" font-style="italic">Schema đầy đủ 7 bảng (Users, Categories, Routines, DailyLogs, CityRooms, CityResidents, NotificationLogs) để ở phụ lục Slide 25.</text>
+  </g>
+</svg>

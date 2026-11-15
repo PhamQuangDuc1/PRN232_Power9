@@ -1,0 +1,144 @@
+@startuml Slide13_Class_Design_Power9
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI", "Inter", Arial
+skinparam defaultFontSize 12
+skinparam roundCorner 8
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam ArrowColor #334155
+skinparam ArrowThickness 1.6
+left to right direction
+
+title **SLIDE 13 · CLASS DESIGN — PHÂN TẦNG TRÁCH NHIỆM & VỊ TRÍ BUSINESS RULE**
+
+package "1. PRESENTATION / WORKER LAYER" #EFF6FF {
+  class CheckInsController <<ApiController>> {
+    - _producer : IKafkaProducer
+    - _cityService : ICityService
+    + CheckIn(routineId: int, body: CheckInRequest) : Task<IActionResult>
+    + SendTestEmail(req: TestEmailRequest) : Task<IActionResult>
+  }
+
+  class CityController <<ApiController>> {
+    - _cityService : ICityService
+    + QuickMatch(ct: CancellationToken) : Task<IActionResult>
+    + Upgrade(id: int, ct: CancellationToken) : Task<IActionResult>
+    + Interact(id: int, req: InteractRequest) : Task<IActionResult>
+    + Leave(id: int, ct: CancellationToken) : Task<IActionResult>
+  }
+
+  class SchedulesController <<ApiController>> {
+    - _schedules : IScheduleService
+    + GetMine(ct: CancellationToken) : Task<ActionResult>
+    + Create(req: CreateScheduleDto) : Task<ActionResult>
+    + Delete(id: int) : Task<IActionResult>
+  }
+
+  class RoutineCompletedConsumerWorker <<BackgroundService>> {
+    - _scopeFactory : IServiceScopeFactory
+    - _emailSender : IEmailSender
+    # ExecuteAsync(stoppingToken: CancellationToken) : Task
+    - ConsumeLoop(stoppingToken: CancellationToken) : Task
+    - HandleAsync(payload: string, ct: CancellationToken) : Task
+  }
+}
+
+package "2. APPLICATION & BUSINESS SERVICE LAYER" #F0FDF4 {
+  interface ICityService <<interface>> {
+    + QuickMatchAsync(userId: int, ct: CancellationToken) : Task<CityRoomResponse>
+    + UpgradeHouseAsync(roomId: int, userId: int, ct: CancellationToken) : Task<UpgradeResult>
+    + InteractAsync(roomId: int, fromUserId: int, req: InteractRequest) : Task<bool>
+    + RewardMaterialsAsync(userId: int, materials: int) : Task
+  }
+
+  class CityService {
+    - _db : Power9DbContext
+    + QuickMatchAsync(userId: int, ct: CancellationToken) : Task<CityRoomResponse>
+    + UpgradeHouseAsync(roomId: int, userId: int, ct: CancellationToken) : Task<UpgradeResult>
+    + RewardMaterialsAsync(userId: int, materials: int) : Task
+    - {static} MapRoom(room: CityRoom, currentUserId: int?) : CityRoomResponse
+    - {static} CalcLandmark(score: int) : (int Level, string Name, int Progress)
+  }
+
+  interface IScheduleService <<interface>> {
+    + GetMineAsync(userId: int) : Task<IReadOnlyList<ScheduleDto>>
+    + CreateAsync(userId: int, req: CreateScheduleDto) : Task<ScheduleDto?>
+  }
+
+  class ScheduleService {
+    - _schedules : IScheduleRepository
+    + GetMineAsync(userId: int) : Task<IReadOnlyList<ScheduleDto>>
+    + CreateAsync(userId: int, req: CreateScheduleDto) : Task<ScheduleDto?>
+  }
+}
+
+package "3. INFRASTRUCTURE & REPOSITORY LAYER" #F8FAFC {
+  interface IScheduleRepository <<interface>> {
+    + GetByUserAsync(userId: int) : Task<IReadOnlyList<UserSchedule>>
+    + AddAsync(schedule: UserSchedule) : Task
+    + SaveChangesAsync() : Task
+  }
+
+  interface IKafkaProducer <<interface>> {
+    + PublishAsync<T>(topic: string, key: string, message: T) : Task
+  }
+
+  interface IEmailSender <<interface>> {
+    + SendEmailAsync(toEmail: string, toName: string, subject: string, htmlBody: string) : Task
+  }
+}
+
+package "4. DOMAIN ENTITIES & PURE RULE ENGINES (CHỨA BR-01..BR-06)" #FEFCE8 {
+  class RecommendationEngine <<Domain Engine · BR-01>> {
+    + Recommend(sittingMinutes: int, timeOfDay: string?, stressLevel: string?) : CatalogRoutine
+    - {static} Normalize(value: string?) : string
+  }
+
+  class StreakCalculator <<Static Domain Rule · BR-03>> {
+    + {static} Next(currentStreak: int, lastActivityDate: DateOnly?, today: DateOnly) : int
+  }
+
+  class CityRoom <<Domain Aggregate>> {
+    + Status : CityRoomStatus
+    + MaxSlots : int = 12
+    + TotalCityScore : int
+    + ExpiredAt : DateTime
+    + Residents : ICollection<CityResident>
+  }
+
+  class CityResident <<Domain Entity>> {
+    + SlotIndex : int [0..11]
+    + HouseFloors : int [1..4]
+    + BuildingMaterials : int
+    + LastCheckInAt : DateTime?
+    + IsActive : bool
+  }
+}
+
+' Relationships
+CheckInsController --> ICityService : injects
+CheckInsController --> IKafkaProducer : injects
+CityController --> ICityService : injects
+SchedulesController --> IScheduleService : injects
+
+CityService ..|> ICityService : implements
+ScheduleService ..|> IScheduleService : implements
+ScheduleService --> IScheduleRepository : uses
+
+RoutineCompletedConsumerWorker --> StreakCalculator : delegates [BR-03]
+RoutineCompletedConsumerWorker --> IEmailSender : uses
+CityService --> CityRoom : manages lifecycle [BR-05, BR-06]
+CityRoom "1" *-- "0..12" CityResident : contains [BR-04]
+
+note bottom of RecommendationEngine
+  **Business Rule nằm trong Domain & Service (Không đặt ở UI / Controller):**
+  • **BR-01 (Smart Suggest):** `RecommendationEngine.Recommend()` (8 nhánh ưu tiên).
+  • **BR-02 (Idempotent EventId):** `RoutineCompletedConsumerWorker.HandleAsync()`.
+  • **BR-03 (Vietnam Streak):** `StreakCalculator.Next()` + `VietnamTime.ToLocalDate()`.
+  • **BR-04 (Moss Decay 24h):** `CityService.MapRoom()` (`UtcNow - LastCheckInAt >= 24h`).
+  • **BR-05 (Upgrade & Landmark):** `CityService.UpgradeHouseAsync()` & `CalcLandmark()`.
+  • **BR-06 (7-Day Archive):** `CityCycleWorker.ProcessExpiredRoomsAsync()`.
+end note
+
+@enduml

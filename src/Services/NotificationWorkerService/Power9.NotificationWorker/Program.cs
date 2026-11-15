@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Power9.NotificationWorker.Data;
+using Power9.NotificationWorker.Services;
 using Power9.NotificationWorker.Workers;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
 builder.Services.AddDbContext<WorkerDbContext>(options =>
     options.UseSqlServer(

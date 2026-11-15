@@ -9,6 +9,8 @@ namespace Power9.NotificationWorker.Data;
 public sealed class WorkerUser
 {
     public int Id { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
     public int TotalPoints { get; set; }
     public int CurrentStreak { get; set; }
 }

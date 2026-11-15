@@ -5,6 +5,7 @@ using Power9.Common.Constants;
 using Power9.Common.Events;
 using Power9.NotificationWorker.Data;
 using Power9.NotificationWorker.Domain;
+using Power9.NotificationWorker.Services;
 
 namespace Power9.NotificationWorker.Workers;
 
@@ -16,13 +17,15 @@ public sealed class RoutineCompletedConsumerWorker : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IConfiguration _configuration;
+    private readonly IEmailSender _emailSender;
     private readonly ILogger<RoutineCompletedConsumerWorker> _logger;
 
     public RoutineCompletedConsumerWorker(IServiceScopeFactory scopeFactory, IConfiguration configuration,
-        ILogger<RoutineCompletedConsumerWorker> logger)
+        IEmailSender emailSender, ILogger<RoutineCompletedConsumerWorker> logger)
     {
         _scopeFactory = scopeFactory;
         _configuration = configuration;
+        _emailSender = emailSender;
         _logger = logger;
     }
 
@@ -179,5 +182,35 @@ public sealed class RoutineCompletedConsumerWorker : BackgroundService
         _logger.LogInformation(
             "[KAFKA CONSUMER] User {UserId} hoàn thành '{Title}' +{Points} điểm -> Tổng {Total}, Streak {Streak} ngày",
             user.Id, routine.Title, routine.RewardPoints, user.TotalPoints, user.CurrentStreak);
+
+        if (!string.IsNullOrWhiteSpace(user.Email))
+        {
+            var subject = $"🎉 [Power9] Check-in thành công: {routine.Title} (+{routine.RewardPoints} điểm)";
+            var htmlBody = $@"
+<div style='font-family: -apple-system, BlinkMacSystemFont, ""Segoe UI"", Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);'>
+    <div style='background: linear-gradient(135deg, #38a169 0%, #276749 100%); padding: 24px 20px; text-align: center; color: #ffffff;'>
+        <h1 style='margin: 0; font-size: 24px; font-weight: 700;'>Tuyệt vời, {(string.IsNullOrWhiteSpace(user.FullName) ? "bạn" : user.FullName)}! 🎉</h1>
+        <p style='margin: 6px 0 0; font-size: 14px; opacity: 0.9;'>Bạn vừa hoàn thành một thói quen lành mạnh hôm nay</p>
+    </div>
+    <div style='padding: 24px 20px;'>
+        <p style='font-size: 16px; color: #2d3748;'>Bạn đã check-in thành công bài tập: <strong>{routine.Title}</strong></p>
+        <div style='background: #f0fff4; border: 1px solid #c6f6d5; border-radius: 8px; padding: 16px; margin: 20px 0;'>
+            <div style='font-size: 15px; color: #22543d; margin-bottom: 8px;'>⭐ <strong>Điểm thưởng nhận được:</strong> +{routine.RewardPoints} điểm</div>
+            <div style='font-size: 15px; color: #22543d; margin-bottom: 8px;'>🔥 <strong>Chuỗi Streak hiện tại:</strong> {user.CurrentStreak} ngày liên tiếp</div>
+            <div style='font-size: 15px; color: #22543d;'>🏆 <strong>Tổng điểm tích lũy:</strong> {user.TotalPoints} điểm</div>
+        </div>
+        <p style='font-size: 14px; color: #718096; line-height: 1.5;'>
+            Hãy tiếp tục duy trì thói quen mỗi ngày để nâng cấp công trình trong Tribe City và nâng cao sức khỏe làm việc!
+        </p>
+        <div style='text-align: center; margin: 28px 0 16px;'>
+            <a href='http://localhost:5000/#/city' style='display: inline-block; background-color: #38a169; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 15px;'>Xem Tribe City</a>
+        </div>
+    </div>
+    <div style='background-color: #f7fafc; padding: 16px 20px; text-align: center; border-top: 1px solid #edf2f7;'>
+        <small style='color: #a0aec0; font-size: 12px;'>Hệ thống thông báo tự động từ Power9 Office Routine.</small>
+    </div>
+</div>";
+            await _emailSender.SendEmailAsync(user.Email, user.FullName, subject, htmlBody, ct);
+        }
     }
 }

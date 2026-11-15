@@ -1,0 +1,57 @@
+@startuml Slide09_System_Architecture_Power9
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI", "Inter", Arial
+skinparam defaultFontSize 13
+skinparam roundCorner 10
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam ArrowColor #334155
+skinparam ArrowThickness 1.8
+
+title **SLIDE 09 · SYSTEM ARCHITECTURE (C4 CONTAINER & DEPLOYMENT VIEW) — POWER9**
+
+actor "Nhân viên / Admin\n(Employee / HR)" as User #DBEAFE
+
+package "CLIENT TIER (Browser)" as ClientBoundary #EFF6FF {
+  component "**Web SPA Dashboard & Tribe City**\n[HTML5 • CSS3 Isometric 2.5D • Vanilla ES6 JS]\n(UI-01..UI-06)" as WebUI #FFFFFF
+}
+
+package "DOCKER HOST · Network: power9-network (docker-compose.yml)" as DockerBoundary #F8FAFC {
+
+  component "**routine-api (:5000)**\n[ASP.NET Core 8 Web API]\n• AuthController (JWT Bearer)\n• Routines / Schedules / CityController\n• CheckIns / RecommendationsController" as RoutineApi #DCFCE7
+
+  component "**recommendation-grpc (:50051)**\n[ASP.NET Core 8 gRPC Server]\n• RecommendationProtoService\n• Rule Engine (BR-01, < 10ms)" as GrpcSvc #E0F2FE
+
+  queue "**Apache Kafka 7.5 (:9092 / :29092)**\n[Confluent Kafka + Zookeeper]\n• Topic: power9-routine-completed\n• 3 Partitions (Key = UserId)\n• Kafka-UI Monitoring (:8085)" as Kafka #FEF3C7
+
+  component "**notification-worker**\n[.NET 8 Hosted BackgroundService]\n• RoutineCompletedConsumerWorker (BR-02, BR-03)\n• DailyScheduleReminderJob (Cron 60s)\n• CityCycleWorker (7-Day Archive BR-06)" as Worker #FFEDD5
+
+  database "**sqlserver (:1433)**\n[MS SQL Server 2022]\nDatabase: **Power9Db** (9 Tables)\n• Users, Routines, UserSchedules, DailyLogs\n• CityRooms, CityResidents, Interactions" as SqlDb #F1F5F9
+}
+
+package "EXTERNAL & AUXILIARY SERVICES" as ExternalBoundary #FDF2F8 {
+  component "**Gmail SMTP Server (:587 TLS)**\n& **Mailpit Web Mailbox (:8025)**\n[Gửi Email HTML Chúc mừng & Nhắc lịch]" as EmailSvc #FFFFFF
+}
+
+' Relationships with protocols & Sync/Async labels
+User -down-> WebUI : Tương tác trên trình duyệt
+WebUI -down-> RoutineApi : **HTTPS / REST JSON**\n[Sync • JWT Bearer Token]
+
+RoutineApi -right-> GrpcSvc : **gRPC over HTTP/2 (h2c)**\n[Sync • Protobuf Contract]
+RoutineApi -down-> Kafka : **Publish RoutineCompletedEvent**\n[Async • 202 Accepted • Key=UserId]
+Kafka -right-> Worker : **Consume Event Loop**\n[Async • At-Least-Once • Manual Commit]
+
+RoutineApi -down-> SqlDb : **EF Core 8 (TCP :1433)**\n[CRUD, Migrations & Seed]
+Worker -down-> SqlDb : **EF Core 8 (TCP :1433)**\n[Cộng Điểm, Streak, DailyLogs, Archive]
+
+Worker -right-> EmailSvc : **SMTP (:587 TLS / :1025)**\n[Async HTML Email]
+RoutineApi .right.> EmailSvc : **SMTP Fallback / Test**\n[POST /api/routines/test-email]
+
+legend bottom
+  **DEPLOYMENT:** Đóng gói Multi-stage Dockerfiles, khởi chạy toàn bộ bằng 1 lệnh `docker compose up -d --build` (kèm Healthcheck tự động).
+  **QUYẾT ĐỊNH 1 (Sync gRPC):** Chọn **gRPC (HTTP/2 Protobuf)** cho RecommendationService để gợi ý bài tập tức thì (`< 10ms`) — *Đánh đổi:* Web gọi qua API Gateway `routine-api`.
+  **QUYẾT ĐỊNH 2 (Async Kafka):** Chọn **Apache Kafka (Key=UserId)** cho Check-in để không nghẽn HTTP khi gửi SMTP/tính Streak và giữ đúng thứ tự sự kiện — *Đánh đổi:* Eventual Consistency (xử lý bằng `202 Accepted` + Idempotent `EventId`).
+endlegend
+
+@enduml

@@ -143,9 +143,26 @@ services:
       ConnectionStrings__DefaultConnection: Server=sqlserver,1433;Database=Power9Db;User Id=sa;Password=${SA_PASSWORD:-Password123!};TrustServerCertificate=True;
       Kafka__BootstrapServers: kafka:29092
       GrpcServices__RecommendationUrl: http://recommendation-grpc:8080
+      Smtp__Username: zrya1236987@gmail.com
+      Smtp__Password: "yeck rlry shos rlmi"
 
   # ==========================================
-  # SERVICE: Notification Background Worker (Kafka consumer + scheduled job)
+  # EMAIL SERVER (MOCK/LOCAL SMTP & WEB UI): Mailpit
+  #   - Web UI xem hòm thư email: http://localhost:8025
+  #   - SMTP server: localhost:1025 (hoặc mailpit:1025 trong mạng Docker)
+  # ==========================================
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: power9-mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - power9-network
+
+  # ==========================================
+  # SERVICE: Notification Background Worker (Kafka consumer + scheduled job + Email)
   # ==========================================
   notification-worker:
     <<: *dotnet-common
@@ -159,12 +176,19 @@ services:
         condition: service_healthy
       kafka-init:
         condition: service_completed_successfully
+      mailpit:
+        condition: service_started
     environment:
       DOTNET_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: Server=sqlserver,1433;Database=Power9Db;User Id=sa;Password=${SA_PASSWORD:-Password123!};TrustServerCertificate=True;
       Kafka__BootstrapServers: kafka:29092
       Kafka__GroupId: power9-worker-group
       Reminder__IntervalSeconds: 60
+      Smtp__Host: mailpit
+      Smtp__Port: 1025
+      Smtp__EnableSsl: "false"
+      Smtp__Username: zrya1236987@gmail.com
+      Smtp__Password: "yeck rlry shos rlmi"
 
 networks:
   power9-network:

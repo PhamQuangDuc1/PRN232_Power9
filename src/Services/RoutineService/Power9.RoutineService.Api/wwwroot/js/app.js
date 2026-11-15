@@ -427,6 +427,205 @@
     };
   }
 
+  /* ---------------- Real-time Notification & Reminder Engine ---------------- */
+  const NotificationManager = {
+    audioCtx: null,
+    notifiedSchedules: new Set(),
+    _initialized: false,
+
+    init() {
+      if (this._initialized) return;
+      this._initialized = true;
+      this.startReminderTimer();
+    },
+
+    isSupported() {
+      return typeof window !== 'undefined' && 'Notification' in window;
+    },
+
+    getPermission() {
+      if (!this.isSupported()) return 'unsupported';
+      return Notification.permission;
+    },
+
+    async requestPermission() {
+      if (!this.isSupported()) {
+        toast('Trình duyệt không hỗ trợ', 'Trình duyệt này không hỗ trợ Web Notification API.', 'warn');
+        return false;
+      }
+      try {
+        const perm = await Notification.requestPermission();
+        this.updateUi();
+        if (perm === 'granted') {
+          toast('Đã bật thông báo trình duyệt!', 'Bạn sẽ nhận được thông báo khi đến giờ nhắc nhở.', 'success');
+          this.playChime();
+          this.sendNativeNotification('Power9 Health Assistant 🔔', {
+            body: 'Thông báo trên trình duyệt đã được bật thành công!',
+            icon: '/assets/favicon.ico'
+          });
+          return true;
+        } else if (perm === 'denied') {
+          toast('Thông báo bị chặn', 'Vui lòng mở cài đặt quyền trang web của trình duyệt để cấp phép Thông báo.', 'warn');
+          return false;
+        }
+      } catch (e) {
+        console.error('Error requesting notification permission:', e);
+      }
+      return false;
+    },
+
+    playChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!this.audioCtx) this.audioCtx = new AudioCtx();
+        if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+
+        const now = this.audioCtx.currentTime;
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.setValueAtTime(880.00, now + 0.12); // A5
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.55);
+      } catch (err) {
+        // Audio error ignored
+      }
+    },
+
+    sendNativeNotification(title, options = {}) {
+      if (!this.isSupported() || Notification.permission !== 'granted') return null;
+      try {
+        const n = new Notification(title, {
+          icon: '/assets/favicon.ico',
+          badge: '/assets/favicon.ico',
+          ...options
+        });
+        n.onclick = () => {
+          window.focus();
+          n.close();
+          if (options.onClick) options.onClick();
+        };
+        return n;
+      } catch (err) {
+        console.warn('Native notification failed:', err);
+        return null;
+      }
+    },
+
+    updateUi() {
+      const btn = document.getElementById('btn-notify-toggle');
+      if (!btn) return;
+      const perm = this.getPermission();
+      if (perm === 'granted') {
+        btn.className = 'pill pill-green';
+        btn.innerHTML = `<span style="font-size:13px">🔔</span> Thông báo: Bật`;
+        btn.title = 'Thông báo trình duyệt đang BẬT. Bấm để gửi thử thông báo mẫu.';
+      } else if (perm === 'denied') {
+        btn.className = 'pill pill-red';
+        btn.innerHTML = `<span style="font-size:13px">🔕</span> Thông báo: Chặn`;
+        btn.title = 'Thông báo đang bị chặn trong trình duyệt. Bấm để xem hướng dẫn.';
+      } else {
+        btn.className = 'pill pill-amber';
+        btn.innerHTML = `<span style="font-size:13px">🔔</span> Bật thông báo`;
+        btn.title = 'Bấm để cấp quyền nhận thông báo khi đến giờ nhắc nhở!';
+      }
+    },
+
+    startReminderTimer() {
+      if (this._timer) return;
+      this._timer = setInterval(() => this.checkDueSchedules(), 20000);
+      setTimeout(() => this.checkDueSchedules(), 2500);
+    },
+
+    async checkDueSchedules() {
+      const session = api.session.get();
+      if (!session) return;
+
+      try {
+        const routinesRes = await api.getRoutines();
+        const routines = routinesRes.data || [];
+        const schedRes = await api.getMySchedules(routines);
+        const schedules = (schedRes.data || []).filter(s => s.isActive);
+
+        const now = new Date();
+        const currentHH = String(now.getHours()).padStart(2, '0');
+        const currentMM = String(now.getMinutes()).padStart(2, '0');
+        const currentTimeStr = `${currentHH}:${currentMM}`;
+        const todayDateStr = now.toISOString().slice(0, 10);
+        const dayCodes = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const currentDayCode = dayCodes[now.getDay()];
+
+        for (const s of schedules) {
+          const sTime = (s.reminderTime || '').slice(0, 5);
+          if (sTime !== currentTimeStr) continue;
+
+          // Check day of week
+          const days = (s.daysOfWeek || '').split(',').map(x => x.trim()).filter(Boolean);
+          if (days.length > 0 && !days.includes(currentDayCode)) continue;
+
+          const notifyKey = `${todayDateStr}_${s.id}_${currentTimeStr}`;
+          if (this.notifiedSchedules.has(notifyKey)) continue;
+
+          this.notifiedSchedules.add(notifyKey);
+
+          const routine = routines.find(r => r.id === s.routineId) || { id: s.routineId, title: s.routineTitle || 'Thói quen' };
+          this.triggerReminder(s, routine);
+        }
+      } catch (err) {
+        // Silently catch scan errors
+      }
+    },
+
+    triggerReminder(schedule, routine) {
+      this.playChime();
+
+      // 1. Native Desktop Notification
+      this.sendNativeNotification(`⏰ [Power9] Đến giờ: ${routine.title}`, {
+        body: `Đã đến giờ nhắc ${schedule.reminderTime.slice(0, 5)}! Hãy tạm dừng 2-5 phút để thực hiện thói quen và giữ gìn sức khỏe.`,
+        onClick: () => {
+          location.hash = '#/today';
+          openCheckIn(routine, () => location.hash = '#/today');
+        }
+      });
+
+      // 2. In-App Interactive Toast with Direct Check-In Action
+      this.showReminderToast(routine, schedule);
+    },
+
+    showReminderToast(routine, schedule) {
+      let wrap = document.querySelector('.toast-wrap');
+      if (!wrap) { wrap = document.createElement('div'); wrap.className = 'toast-wrap'; document.body.appendChild(wrap); }
+      const el = document.createElement('div');
+      el.className = 'toast success';
+      el.style.borderLeft = '4px solid #3182ce';
+      el.innerHTML = `
+        <div style="font-size:20px;line-height:1">⏰</div>
+        <div style="flex:1">
+          <strong style="color:var(--p9-primary);display:block;margin-bottom:2px">Đến giờ: ${esc(routine.title)}</strong>
+          <small style="display:block;margin-bottom:8px;color:var(--p9-text-2)">Đã đến giờ nhắc ${schedule.reminderTime.slice(0, 5)}. Dành ra vài phút thư giãn nhé!</small>
+          <button class="btn btn-sm btn-primary" id="toast-ci-${schedule.id}" style="padding:4px 12px;font-size:12px;border-radius:4px;cursor:pointer">
+            Check-in ngay
+          </button>
+        </div>
+      `;
+      wrap.appendChild(el);
+      const btn = el.querySelector(`#toast-ci-${schedule.id}`);
+      if (btn) {
+        btn.onclick = () => {
+          el.remove();
+          openCheckIn(routine, () => location.hash = '#/today');
+        };
+      }
+      setTimeout(() => el.remove(), 12000);
+    }
+  };
+
   /* ---------------- Shell ---------------- */
   function shell(active, content) {
     const s = api.session.get();
@@ -447,6 +646,9 @@
           <div><div class="brand-name">Power9</div><div class="brand-sub">OFFICE ROUTINE</div></div></a>
         <nav class="nav">${navItems.map(n => `<a href="${n.href}" class="${n.key === active ? 'active' : ''}">${n.label}${n.badge ? ` <span class="nav-badge">${n.badge}</span>` : ''}</a>`).join('')}</nav>
         <div class="topbar-right">
+          <button id="btn-notify-toggle" class="pill pill-amber" style="cursor:pointer;border:none;background:var(--p9-bg-card);font-family:inherit;font-size:12px;padding:6px 12px;display:inline-flex;align-items:center;gap:6px;">
+            <span style="font-size:13px">🔔</span> Bật thông báo
+          </button>
           <span id="api-status" class="pill">${icon('refresh', 'ic-sm')} Đang kiểm tra</span>
           <button class="user-chip" id="user-chip">
             <div class="u-text"><div class="u-name">${esc(s.displayName)}</div><div class="u-role">${s.role === 'Admin' ? 'Quản trị viên' : 'Người dùng'}</div></div>
@@ -462,6 +664,28 @@
   }
 
   function bindShell() {
+    NotificationManager.init();
+    NotificationManager.updateUi();
+
+    const notifyBtn = document.getElementById('btn-notify-toggle');
+    if (notifyBtn) {
+      notifyBtn.onclick = async (e) => {
+        e.stopPropagation();
+        const perm = NotificationManager.getPermission();
+        if (perm === 'default') {
+          await NotificationManager.requestPermission();
+        } else if (perm === 'granted') {
+          NotificationManager.playChime();
+          NotificationManager.sendNativeNotification('⏰ [Power9 Test] Thông báo hoạt động tốt!', {
+            body: 'Đây là thông báo thử nghiệm từ hệ thống Power9 Office Routine.'
+          });
+          toast('Đã gửi thông báo thử nghiệm!', 'Bạn sẽ thấy thông báo bật lên ở góc màn hình.', 'success');
+        } else if (perm === 'denied') {
+          toast('Thông báo đang bị chặn', 'Vui lòng nhấp vào biểu tượng cài đặt cạnh URL trình duyệt để bật lại quyền Thông báo.', 'warn');
+        }
+      };
+    }
+
     const chip = document.getElementById('user-chip');
     chip.onclick = (e) => {
       e.stopPropagation();
@@ -486,9 +710,27 @@
           <a href="#/admin" class="dd-link">${icon('shield', 'ic-sm')} Bảng điều khiển Quản trị</a>
           <a href="#/today" class="dd-link">${icon('user', 'ic-sm')} Xem giao diện Người dùng</a>
         ` : ''}
+        <button data-act="test-notify" class="dd-link" style="border:none;background:none;width:100%;text-align:left;cursor:pointer;color:inherit;font:inherit">${icon('clock', 'ic-sm')} Gửi thử thông báo mẫu</button>
         <button data-act="logout" class="danger">${icon('logout')} Đăng xuất</button>`;
       chip.appendChild(dd);
       dd.querySelector('[data-act=logout]').onclick = (ev) => { ev.stopPropagation(); logout(); };
+
+      const testBtn = dd.querySelector('[data-act=test-notify]');
+      if (testBtn) {
+        testBtn.onclick = async (ev) => {
+          ev.stopPropagation();
+          dd.remove();
+          if (NotificationManager.getPermission() !== 'granted') {
+            await NotificationManager.requestPermission();
+          } else {
+            NotificationManager.playChime();
+            NotificationManager.sendNativeNotification('⏰ [Power9 Test] Thông báo hoạt động tốt!', {
+              body: 'Đây là thông báo thử nghiệm từ hệ thống Power9 Office Routine.'
+            });
+            toast('Đã gửi thông báo thử nghiệm!', 'Bạn sẽ thấy thông báo bật lên ở góc màn hình.', 'success');
+          }
+        };
+      }
     };
     updateApiStatus();
   }
@@ -3654,5 +3896,6 @@
     return renderToday();
   }
   window.addEventListener('hashchange', route);
+  NotificationManager.init();
   route();
 })();

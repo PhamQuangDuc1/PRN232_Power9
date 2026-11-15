@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 800" width="1440" height="800" font-family="'Segoe UI', Inter, Arial, sans-serif">
+  <!-- Background -->
+  <rect width="1440" height="800" fill="#F8FAFC"/>
+
+  <!-- Top Header -->
+  <text x="36" y="48" font-size="26" font-weight="800" fill="#7C3AED">Slide 14 <tspan fill="#1E293B">Database Design 1/2 — Mô hình dữ liệu khái niệm (Conceptual ERD)</tspan></text>
+  <text x="36" y="76" font-size="15" fill="#475569">Chín thực thể nghiệp vụ kết nối chặt chẽ giữa Thói quen cá nhân (Power9) và Thành phố đồng đội 7 ngày (Tribe City).</text>
+
+  <!-- 3 Info Pills matching V11 layout -->
+  <rect x="36" y="96" width="660" height="58" rx="10" fill="#F3E8FF"/>
+  <text x="54" y="117" font-size="11" font-weight="800" fill="#7C3AED">CÂU HỎI HỘI ĐỒNG</text>
+  <text x="54" y="139" font-size="14.5" font-style="italic" fill="#1E293B">Dữ liệu nghiệp vụ gồm những thực thể nào, quan hệ và quy tắc ràng buộc ra sao?</text>
+
+  <rect x="712" y="96" width="165" height="58" rx="10" fill="#F3E8FF"/>
+  <text x="730" y="117" font-size="11" font-weight="800" fill="#7C3AED">THỜI LƯỢNG</text>
+  <text x="730" y="141" font-size="18" font-weight="800" fill="#0F172A">25 s</text>
+
+  <rect x="893" y="96" width="511" height="58" rx="10" fill="#F3E8FF"/>
+  <text x="911" y="117" font-size="11" font-weight="800" fill="#7C3AED">MINH CHỨNG BẮT BUỘC</text>
+  <text x="911" y="139" font-size="14" fill="#1E293B">Conceptual ERD có Cardinality (1, 0..*, 1..12) và Business Rules (BR-01..06)</text>
+
+  <!-- ================= LEFT COLUMN (4 BULLET POINTS) ================= -->
+  <text x="36" y="190" font-size="13" font-weight="800" fill="#7C3AED" letter-spacing="0.8">NỘI DUNG TRÌNH BÀY (4 Ý CỐT LÕI)</text>
+
+  <!-- Item 1 -->
+  <circle cx="54" cy="232" r="16" fill="#EDE9FE"/>
+  <text x="54" y="237" font-size="13" font-weight="800" fill="#7C3AED" text-anchor="middle">1</text>
+  <text x="82" y="226" font-size="14" font-weight="700" fill="#0F172A">2 Nhóm thực thể nghiệp vụ chính:</text>
+  <text x="82" y="247" font-size="13" fill="#334155">• Thói quen cá nhân: Routine Category,</text>
+  <text x="82" y="266" font-size="13" fill="#334155">  Routine, User Schedule, Daily Log.</text>
+  <text x="82" y="285" font-size="13" fill="#334155">• Đô thị đồng đội: User, City Room,</text>
+  <text x="82" y="304" font-size="13" fill="#334155">  City Resident, Interaction, Friendship.</text>
+
+  <!-- Item 2 -->
+  <circle cx="54" cy="348" r="16" fill="#EDE9FE"/>
+  <text x="54" y="353" font-size="13" font-weight="800" fill="#7C3AED" text-anchor="middle">2</text>
+  <text x="82" y="342" font-size="14" font-weight="700" fill="#0F172A">Quan hệ &amp; Bản số (Cardinality):</text>
+  <text x="82" y="363" font-size="13" fill="#334155">• 1 Category phân loại nhiều Routine (1 — 0..*).</text>
+  <text x="82" y="382" font-size="13" fill="#334155">• 1 User sở hữu nhiều Schedule &amp; Daily Log.</text>
+  <text x="82" y="401" font-size="13" fill="#334155">• 1 City Room chứa tối đa 12 Resident (1 — 1..12).</text>
+
+  <!-- Item 3 -->
+  <circle cx="54" cy="445" r="16" fill="#EDE9FE"/>
+  <text x="54" y="450" font-size="13" font-weight="800" fill="#7C3AED" text-anchor="middle">3</text>
+  <text x="82" y="439" font-size="14" font-weight="700" fill="#0F172A">Business Rules chi phối dữ liệu:</text>
+  <text x="82" y="460" font-size="13" fill="#334155">• Ràng buộc chống ghi trùng sự kiện (BR-02),</text>
+  <text x="82" y="479" font-size="13" fill="#334155">  tính chuỗi ngày (BR-03), mọc rêu 24h (BR-04),</text>
+  <text x="82" y="498" font-size="13" fill="#334155">  nâng tầng (BR-05) &amp; đóng phòng 168h (BR-06).</text>
+
+  <!-- Item 4 -->
+  <circle cx="54" cy="542" r="16" fill="#EDE9FE"/>
+  <text x="54" y="547" font-size="13" font-weight="800" fill="#7C3AED" text-anchor="middle">4</text>
+  <text x="82" y="536" font-size="14" font-weight="700" fill="#0F172A">Đối chiếu với Actor &amp; Workflow:</text>
+  <text x="82" y="557" font-size="13" fill="#334155">• Employee tạo Schedule (WF-01), ghi Daily Log</text>
+  <text x="82" y="576" font-size="13" fill="#334155">  (WF-02) và nâng cấp City Resident (WF-03).</text>
+  <text x="82" y="595" font-size="13" fill="#334155">• Admin quản lý danh mục Routine chuẩn.</text>
+
+  <!-- Note Box Bottom Left -->
+  <rect x="36" y="628" width="430" height="128" rx="10" fill="#FEF3C7" stroke="#FCD34D" stroke-width="1.5"/>
+  <text x="54" y="655" font-size="12.5" font-weight="800" fill="#B45309">ĐIỂM NHẤN THIẾT KẾ KHÁI NIỆM</text>
+  <text x="54" y="678" font-size="13" fill="#78350F">• Mô hình hoàn toàn độc lập với DBMS (chưa đưa kiểu</text>
+  <text x="54" y="698" font-size="13" fill="#78350F">  dữ liệu vật lý NVARCHAR, INT, PK/FK vào bước này).</text>
+  <text x="54" y="720" font-size="13" fill="#78350F">• Chi tiết cột vật lý, Unique Index và EF Core Migration</text>
+  <text x="54" y="740" font-size="13" fill="#78350F">  được hiện thực hóa ở Slide 15 tiếp theo.</text>
+
+  <!-- ================= RIGHT PANEL (EMBEDDED CONCEPTUAL ERD) ================= -->
+  <g transform="translate(488, 170)">
+    <rect x="0" y="0" width="916" height="588" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <text x="28" y="34" fill="#64748B" font-size="12.5" font-weight="700" letter-spacing="1.2">MÔ HÌNH KHÁI NIỆM (CONCEPTUAL ERD — POWER9 &amp; TRIBE CITY)</text>
+
+    <!-- Row 1: ROUTINE CATEGORY -> ROUTINE -> USER SCHEDULE -> DAILY LOG -->
+    <rect x="28" y="56" width="185" height="84" rx="10" fill="#E3F5F2"/>
+    <text x="120" y="94" fill="#0D8A7B" font-size="13.5" font-weight="800" text-anchor="middle">ROUTINE CATEGORY</text>
+    <text x="120" y="115" fill="#3B7A72" font-size="12" font-weight="500" text-anchor="middle">Nhóm thói quen (9 nhóm)</text>
+
+    <line x1="213" y1="98" x2="290" y2="98" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="225" y="89" fill="#0F172A" font-size="12" font-weight="800">1</text>
+    <text x="258" y="89" fill="#0F172A" font-size="12" font-weight="800">0..*</text>
+
+    <rect x="290" y="56" width="185" height="84" rx="10" fill="#E3F5F2"/>
+    <text x="382" y="94" fill="#0D8A7B" font-size="14" font-weight="800" text-anchor="middle">ROUTINE</text>
+    <text x="382" y="115" fill="#3B7A72" font-size="12" font-weight="500" text-anchor="middle">Bài tập vi thói quen</text>
+
+    <line x1="475" y1="98" x2="552" y2="98" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="488" y="89" fill="#0F172A" font-size="12" font-weight="800">1</text>
+    <text x="520" y="89" fill="#0F172A" font-size="12" font-weight="800">0..*</text>
+
+    <rect x="552" y="56" width="175" height="84" rx="10" fill="#E3F5F2"/>
+    <text x="639" y="94" fill="#0D8A7B" font-size="13.5" font-weight="800" text-anchor="middle">USER SCHEDULE</text>
+    <text x="639" y="115" fill="#3B7A72" font-size="12" font-weight="500" text-anchor="middle">Lịch nhắc cá nhân</text>
+
+    <rect x="750" y="56" width="138" height="84" rx="10" fill="#E3F5F2"/>
+    <text x="819" y="94" fill="#0D8A7B" font-size="13.5" font-weight="800" text-anchor="middle">DAILY LOG</text>
+    <text x="819" y="115" fill="#3B7A72" font-size="12" font-weight="500" text-anchor="middle">Nhật ký Check-in</text>
+
+    <path d="M 382 56 L 382 42 L 819 42 L 819 56" fill="none" stroke="#CBD5E1" stroke-width="1.8"/>
+    <text x="392" y="52" fill="#0F172A" font-size="11" font-weight="800">1</text>
+    <text x="790" y="52" fill="#0F172A" font-size="11" font-weight="800">0..*</text>
+
+    <!-- Row 2: CITY ROOM <- USER -> CITY RESIDENT -> INTERACTION -->
+    <rect x="28" y="198" width="185" height="84" rx="10" fill="#E3F5F2"/>
+    <text x="120" y="236" fill="#0D8A7B" font-size="13.5" font-weight="800" text-anchor="middle">CITY ROOM</text>
+    <text x="120" y="257" fill="#3B7A72" font-size="12" font-weight="500" text-anchor="middle">Thành phố 7 ngày</text>
+
+    <line x1="213" y1="240" x2="290" y2="240" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="222" y="231" fill="#0F172A" font-size="12" font-weight="800">0..*</text>
+    <text x="272" y="231" fill="#0F172A" font-size="12" font-weight="800">1</text>
+
+    <rect x="290" y="198" width="185" height="84" rx="10" fill="#E3F5F2"/>
+    <text x="382" y="236" fill="#0D8A7B" font-size="14" font-weight="800" text-anchor="middle">USER</text>
+    <text x="382" y="257" fill="#3B7A72" font-size="12" font-weight="500" text-anchor="middle">Nhân viên / Quản trị viên</text>
+
+    <path d="M 445 198 L 445 168 L 639 168 L 639 140" fill="none" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="453" y="191" fill="#0F172A" font-size="11.5" font-weight="800">1</text>
+    <text x="610" y="159" fill="#0F172A" font-size="11.5" font-weight="800">0..*</text>
+
+    <path d="M 475 220 L 819 220 L 819 140" fill="none" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="488" y="213" fill="#0F172A" font-size="11.5" font-weight="800">1</text>
+    <text x="790" y="159" fill="#0F172A" font-size="11.5" font-weight="800">0..*</text>
+
+    <rect x="552" y="236" width="175" height="84" rx="10" fill="#E3F5F2"/>
+    <text x="639" y="274" fill="#0D8A7B" font-size="13.5" font-weight="800" text-anchor="middle">CITY RESIDENT</text>
+    <text x="639" y="295" fill="#3B7A72" font-size="12" font-weight="500" text-anchor="middle">Cư dân &amp; Ngôi nhà</text>
+
+    <line x1="475" y1="262" x2="552" y2="262" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="488" y="254" fill="#0F172A" font-size="11.5" font-weight="800">1</text>
+    <text x="520" y="254" fill="#0F172A" font-size="11.5" font-weight="800">0..*</text>
+
+    <path d="M 120 282 L 120 308 L 552 308" fill="none" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="130" y="300" fill="#0F172A" font-size="12" font-weight="800">1</text>
+    <text x="510" y="300" fill="#0F172A" font-size="12" font-weight="800">1..12</text>
+
+    <rect x="750" y="236" width="138" height="84" rx="10" fill="#E3F5F2"/>
+    <text x="819" y="274" fill="#0D8A7B" font-size="12.5" font-weight="800" text-anchor="middle">INTERACTION</text>
+    <text x="819" y="295" fill="#3B7A72" font-size="11.5" font-weight="500" text-anchor="middle">Thả tim / Nhắc bạn</text>
+
+    <line x1="727" y1="278" x2="750" y2="278" stroke="#CBD5E1" stroke-width="2"/>
+    <text x="729" y="270" fill="#0F172A" font-size="10.5" font-weight="800">1</text>
+    <text x="733" y="295" fill="#0F172A" font-size="10.5" font-weight="800">0..*</text>
+
+    <!-- Business Rules Box -->
+    <rect x="28" y="344" width="860" height="196" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+    <text x="48" y="372" fill="#1E293B" font-size="13.5" font-weight="800">Business rules chi phối quan hệ dữ liệu</text>
+
+    <text x="48" y="398" fill="#334155" font-size="12.5"><tspan font-weight="700" fill="#0D8A7B">BR-01</tspan>   Mỗi <tspan font-weight="600">Routine</tspan> thuộc đúng một <tspan font-weight="600">Routine Category</tspan> (9 nhóm nguyên lý sống khỏe Blue Zones).</text>
+    <text x="48" y="422" fill="#334155" font-size="12.5"><tspan font-weight="700" fill="#0D8A7B">BR-02</tspan>   Mỗi <tspan font-weight="600">Daily Log</tspan> thuộc đúng một <tspan font-weight="600">User</tspan> và gắn với duy nhất một sự kiện hoàn thành (chống ghi trùng).</text>
+    <text x="48" y="446" fill="#334155" font-size="12.5"><tspan font-weight="700" fill="#0D8A7B">BR-03</tspan>   Chuỗi ngày liên tiếp (<tspan font-weight="600">Streak</tspan>) của <tspan font-weight="600">User</tspan> được tính từ chuỗi <tspan font-weight="600">Daily Log</tspan> theo ngày giờ Việt Nam.</text>
+    <text x="48" y="470" fill="#334155" font-size="12.5"><tspan font-weight="700" fill="#0D8A7B">BR-04</tspan>   <tspan font-weight="600">City Resident</tspan> quá 24 giờ không phát sinh <tspan font-weight="600">Daily Log</tspan> mới sẽ chuyển sang trạng thái nhà mọc rêu.</text>
+    <text x="48" y="494" fill="#334155" font-size="12.5"><tspan font-weight="700" fill="#0D8A7B">BR-05</tspan>   Mỗi <tspan font-weight="600">City Resident</tspan> dùng vật liệu nâng cấp nhà (1..4 tầng) và đóng góp điểm mở khóa Landmark của <tspan font-weight="600">City Room</tspan>.</text>
+    <text x="48" y="518" fill="#334155" font-size="12.5"><tspan font-weight="700" fill="#0D8A7B">BR-06</tspan>   Mỗi <tspan font-weight="600">City Room</tspan> chứa tối đa <tspan font-weight="600">12 City Resident (1..12)</tspan> và tự động đóng lưu trữ sau chu kỳ <tspan font-weight="600">7 ngày (168 giờ)</tspan>.</text>
+
+    <text x="28" y="566" fill="#64748B" font-size="12" font-style="italic">Mã BR-01..BR-06 dùng lại nhất quán ở Luồng nghiệp vụ (Slide 07) và Kiểm thử (Slide 21).</text>
+  </g>
+</svg>

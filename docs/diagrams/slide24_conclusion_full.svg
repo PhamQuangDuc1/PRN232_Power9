@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="100%" style="background:#F8FAFC; font-family: 'Segoe UI', Inter, Roboto, Arial, sans-serif;">
+  <!-- Top Pill -->
+  <rect x="48" y="24" width="130" height="28" rx="14" fill="#E6F4EE"/>
+  <text x="113" y="43" text-anchor="middle" fill="#0D7A5F" font-size="12" font-weight="700">P4 • PROOF</text>
+  <text x="196" y="43" fill="#64748B" font-size="13" font-weight="700" letter-spacing="1.2">24 / CONCLUSION</text>
+
+  <!-- Title & Subtitle -->
+  <text x="48" y="92" fill="#0D7A5F" font-size="34" font-weight="800">Slide 24 <tspan fill="#1E293B">Conclusion — kết lại bằng ba thông điệp</tspan></text>
+  <text x="48" y="124" fill="#64748B" font-size="17.5">Chốt lại giá trị thực tế đã chứng minh của Power9 Office Routine &amp; Tribe City: Giải quyết đúng bài toán, Kiến trúc chạy thật, Kiểm thử 100%.</text>
+
+  <!-- Top Info Pills -->
+  <g transform="translate(48, 144)">
+    <rect x="0" y="0" width="740" height="72" rx="10" fill="#E6F4EE"/>
+    <text x="20" y="26" fill="#0D7A5F" font-size="12" font-weight="700">CÂU HỎI HỘI ĐỒNG</text>
+    <text x="20" y="52" fill="#1E293B" font-size="17" font-style="italic" font-weight="600">Hội đồng nên nhớ điều gì sau buổi bảo vệ?</text>
+
+    <rect x="760" y="0" width="180" height="72" rx="10" fill="#E6F4EE"/>
+    <text x="780" y="26" fill="#0D7A5F" font-size="12" font-weight="700">THỜI LƯỢNG</text>
+    <text x="780" y="54" fill="#1E293B" font-size="24" font-weight="800">30 s</text>
+
+    <rect x="960" y="0" width="592" height="72" rx="10" fill="#E6F4EE"/>
+    <text x="980" y="26" fill="#0D7A5F" font-size="12" font-weight="700">MINH CHỨNG BẮT BUỘC</text>
+    <text x="980" y="52" fill="#1E293B" font-size="15.5" font-weight="600">localhost:5000 (Web/API) • :8085 (Kafka) • Power9.slnx</text>
+  </g>
+
+  <!-- Left Column: NỘI DUNG CẦN TRÌNH BÀY -->
+  <g transform="translate(48, 248)">
+    <text x="0" y="0" fill="#0D7A5F" font-size="14" font-weight="700" letter-spacing="1">NỘI DUNG CẦN TRÌNH BÀY</text>
+
+    <!-- Point 1 -->
+    <circle cx="18" cy="42" r="16" fill="#E6F4EE"/>
+    <text x="18" y="47" text-anchor="middle" fill="#0D7A5F" font-size="14" font-weight="700">1</text>
+    <text x="48" y="36" fill="#0F172A" font-size="15.5" font-weight="700">Problem &amp; Người hưởng lợi:</text>
+    <text x="48" y="58" fill="#334155" font-size="13.5">Giúp nhân viên văn phòng &amp; lập trình viên xóa bỏ thói quen</text>
+    <text x="48" y="78" fill="#334155" font-size="13.5">ngồi lì bằng bài tập &lt; 3 phút gắn kết 12 đồng nghiệp.</text>
+
+    <!-- Point 2 -->
+    <circle cx="18" cy="134" r="16" fill="#E6F4EE"/>
+    <text x="18" y="139" text-anchor="middle" fill="#0D7A5F" font-size="14" font-weight="700">2</text>
+    <text x="48" y="128" fill="#0F172A" font-size="15.5" font-weight="700">Sản phẩm đã xây &amp; 3 Workflow đã Demo:</text>
+    <text x="48" y="150" fill="#334155" font-size="13.5">3 Microservices (.NET 8) phối hợp qua REST, gRPC &amp; Kafka</text>
+    <text x="48" y="170" fill="#334155" font-size="13.5">vận hành trực tiếp bản đồ Isometric 2.5D và gửi Gmail thật.</text>
+
+    <!-- Point 3 -->
+    <circle cx="18" cy="226" r="16" fill="#E6F4EE"/>
+    <text x="18" y="231" text-anchor="middle" fill="#0D7A5F" font-size="14" font-weight="700">3</text>
+    <text x="48" y="220" fill="#0F172A" font-size="15.5" font-weight="700">Kết quả kiểm thử &amp; Minh chứng nổi bật:</text>
+    <text x="48" y="242" fill="#334155" font-size="13.5">31/31 xUnit Tests Pass (100%), 23 REST APIs, 7 bảng DB,</text>
+    <text x="48" y="262" fill="#334155" font-size="13.5">độ trễ gRPC &lt; 15ms, Kafka &lt; 1s, 100% có Fallback an toàn.</text>
+
+    <!-- Point 4 -->
+    <circle cx="18" cy="318" r="16" fill="#E6F4EE"/>
+    <text x="18" y="323" text-anchor="middle" fill="#0D7A5F" font-size="14" font-weight="700">4</text>
+    <text x="48" y="312" fill="#0F172A" font-size="15.5" font-weight="700">Định hướng cải tiến &amp; Lời cảm ơn:</text>
+    <text x="48" y="334" fill="#334155" font-size="13.5">Nâng cấp SignalR Real-time, Hybrid ML Scoring &amp; Outbox</text>
+    <text x="48" y="354" fill="#334155" font-size="13.5">Pattern. Sẵn sàng mở trực tiếp từng container cho Q&amp;A.</text>
+
+    <!-- Bottom Left Box -->
+    <rect x="0" y="390" width="490" height="185" rx="10" fill="#E6F4EE" stroke="#10B981" stroke-width="1.2"/>
+    <text x="20" y="420" fill="#0D7A5F" font-size="13.5" font-weight="700">LỜI CHỐT TRƯỚC HỘI ĐỒNG (30 GIÂY CUỐI)</text>
+    <text x="20" y="448" fill="#1E293B" font-size="13" font-style="italic">"Power9 không chỉ là một ứng dụng nhắc tập thể dục, mà là</text>
+    <text x="20" y="468" fill="#1E293B" font-size="13" font-style="italic">một hệ thống Microservices hoàn chỉnh biến sức khỏe cá nhân</text>
+    <text x="20" y="488" fill="#1E293B" font-size="13" font-style="italic">thành niềm vui tập thể trên bản đồ Tribe City 2.5D — đã được</text>
+    <text x="20" y="508" fill="#1E293B" font-size="13" font-style="italic">kiểm chứng bằng 31 Unit Tests, 7 Docker Containers và Email</text>
+    <text x="20" y="528" fill="#1E293B" font-size="13" font-style="italic">thật. Nhóm xin cảm ơn và sẵn sàng nhận câu hỏi từ Hội đồng!"</text>
+  </g>
+
+  <!-- Right Panel: Embed exact MẪU BỐ CỤC -->
+  <g transform="translate(560, 226) scale(0.93)">
+    <rect x="8" y="8" width="1104" height="664" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+    <text x="40" y="46" fill="#64748B" font-size="13.5" font-weight="700" letter-spacing="1.2">MẪU BỐ CỤC • 3 THÔNG ĐIỆP CHỐT LẠI GIÁ TRỊ ĐÃ CHỨNG MINH (GIỮ TRÊN MÀN HÌNH KHI Q&amp;A)</text>
+
+    <g transform="translate(40, 74)">
+      <rect x="0" y="0" width="1040" height="128" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.2"/>
+      <circle cx="48" cy="64" r="28" fill="#1D4ED8"/>
+      <text x="48" y="72" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">1</text>
+      <text x="98" y="38" fill="#0F172A" font-size="17" font-weight="800">PROBLEM SOLVED — Giải quyết trọn vẹn bài toán bỏ cuộc của dân văn phòng</text>
+      <text x="98" y="66" fill="#334155" font-size="14">• Chuyển đổi việc tập luyện đơn độc, tốn thời gian thành các bài vận động ngắn <tspan fill="#1D4ED8" font-weight="700">&lt; 3 phút ngay tại bàn làm việc</tspan></text>
+      <text x="98" y="90" fill="#334155" font-size="14">  (ngừa đau mỏi cổ vai gáy &amp; mỏi mắt) kết hợp <tspan fill="#1D4ED8" font-weight="700">trách nhiệm đồng đội (Social Accountability)</tspan> giữa 12 đồng nghiệp</text>
+      <text x="98" y="112" fill="#64748B" font-size="13">  cùng xây dựng Thành phố chung Tribe City 2.5D trong chu kỳ 7 ngày.</text>
+    </g>
+
+    <g transform="translate(40, 222)">
+      <rect x="0" y="0" width="1040" height="136" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.2"/>
+      <circle cx="48" cy="68" r="28" fill="#EA580C"/>
+      <text x="48" y="76" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">2</text>
+      <text x="98" y="36" fill="#0F172A" font-size="17" font-weight="800">WORKING PRODUCT — 3 Luồng nghiệp vụ (WF-01..03) vận hành mượt trên 7 Docker Containers</text>
+      <text x="98" y="64" fill="#334155" font-size="13.5">• <tspan fill="#EA580C" font-weight="700">WF-01 (Smart Routine &amp; gRPC):</tspan> Gợi ý bài tập tức thì qua HTTP/2 gRPC (:50051) theo thời gian ngồi, buổi &amp; mức Stress.</text>
+      <text x="98" y="88" fill="#334155" font-size="13.5">• <tspan fill="#EA580C" font-weight="700">WF-02 (Tribe City 2.5D):</tspan> Check-in nhận +50 vật liệu, nâng nhà 4 tầng (BR-05), quét rêu 24h (BR-04) &amp; Bảo tàng 7 ngày (BR-06).</text>
+      <text x="98" y="112" fill="#334155" font-size="13.5">• <tspan fill="#EA580C" font-weight="700">WF-03 (Kafka &amp; Gmail SMTP):</tspan> Xử lý bất đồng bộ qua Kafka (:8085), tự động tính Streak (BR-02) &amp; gửi thẳng Email về Gmail thật.</text>
+    </g>
+
+    <g transform="translate(40, 378)">
+      <rect x="0" y="0" width="1040" height="128" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.2"/>
+      <circle cx="48" cy="64" r="28" fill="#0D7A5F"/>
+      <text x="48" y="72" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">3</text>
+      <text x="98" y="38" fill="#0F172A" font-size="17" font-weight="800">VERIFIED RESULT — Minh chứng kỹ thuật đo đạc thực tế &amp; hướng mở rộng rõ ràng</text>
+      <text x="98" y="66" fill="#334155" font-size="14">• <tspan fill="#0D7A5F" font-weight="700">31 / 31 xUnit Tests Passed (100% trong ~1.04s)</tspan> • 23 REST Endpoints • 7 bảng SQL Server 2022 (Power9Db) • 100+ bản ghi Seed.</text>
+      <text x="98" y="90" fill="#334155" font-size="14">• Độ trễ gRPC <tspan fill="#0D7A5F" font-weight="700">&lt; 15ms</tspan> (có Fallback chịu lỗi 100%); Kafka Consumer xử lý <tspan fill="#0D7A5F" font-weight="700">&lt; 1s</tspan> (chống cộng trùng bằng EventId UNIQUE).</text>
+      <text x="98" y="112" fill="#64748B" font-size="13">• Bước tiếp theo: Nâng cấp SignalR Real-time (&lt; 100ms), Hybrid ML Scoring &amp; Transactional Outbox.</text>
+    </g>
+
+    <g transform="translate(40, 530)">
+      <rect x="0" y="0" width="328" height="62" rx="31" fill="#E0E7FF"/>
+      <text x="164" y="27" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800">Demo URL (Web 2.5D &amp; Swagger)</text>
+      <text x="164" y="47" text-anchor="middle" fill="#1E3A8A" font-size="12.5" font-family="Consolas, monospace">http://localhost:5000</text>
+
+      <rect x="356" y="0" width="328" height="62" rx="31" fill="#E0E7FF"/>
+      <text x="520" y="27" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800">Git Repo &amp; Test Suite</text>
+      <text x="520" y="47" text-anchor="middle" fill="#1E3A8A" font-size="12.5" font-family="Consolas, monospace">Power9.slnx (31/31 xUnit Pass)</text>
+
+      <rect x="712" y="0" width="328" height="62" rx="31" fill="#E0E7FF"/>
+      <text x="876" y="27" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800">Kafka UI &amp; Real Gmail SMTP</text>
+      <text x="876" y="47" text-anchor="middle" fill="#1E3A8A" font-size="12.5" font-family="Consolas, monospace">:8085 (Kafka) • :8025 / Gmail</text>
+    </g>
+
+    <text x="40" y="636" fill="#0D7A5F" font-size="13.5" font-weight="700" font-style="italic">Xin chân thành cảm ơn Hội đồng! Nhóm xin để slide này trên màn hình trong suốt phần Q&amp;A để đối chiếu trực tiếp.</text>
+  </g>
+</svg>

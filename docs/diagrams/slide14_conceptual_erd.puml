@@ -1,0 +1,56 @@
+@startuml Slide14_Conceptual_ERD_Power9
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI", "Inter", Arial
+skinparam defaultFontSize 13
+skinparam roundCorner 12
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor #E6F4F1
+  BorderColor #99F6E4
+  BorderThickness 1.5
+  FontColor #0F766E
+}
+skinparam ArrowColor #94A3B8
+skinparam ArrowThickness 1.8
+skinparam ArrowFontColor #0F172A
+skinparam ArrowFontSize 12
+skinparam ArrowFontStyle bold
+
+title **SLIDE 14 · DATABASE DESIGN 1/2 — MÔ HÌNH KHÁI NIỆM (CONCEPTUAL ERD)**
+
+' Top row: Core Personal Routine Domain
+rectangle "**ROUTINE CATEGORY**\n<color:#475569>Nhóm thói quen (9 nhóm)</color>" as CAT
+rectangle "**ROUTINE**\n<color:#475569>Bài tập vi thói quen</color>" as RTN
+rectangle "**USER SCHEDULE**\n<color:#475569>Lịch nhắc cá nhân</color>" as SCH
+rectangle "**DAILY LOG**\n<color:#475569>Nhật ký hoàn thành</color>" as LOG
+
+' Bottom row: User & Tribe City Domain
+rectangle "**USER**\n<color:#475569>Nhân viên / Quản trị viên</color>" as USR
+rectangle "**CITY ROOM**\n<color:#475569>Thành phố 7 ngày</color>" as ROOM
+rectangle "**CITY RESIDENT**\n<color:#475569>Cư dân & Ngôi nhà (12 ô)</color>" as RES
+rectangle "**CITY INTERACTION**\n<color:#475569>Tương tác đồng nghiệp</color>" as INT
+
+' Relationships with exact Cardinality (NO PK/FK/VARCHAR!)
+CAT "1" -right- "0..*" RTN : phân loại
+RTN "1" -right- "0..*" SCH : được hẹn giờ
+RTN "1" -down- "0..*" LOG : ghi nhận tập
+
+USR "1" -up- "0..*" SCH : sở hữu lịch
+USR "1" -up- "0..*" LOG : thực hiện check-in
+USR "1" -right- "0..*" ROOM : làm chủ phòng
+USR "1" -right- "0..*" RES : cư trú & xây nhà
+ROOM "1" -right- "1..12" RES : gồm tối đa 12 lô đất
+ROOM "1" -right- "0..*" INT : diễn ra tương tác
+
+note bottom of RES
+  **Business rules chi phối quan hệ (Dùng thống nhất với Slide 07 & Slide 21):**
+  • **BR-01**  Mỗi **Routine** thuộc đúng **1 Routine Category** (9 nhóm chuẩn Blue Zones).
+  • **BR-02**  Mỗi **Daily Log** thuộc về **1 User** và gắn với duy nhất **1 sự kiện Check-in** (không ghi trùng).
+  • **BR-03**  Chuỗi ngày liên tiếp (**Streak**) của **User** được tổng hợp từ các **Daily Log** theo ngày Việt Nam.
+  • **BR-04**  **City Resident** quá **24 giờ** chưa có **Daily Log** mới sẽ chuyển sang trạng thái phủ rêu.
+  • **BR-05**  Mỗi **City Resident** tích lũy vật liệu để nâng cấp nhà (**1..4 tầng**) và đóng góp mở khóa **Landmark** của **City Room**.
+  • **BR-06**  Mỗi **City Room** chứa tối đa **12 City Resident** (`1..12`) và tự động lưu trữ sau chu kỳ **7 ngày (168 giờ)**.
+end note
+
+@enduml

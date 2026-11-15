@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 680" width="100%" height="100%" style="background:#FFFFFF; font-family: 'Segoe UI', Inter, Roboto, Arial, sans-serif;">
+  <!-- Outer Card Border matching MẪU BỐ CỤC -->
+  <rect x="8" y="8" width="1104" height="664" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+  <text x="36" y="44" fill="#64748B" font-size="13.5" font-weight="700" letter-spacing="1.2">MẪU BỐ CỤC • ĐỐI CHIẾU MỤC TIÊU CAM KẾT (SLIDE 04) VỚI KẾT QUẢ ĐO ĐẠC THỰC TẾ</text>
+
+  <!-- ================= 3 CARDS: OBJECTIVE | IMPLEMENTED | VALIDATED ================= -->
+  <g transform="translate(36, 68)">
+    <!-- CARD 1: OBJECTIVE (Blue Checkmark) -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="328" height="390" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      <circle cx="54" cy="54" r="26" fill="#1D4ED8"/>
+      <path d="M 43 54 L 51 62 L 66 46" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <text x="28" y="114" fill="#0F172A" font-size="16" font-weight="800">OBJECTIVE (3 MỤC TIÊU)</text>
+      <text x="28" y="138" fill="#64748B" font-size="12.5" font-weight="600">Cam kết từ Slide 04 (Solution):</text>
+
+      <rect x="20" y="152" width="288" height="64" rx="6" fill="#EFF6FF"/>
+      <text x="32" y="173" fill="#1E3A8A" font-size="13" font-weight="700">1. Gợi ý vận động tức thì (&lt; 3 phút)</text>
+      <text x="32" y="193" fill="#334155" font-size="12">Chấm dứt ngồi lì bằng bài tập khớp đúng</text>
+      <text x="32" y="209" fill="#334155" font-size="12">thời gian ngồi, buổi &amp; mức độ Stress.</text>
+
+      <rect x="20" y="226" width="288" height="64" rx="6" fill="#EFF6FF"/>
+      <text x="32" y="247" fill="#1E3A8A" font-size="13" font-weight="700">2. Thành phố chung Tribe City 2.5D</text>
+      <text x="32" y="267" fill="#334155" font-size="12">ối đa 12 đồng nghiệp/phòng; thưởng</text>
+      <text x="32" y="283" fill="#334155" font-size="12">+50 vật liệu, nâng nhà 4 tầng &amp; rêu 24h.</text>
+
+      <rect x="20" y="300" width="288" height="68" rx="6" fill="#EFF6FF"/>
+      <text x="32" y="321" fill="#1E3A8A" font-size="13" font-weight="700">3. Tự động cộng Streak &amp; Nhắc lịch</text>
+      <text x="32" y="341" fill="#334155" font-size="12">Xử lý bất đồng bộ qua Event Broker &amp;</text>
+      <text x="32" y="357" fill="#334155" font-size="12">gửi Email thật không làm chậm thao tác.</text>
+    </g>
+
+    <!-- CARD 2: IMPLEMENTED (Green Checkmark) -->
+    <g transform="translate(360, 0)">
+      <rect x="0" y="0" width="328" height="390" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      <circle cx="54" cy="54" r="26" fill="#0D7A5F"/>
+      <path d="M 43 54 L 51 62 L 66 46" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <text x="28" y="114" fill="#0F172A" font-size="16" font-weight="800">IMPLEMENTED (ĐÃ HIỆN THỰC)</text>
+      <text x="28" y="138" fill="#64748B" font-size="12.5" font-weight="600">Chạy thật trên 7 Docker Containers:</text>
+
+      <rect x="20" y="152" width="288" height="64" rx="6" fill="#ECFDF5"/>
+      <text x="32" y="173" fill="#065F46" font-size="13" font-weight="700">• 3 Microservices (.NET 8 + Clean Arch)</text>
+      <text x="32" y="193" fill="#334155" font-size="12">Routine REST API (:5000), Recommendation</text>
+      <text x="32" y="209" fill="#334155" font-size="12">gRPC (:50051) &amp; Notification Worker.</text>
+
+      <rect x="20" y="226" width="288" height="64" rx="6" fill="#ECFDF5"/>
+      <text x="32" y="247" fill="#065F46" font-size="13" font-weight="700">• 23 REST Endpoints + Bản đồ 2.5D</text>
+      <text x="32" y="267" fill="#334155" font-size="12">6 Controllers, 7 bảng SQL Server (Power9Db),</text>
+      <text x="32" y="283" fill="#334155" font-size="12">2 EF Migrations, 100+ bản ghi Seed sẵn.</text>
+
+      <rect x="20" y="300" width="288" height="68" rx="6" fill="#ECFDF5"/>
+      <text x="32" y="321" fill="#065F46" font-size="13" font-weight="700">• Kafka Broker + Gmail SMTP thật</text>
+      <text x="32" y="341" fill="#334155" font-size="12">Topic routine-completed-events (:8085) +</text>
+      <text x="32" y="357" fill="#334155" font-size="12">gửi thẳng Gmail (zrya1236987@gmail.com).</text>
+    </g>
+
+    <!-- CARD 3: VALIDATED (Orange Checkmark) -->
+    <g transform="translate(720, 0)">
+      <rect x="0" y="0" width="328" height="390" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      <circle cx="54" cy="54" r="26" fill="#EA580C"/>
+      <path d="M 43 54 L 51 62 L 66 46" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <text x="28" y="114" fill="#0F172A" font-size="16" font-weight="800">VALIDATED (SỐ ĐO KIỂM CHỨNG)</text>
+      <text x="28" y="138" fill="#64748B" font-size="12.5" font-weight="600">Đo đạc trực tiếp từ Test &amp; Docker Logs:</text>
+
+      <rect x="20" y="152" width="288" height="64" rx="6" fill="#FFF7ED"/>
+      <text x="32" y="173" fill="#9A3412" font-size="13" font-weight="700">• 31 / 31 xUnit Tests Passed (~1.04s)</text>
+      <text x="32" y="193" fill="#334155" font-size="12">Kiểm chứng toàn bộ BR-01..BR-06 (Streak,</text>
+      <text x="32" y="209" fill="#334155" font-size="12">Rêu 24h, Nâng nhà Floor*100, Chu kỳ 168h).</text>
+
+      <rect x="20" y="226" width="288" height="64" rx="6" fill="#FFF7ED"/>
+      <text x="32" y="247" fill="#9A3412" font-size="13" font-weight="700">• Độ trễ gRPC &lt; 15ms &amp; Fallback 100%</text>
+      <text x="32" y="267" fill="#334155" font-size="12">Tắt thử container gRPC → REST API vẫn trả</text>
+      <text x="32" y="283" fill="#334155" font-size="12">HTTP 200 kèm bài tập dự phòng an toàn.</text>
+
+      <rect x="20" y="300" width="288" height="68" rx="6" fill="#FFF7ED"/>
+      <text x="32" y="321" fill="#9A3412" font-size="13" font-weight="700">• Kafka Consume &lt; 1s &amp; Gmail OK</text>
+      <text x="32" y="341" fill="#334155" font-size="12">Worker xử lý sự kiện &lt; 1s, chống cộng trùng</text>
+      <text x="32" y="357" fill="#334155" font-size="12">bằng EventId UNIQUE; gửi Gmail thành công.</text>
+    </g>
+  </g>
+
+  <!-- ================= BOTTOM ORANGE BANNER: CHƯA ĐẠT -> SLIDE 23 ================= -->
+  <g transform="translate(36, 482)">
+    <rect x="0" y="0" width="1048" height="106" rx="8" fill="#FDECE6" stroke="#FDBA74" stroke-width="1.2"/>
+    <text x="20" y="32" fill="#C2410C" font-size="14" font-weight="800">CHƯA ĐẠT / GIỚI HẠN HIỆN TẠI (CHUYỂN TIẾP → SLIDE 23 &amp; 24)</text>
+    <text x="20" y="58" fill="#431407" font-size="13">
+      1. <tspan font-weight="700">Chưa có WebSocket / SignalR thời gian thực:</tspan> Bản đồ Tribe City 2.5D hiện đồng bộ trạng thái bằng HTTP Polling (chu kỳ 15s).
+    </text>
+    <text x="20" y="84" fill="#431407" font-size="13">
+      2. <tspan font-weight="700">Chưa triển khai Cloud Production &amp; ML cá nhân hóa:</tspan> Hệ thống đang chạy trên Docker Compose Local (7 containers) &amp; dùng Rule-based Engine (8 kịch bản) → phân tích nguyên nhân ở Slide 23.
+    </text>
+  </g>
+
+  <!-- Bottom Caption -->
+  <text x="36" y="632" fill="#64748B" font-size="12.5" font-style="italic">Minh chứng trực tiếp: http://localhost:5000 (Web/Swagger) • http://localhost:8085 (Kafka UI) • http://localhost:8025 (Mailpit) &amp; Gmail thật.</text>
+</svg>

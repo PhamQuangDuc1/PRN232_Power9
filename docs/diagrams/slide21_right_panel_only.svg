@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 680" width="100%" height="100%" style="background:#FFFFFF; font-family: 'Segoe UI', Inter, Roboto, Arial, sans-serif;">
+  <!-- Outer Card Border matching MẪU BỐ CỤC -->
+  <rect x="8" y="8" width="1104" height="664" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+  <text x="36" y="44" fill="#64748B" font-size="13.5" font-weight="700" letter-spacing="1.2">MẪU BỐ CỤC • KẾT QUẢ KIỂM THỬ &amp; MINH CHỨNG THỰC TẾ (POWER9.SLNX)</text>
+
+  <!-- ================= TOP 3 MINT STAT CARDS ([N], [x]%, [k]) ================= -->
+  <g transform="translate(36, 66)">
+    <!-- Card 1: [N] test case -->
+    <rect x="0" y="0" width="328" height="122" rx="10" fill="#E6F4EE"/>
+    <text x="164" y="64" text-anchor="middle" fill="#0D7A5F" font-size="44" font-weight="800">31</text>
+    <text x="164" y="92" text-anchor="middle" fill="#334155" font-size="14" font-weight="600">xUnit test cases tự động (+12 kịch bản API/E2E)</text>
+    <text x="164" y="110" text-anchor="middle" fill="#64748B" font-size="12">10 gRPC Engine • 10 Worker • 11 Tribe City</text>
+
+    <!-- Card 2: [x]% pass -->
+    <rect x="360" y="0" width="328" height="122" rx="10" fill="#E6F4EE"/>
+    <text x="524" y="64" text-anchor="middle" fill="#0D7A5F" font-size="44" font-weight="800">100%</text>
+    <text x="524" y="92" text-anchor="middle" fill="#334155" font-size="14" font-weight="600">pass (31/31 Passed • 0 Failed • ~1.04s)</text>
+    <text x="524" y="110" text-anchor="middle" fill="#64748B" font-size="12">dotnet test Power9.slnx</text>
+
+    <!-- Card 3: [k] bug còn mở -->
+    <rect x="720" y="0" width="328" height="122" rx="10" fill="#E6F4EE"/>
+    <text x="884" y="64" text-anchor="middle" fill="#0D7A5F" font-size="44" font-weight="800">0</text>
+    <text x="884" y="92" text-anchor="middle" fill="#334155" font-size="14" font-weight="600">bug nghiêm trọng còn mở (Critical/Major)</text>
+    <text x="884" y="110" text-anchor="middle" fill="#64748B" font-size="12">2 giới hạn kỹ thuật đã ghi nhận (Polling / Rule Engine)</text>
+  </g>
+
+  <!-- ================= TABLE: Level | Evidence | Result ================= -->
+  <g transform="translate(36, 214)">
+    <!-- Table Header -->
+    <rect x="0" y="0" width="1048" height="44" fill="#0F172A"/>
+    <text x="18" y="28" fill="#FFFFFF" font-size="13.5" font-weight="700">Level</text>
+    <text x="195" y="28" fill="#FFFFFF" font-size="13.5" font-weight="700">Evidence (Minh chứng thực tế trong Code &amp; Docker)</text>
+    <text x="845" y="28" fill="#FFFFFF" font-size="13.5" font-weight="700">Result</text>
+
+    <!-- Row 1: Unit -->
+    <rect x="0" y="44" width="1048" height="82" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.9"/>
+    <text x="18" y="76" fill="#0F172A" font-size="14" font-weight="700">Unit</text>
+    <text x="18" y="96" fill="#64748B" font-size="12">(xUnit .NET 8)</text>
+
+    <text x="195" y="68" fill="#0F172A" font-size="13" font-weight="600">• RecommendationEngineTests.cs (10 tests): Rule ưu tiên gợi ý gRPC, xử lý biên âm &amp; null</text>
+    <text x="195" y="90" fill="#334155" font-size="13">• WorkerLogicTests.cs (10 tests): StreakCalculator (BR-02) &amp; ReminderWindow chống gửi trùng</text>
+    <text x="195" y="112" fill="#334155" font-size="13">• TribeCityTests.cs (11 tests): Mốc Landmark 0..3, nâng nhà Floor*100 (BR-05), rêu 24h (BR-04)</text>
+
+    <rect x="845" y="66" width="180" height="34" rx="6" fill="#DCFCE7"/>
+    <text x="935" y="88" text-anchor="middle" fill="#15803D" font-size="13" font-weight="700">31 / 31 Passed (100%)</text>
+
+    <!-- Row 2: Integration -->
+    <rect x="0" y="126" width="1048" height="82" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.9"/>
+    <text x="18" y="158" fill="#0F172A" font-size="14" font-weight="700">Integration</text>
+    <text x="18" y="178" fill="#64748B" font-size="12">(API • DB • Kafka)</text>
+
+    <text x="195" y="150" fill="#0F172A" font-size="13" font-weight="600">• REST + gRPC Contract: POST /api/recommendations → gRPC :50051 (&lt; 15ms)</text>
+    <text x="195" y="172" fill="#334155" font-size="13">• Event-Driven Kafka + DB: Check-in → Topic routine-completed-events (:8085) → SQL Server</text>
+    <text x="195" y="194" fill="#334155" font-size="13">• SMTP Gmail thật: POST /api/routines/test-email → gửi về Gmail zrya1236987@gmail.com</text>
+
+    <rect x="845" y="148" width="180" height="34" rx="6" fill="#DCFCE7"/>
+    <text x="935" y="170" text-anchor="middle" fill="#15803D" font-size="13" font-weight="700">Passed (7 Containers)</text>
+
+    <!-- Row 3: E2E / UI -->
+    <rect x="0" y="208" width="1048" height="78" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.9"/>
+    <text x="18" y="240" fill="#0F172A" font-size="14" font-weight="700">E2E / UI</text>
+    <text x="18" y="260" fill="#64748B" font-size="12">(Web 2.5D + Swagger)</text>
+
+    <text x="195" y="232" fill="#0F172A" font-size="13" font-weight="600">• Luồng 1 (Happy Path): Đăng nhập JWT → Check-in bài tập → +50 Vật liệu → Nâng nhà Tầng 2..4</text>
+    <text x="195" y="254" fill="#334155" font-size="13">• Luồng 2 (State Guard): Thiếu vật liệu hoặc phòng Archived → API chặn HTTP 400 BadRequest</text>
+    <text x="195" y="274" fill="#334155" font-size="13">• Luồng 3 (Fault Tolerance): Tắt gRPC container → API tự động trả Fallback Routine (HTTP 200)</text>
+
+    <rect x="845" y="230" width="180" height="34" rx="6" fill="#DCFCE7"/>
+    <text x="935" y="252" text-anchor="middle" fill="#15803D" font-size="13" font-weight="700">12 / 12 Scenarios OK</text>
+
+    <!-- Row 4: UAT -->
+    <rect x="0" y="286" width="1048" height="72" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.9"/>
+    <text x="18" y="318" fill="#0F172A" font-size="14" font-weight="700">UAT</text>
+    <text x="18" y="338" fill="#64748B" font-size="12">(Role-based Demo)</text>
+
+    <text x="195" y="312" fill="#0F172A" font-size="13" font-weight="600">• Nghiệm thu trên dữ liệu Seed 100+ bản ghi (13 Users, 4 Thành phố Tribe City, 40 DailyLogs)</text>
+    <text x="195" y="336" fill="#334155" font-size="13">• Kiểm chứng đầy đủ 2 vai trò: Nhân viên (minh_dev) &amp; Quản trị viên duyệt bài (admin@power9.com)</text>
+
+    <rect x="845" y="305" width="180" height="34" rx="6" fill="#E0F2FE"/>
+    <text x="935" y="327" text-anchor="middle" fill="#0369A1" font-size="13" font-weight="700">Accepted (Sẵn sàng)</text>
+
+    <!-- Vertical Dividers -->
+    <line x1="180" y1="0" x2="180" y2="358" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="830" y1="0" x2="830" y2="358" stroke="#CBD5E1" stroke-width="1"/>
+  </g>
+
+  <!-- Bottom Note -->
+  <text x="36" y="610" fill="#0D7A5F" font-size="13" font-weight="700">Lệnh chạy kiểm chứng trực tiếp: <tspan fill="#1E293B" font-family="Consolas, monospace">dotnet test Power9.slnx --logger "console;verbosity=normal"</tspan></text>
+  <text x="36" y="638" fill="#64748B" font-size="12.5" font-style="italic">Unit Test: xUnit (.NET 8) • API/Contract: Swagger UI (:5000) &amp; Kafka UI (:8085) • Email Verification: Gmail SMTP &amp; Mailpit (:8025).</text>
+</svg>

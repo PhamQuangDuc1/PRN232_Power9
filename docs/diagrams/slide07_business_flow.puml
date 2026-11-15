@@ -1,0 +1,73 @@
+@startuml Slide07_Business_Flow_Power9
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI", "Inter", Arial
+skinparam defaultFontSize 13
+skinparam roundCorner 10
+skinparam shadowing false
+skinparam ArrowColor #334155
+skinparam ArrowThickness 1.5
+skinparam ActivityBorderColor #0F766E
+skinparam ActivityBackgroundColor #F0FDF4
+skinparam ActivityDiamondBackgroundColor #FEF3C7
+skinparam ActivityDiamondBorderColor #D97706
+skinparam SwimlaneTitleFontSize 15
+skinparam SwimlaneTitleFontStyle bold
+skinparam SwimlaneBorderColor #CBD5E1
+skinparam SwimlaneBorderThickness 2
+
+title **SLIDE 07 · BUSINESS FLOW TỔNG THỂ — POWER9 OFFICE ROUTINE & TRIBE CITY**
+
+|#EFF6FF| Nhân viên (Employee) |
+start
+:Ngồi làm việc lâu / Căng thẳng\nYêu cầu **Gợi ý bài tập** & **Lên lịch nhắc**;
+
+|#F0FDF4| Hệ thống Core (Routine API & gRPC) |
+if (Kiểm tra tham số **BR-01**\n(SittingMinutes, StressLevel hợp lệ?)) then (Sai tham số [FAIL BR-01])
+  #FEE2E2:Trả lỗi **400 Bad Request**\nYêu cầu nhập lại;
+  stop
+else (Hợp lệ [PASS BR-01])
+  :gRPC Rule Engine tính bài tập tối ưu\n(VD: *#3 Hít thở 4-7-8* • +40 điểm)\n& Lưu lịch nhắc `UserSchedule`;
+endif
+
+|#EFF6FF| Nhân viên (Employee) |
+:Thực hiện bài tập 1–5 phút\n& Bấm **Check-in Hoàn thành**;
+
+|#F0FDF4| Hệ thống Core (Routine API & gRPC) |
+:Cộng ngay **+50 Vật liệu Tribe City**\nSinh `EventId` & Bắn sự kiện vào **Kafka**\n(Trả về **202 Accepted** tức thì);
+
+|#FEFCE8| Background Worker & Kafka |
+if (Kiểm tra **BR-02**\n(`EventId` đã tồn tại trong `DailyLogs`?)) then (Trùng EventId [FAIL BR-02])
+  #E2E8F0:Bỏ qua không cộng trùng\n& Commit Offset;
+else (Event mới [PASS BR-02])
+  :Tính chuỗi ngày **BR-03** (`StreakCalculator`)\nCộng `TotalPoints` & Ghi nhận `DailyLogs`;
+  |#FDF2F8| Dịch vụ Email (SMTP / Gmail) |
+  :Gửi **Email HTML** chúc mừng Check-in\n& Nhắc lịch tập định kỳ đến hộp thư;
+endif
+
+|#EFF6FF| Nhân viên (Employee) |
+:Vào **Tribe City (12 ô đất)**\nBấm **Nâng cấp tầng nhà** & Tương tác đồng nghiệp;
+
+|#F0FDF4| Hệ thống Core (Routine API & gRPC) |
+if (Kiểm tra **BR-05**\n(`Materials >= Floor * 100` & `Floor < 4`?)) then (Thiếu vật liệu / Đạt Tầng 4 [FAIL BR-05])
+  #FEE2E2:Chặn nâng cấp & Báo số vật liệu còn thiếu;
+else (Đủ điều kiện [PASS BR-05])
+  :Trừ vật liệu & Tăng **+1 Tầng nhà**\nCập nhật `TotalCityScore` mở khóa **Landmark (Cấp 1..3)**;
+endif
+
+|#FEFCE8| Background Worker & Kafka |
+if (Kiểm tra **BR-04**\n(Quá 24h chưa Check-in?)) then (>= 24h)
+  #FEF3C7:Gắn trạng thái **Phủ rêu (`IsMossy = true`)**\nĐể đồng nghiệp bấm chuông nhắc uống nước;
+else (< 24h)
+  :Giữ trạng thái nhà sạch đẹp;
+endif
+
+if (Kiểm tra **BR-06**\n(Đủ chu kỳ 7 ngày = 168 giờ?)) then (ExpiredAt <= UtcNow)
+  #DCFCE7:Đóng phòng (`Status = Archived`)\nVinh danh MVP & Lưu vào **Bảo tàng Kỷ niệm**;
+  stop
+else (Còn hạn)
+  :Tiếp tục chu kỳ 7 ngày;
+  stop
+endif
+
+@enduml

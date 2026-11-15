@@ -1,0 +1,74 @@
+@startuml slide15_logical_physical_db
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI"
+skinparam roundCorner 8
+skinparam shadowing false
+left to right direction
+
+title Slide 15: Database Design 2/2 — Từ Logic sang Vật lý (SQL Server 2022 - Power9Db)
+
+package "Logical Model (3NF)" #F8FAFC {
+  class "CITY_RESIDENT (logical)" as L_Resident #E3F5F2 {
+    + ResidentID (ID)
+    --
+    RoomID (ref -> CITY_ROOM)
+    UserID (ref -> USER)
+    SlotIndex (0..11)
+    HouseFloors (1..4)
+    BuildingMaterials
+    RooftopStatus
+    LastCheckInAt
+    IsActive
+  }
+
+  class "DAILY_LOG (logical)" as L_Log #E3F5F2 {
+    + LogID (ID)
+    --
+    UserID (ref -> USER)
+    RoutineID (ref -> ROUTINE)
+    EventID (Idempotency Key)
+    CompletedAt
+    PointsEarned
+    Note
+  }
+}
+
+package "Physical Schema (SQL Server 2022 • Power9Db)" #FFFFFF {
+  entity "CityResidents" as P_Resident {
+    * **Id** : INT IDENTITY(1,1) <<PK>>
+    --
+    * **RoomId** : INT <<FK -> CityRooms(Id) CASCADE, NOT NULL>>
+    * **UserId** : INT <<FK -> Users(Id) CASCADE, NOT NULL>>
+    * **SlotIndex** : INT <<NOT NULL, UNIQUE(RoomId, SlotIndex), 0..11 (BR-03)>>
+    * **HouseFloors** : INT <<NOT NULL, DEFAULT 1, Range 1..4 (BR-05)>>
+    * **BuildingMaterials** : INT <<NOT NULL, DEFAULT 0, >= 0>>
+    * **RooftopStatus** : NVARCHAR(100) <<NOT NULL, DEFAULT 'Basic Solar'>>
+    o **LastCheckInAt** : DATETIME2 <<NULL (UTC - Tính rêu 24h BR-04)>>
+    * **IsActive** : BIT <<NOT NULL, DEFAULT 1>>
+  }
+
+  entity "DailyLogs" as P_Log {
+    * **Id** : INT IDENTITY(1,1) <<PK>>
+    --
+    * **UserId** : INT <<FK -> Users(Id) CASCADE, NOT NULL>>
+    * **RoutineId** : INT <<FK -> Routines(Id) RESTRICT, NOT NULL>>
+    o **EventId** : UNIQUEIDENTIFIER <<Filtered UNIQUE INDEX (BR-02)>>
+    * **CompletedAt** : DATETIME2 <<NOT NULL (UTC)>>
+    * **PointsEarned** : INT <<NOT NULL>>
+    * **Note** : NVARCHAR(1000) <<NOT NULL>>
+  }
+}
+
+L_Resident -[#A78BFA,bold]-> P_Resident : EF Core FluentAPI\n(AddTribeCityEntities)
+L_Log -[#A78BFA,bold]-> P_Log : EF Core FluentAPI\n(InitialCreate)
+
+note bottom of P_Resident
+  **INDEX & MIGRATION (Power9DbContext.cs)**
+  • IX_CityResidents_RoomId_SlotIndex (UNIQUE)
+  • IX_CityRooms_RoomCode (UNIQUE)
+  • IX_DailyLogs_UserId_CompletedAt
+  • IX_DailyLogs_EventId (UNIQUE WHERE EventId IS NOT NULL)
+  • Migrations: 20261114070221_InitialCreate.cs & 20261114145748_AddTribeCityEntities.cs
+end note
+@enduml

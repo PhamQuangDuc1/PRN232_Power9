@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 800" width="1440" height="800" font-family="'Segoe UI', Inter, Arial, sans-serif">
+  <defs>
+    <marker id="dep-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#334155"/>
+    </marker>
+    <marker id="impl-arr" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <polygon points="0,1 10,6 0,11" fill="#FFFFFF" stroke="#059669" stroke-width="1.8"/>
+    </marker>
+    <filter id="cls-shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="800" fill="#F8FAFC"/>
+
+  <!-- Header -->
+  <rect x="20" y="14" width="1400" height="50" rx="10" fill="#0F172A"/>
+  <text x="42" y="45" fill="#FFFFFF" font-size="18.5" font-weight="700">SLIDE 13 · CLASS DESIGN — PHÂN TẦNG TRÁCH NHIỆM &amp; VỊ TRÍ BUSINESS RULE</text>
+  <text x="1398" y="44" fill="#38BDF8" font-size="13.5" font-weight="600" text-anchor="end">Clean Architecture · Controller → Service → Repository → Domain (BR-01..BR-06)</text>
+
+  <!-- ================= 4 COLUMNS HEADERS ================= -->
+  <!-- Col 1: Presentation / Worker (x=20, w=325) -->
+  <rect x="20" y="76" width="325" height="568" rx="10" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5"/>
+  <rect x="20" y="76" width="325" height="32" rx="8" fill="#1D4ED8"/>
+  <text x="182" y="97" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">1. CONTROLLER &amp; WORKER LAYER</text>
+
+  <!-- Col 2: Application / Service (x=370, w=345) -->
+  <rect x="370" y="76" width="345" height="568" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5"/>
+  <rect x="370" y="76" width="345" height="32" rx="8" fill="#047857"/>
+  <text x="542" y="97" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">2. SERVICE LAYER (INTERFACE &amp; IMPL)</text>
+
+  <!-- Col 3: Infrastructure / Repo (x=740, w=315) -->
+  <rect x="740" y="76" width="315" height="568" rx="10" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+  <rect x="740" y="76" width="315" height="32" rx="8" fill="#334155"/>
+  <text x="897" y="97" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">3. REPOSITORY &amp; INFRASTRUCTURE</text>
+
+  <!-- Col 4: Domain & Business Rule Engine (x=1080, w=340) -->
+  <rect x="1080" y="76" width="340" height="568" rx="10" fill="#FEFCE8" stroke="#FDE047" stroke-width="1.5"/>
+  <rect x="1080" y="76" width="340" height="32" rx="8" fill="#B45309"/>
+  <text x="1250" y="97" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">4. DOMAIN &amp; RULE ENGINE (BR-01..06)</text>
+
+  <!-- ================= COLUMN 1 CLASSES ================= -->
+  <!-- Class: CheckInsController -->
+  <rect x="34" y="122" width="297" height="122" rx="8" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" filter="url(#cls-shadow)"/>
+  <rect x="34" y="122" width="297" height="28" rx="6" fill="#DBEAFE"/>
+  <text x="182" y="141" fill="#1E3A8A" font-size="12.5" font-weight="700" text-anchor="middle">CheckInsController</text>
+  <line x1="34" y1="186" x2="331" y2="186" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="44" y="165" fill="#475569" font-size="11" font-family="Consolas, monospace">- _producer : IKafkaProducer</text>
+  <text x="44" y="180" fill="#475569" font-size="11" font-family="Consolas, monospace">- _cityService : ICityService</text>
+  <text x="44" y="204" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ CheckIn(routineId, body) : Task</text>
+  <text x="44" y="220" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ SendTestEmail(req) : Task</text>
+  <text x="44" y="236" fill="#2563EB" font-size="10.5" font-weight="600">→ Nhận request, cộng vật liệu &amp; bắn Kafka</text>
+
+  <!-- Class: CityController -->
+  <rect x="34" y="260" width="297" height="122" rx="8" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" filter="url(#cls-shadow)"/>
+  <rect x="34" y="260" width="297" height="28" rx="6" fill="#DBEAFE"/>
+  <text x="182" y="279" fill="#1E3A8A" font-size="12.5" font-weight="700" text-anchor="middle">CityController</text>
+  <line x1="34" y1="310" x2="331" y2="310" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="44" y="303" fill="#475569" font-size="11" font-family="Consolas, monospace">- _cityService : ICityService</text>
+  <text x="44" y="328" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ QuickMatch(ct) : Task&lt;IActionResult&gt;</text>
+  <text x="44" y="344" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ Upgrade(id, ct) : Task&lt;IActionResult&gt;</text>
+  <text x="44" y="360" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ Interact(id, req) / Leave(id, ct)</text>
+  <text x="44" y="375" fill="#2563EB" font-size="10.5" font-weight="600">→ Điều hướng API Thành phố 12 ô</text>
+
+  <!-- Class: SchedulesController -->
+  <rect x="34" y="398" width="297" height="100" rx="8" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" filter="url(#cls-shadow)"/>
+  <rect x="34" y="398" width="297" height="26" rx="6" fill="#DBEAFE"/>
+  <text x="182" y="416" fill="#1E3A8A" font-size="12.5" font-weight="700" text-anchor="middle">SchedulesController</text>
+  <line x1="34" y1="444" x2="331" y2="444" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="44" y="438" fill="#475569" font-size="11" font-family="Consolas, monospace">- schedules : IScheduleService</text>
+  <text x="44" y="460" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ GetMine(ct) / Create(req)</text>
+  <text x="44" y="476" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ Update(id, req) / Delete(id, ct)</text>
+  <text x="44" y="491" fill="#2563EB" font-size="10.5" font-weight="600">→ Quản lý lịch nhắc cá nhân theo JWT</text>
+
+  <!-- Class: RoutineCompletedConsumerWorker -->
+  <rect x="34" y="512" width="297" height="120" rx="8" fill="#FFFFFF" stroke="#EA580C" stroke-width="2" filter="url(#cls-shadow)"/>
+  <rect x="34" y="512" width="297" height="28" rx="6" fill="#FFEDD5"/>
+  <text x="182" y="531" fill="#9A3412" font-size="12" font-weight="700" text-anchor="middle">RoutineCompletedConsumerWorker</text>
+  <line x1="34" y1="572" x2="331" y2="572" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="44" y="553" fill="#475569" font-size="10.5" font-family="Consolas, monospace">- _scopeFactory : IServiceScopeFactory</text>
+  <text x="44" y="567" fill="#475569" font-size="10.5" font-family="Consolas, monospace">- _emailSender : IEmailSender</text>
+  <text x="44" y="588" fill="#0F172A" font-size="11" font-family="Consolas, monospace"># ExecuteAsync(stoppingToken) : Task</text>
+  <text x="44" y="604" fill="#0F172A" font-size="11" font-family="Consolas, monospace">- HandleAsync(payload, ct) : Task</text>
+  <text x="44" y="622" fill="#C2410C" font-size="10.5" font-weight="700">★ Thực thi BR-02 (Chống trùng EventId)</text>
+
+  <!-- ================= COLUMN 2 CLASSES ================= -->
+  <!-- Interface: ICityService -->
+  <rect x="384" y="122" width="317" height="110" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="2" stroke-dasharray="5,3" filter="url(#cls-shadow)"/>
+  <rect x="384" y="122" width="317" height="28" rx="6" fill="#D1FAE5"/>
+  <text x="542" y="141" fill="#065F46" font-size="12" font-weight="700" text-anchor="middle">«interface» ICityService</text>
+  <text x="394" y="168" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ QuickMatchAsync(userId, ct) : Task</text>
+  <text x="394" y="185" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ UpgradeHouseAsync(roomId, userId) : Task</text>
+  <text x="394" y="202" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ InteractAsync(roomId, fromId, req) : Task</text>
+  <text x="394" y="219" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ RewardMaterialsAsync(userId, mat) : Task</text>
+
+  <!-- Class: CityService -->
+  <rect x="384" y="255" width="317" height="160" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="2.2" filter="url(#cls-shadow)"/>
+  <rect x="384" y="255" width="317" height="28" rx="6" fill="#10B981"/>
+  <text x="542" y="274" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">CityService : ICityService</text>
+  <line x1="384" y1="305" x2="701" y2="305" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="394" y="299" fill="#475569" font-size="11" font-family="Consolas, monospace">- _db : Power9DbContext</text>
+  <text x="394" y="322" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ CreateRoomAsync() / QuickMatchAsync()</text>
+  <text x="394" y="339" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ UpgradeHouseAsync() [Guard: Floor*100]</text>
+  <text x="394" y="356" fill="#0F172A" font-size="11" font-family="Consolas, monospace">- MapRoom(room) [Check IsMossy &gt;= 24h]</text>
+  <text x="394" y="373" fill="#0F172A" font-size="11" font-family="Consolas, monospace">- CalcLandmark(score) [250 / 500 / 800]</text>
+  <text x="394" y="398" fill="#047857" font-size="10.5" font-weight="700">★ Thực thi BR-04 (Rêu) &amp; BR-05 (Nâng tầng)</text>
+
+  <!-- Class: ScheduleService & RoutineService -->
+  <rect x="384" y="438" width="317" height="194" rx="8" fill="#FFFFFF" stroke="#059669" stroke-width="2" filter="url(#cls-shadow)"/>
+  <rect x="384" y="438" width="317" height="28" rx="6" fill="#D1FAE5"/>
+  <text x="542" y="457" fill="#065F46" font-size="12" font-weight="700" text-anchor="middle">ScheduleService &amp; RoutineService</text>
+  <line x1="384" y1="504" x2="701" y2="504" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="394" y="482" fill="#475569" font-size="11" font-family="Consolas, monospace">- schedules : IScheduleRepository</text>
+  <text x="394" y="497" fill="#475569" font-size="11" font-family="Consolas, monospace">- routines : IRoutineRepository</text>
+  <text x="394" y="522" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ GetMineAsync(userId) : Task&lt;List&gt;</text>
+  <text x="394" y="539" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ CreateAsync(userId, req) : Task</text>
+  <text x="394" y="556" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ GetRoutinesAsync(filter) : PagedResult</text>
+  <text x="394" y="573" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ DeleteAsync(userId, id) : Task&lt;bool&gt;</text>
+  <text x="394" y="618" fill="#047857" font-size="10.5" font-weight="700">→ Kiểm tra quyền sở hữu lịch theo UserId</text>
+
+  <!-- ================= COLUMN 3 CLASSES ================= -->
+  <!-- Class: KafkaProducer -->
+  <rect x="754" y="122" width="287" height="118" rx="8" fill="#FFFFFF" stroke="#D97706" stroke-width="2" filter="url(#cls-shadow)"/>
+  <rect x="754" y="122" width="287" height="28" rx="6" fill="#FEF3C7"/>
+  <text x="897" y="141" fill="#92400E" font-size="12" font-weight="700" text-anchor="middle">KafkaProducer : IKafkaProducer</text>
+  <line x1="754" y1="176" x2="1041" y2="176" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="764" y="168" fill="#475569" font-size="11" font-family="Consolas, monospace">- _producer : IProducer&lt;string,string&gt;</text>
+  <text x="764" y="196" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ PublishAsync&lt;T&gt;(topic, key, msg)</text>
+  <text x="764" y="214" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ Dispose() : void</text>
+  <text x="764" y="232" fill="#B45309" font-size="10.5" font-weight="600">→ Partition Key = UserId (Giữ thứ tự)</text>
+
+  <!-- Class: Power9DbContext & Repositories -->
+  <rect x="754" y="260" width="287" height="205" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="2" filter="url(#cls-shadow)"/>
+  <rect x="754" y="260" width="287" height="28" rx="6" fill="#E2E8F0"/>
+  <text x="897" y="279" fill="#0F172A" font-size="12" font-weight="700" text-anchor="middle">EfRepositories &amp; Power9DbContext</text>
+  <line x1="754" y1="340" x2="1041" y2="340" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="764" y="304" fill="#475569" font-size="11" font-family="Consolas, monospace">+ Users / Routines / UserSchedules</text>
+  <text x="764" y="320" fill="#475569" font-size="11" font-family="Consolas, monospace">+ DailyLogs / CityRooms / Residents</text>
+  <text x="764" y="334" fill="#475569" font-size="11" font-family="Consolas, monospace">+ Interactions / Friendships</text>
+  <text x="764" y="360" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ SearchAsync(keyword, catId, page)</text>
+  <text x="764" y="378" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ GetByIdForUserAsync(id, userId)</text>
+  <text x="764" y="396" fill="#0F172A" font-size="11" font-family="Consolas, monospace"># OnModelCreating(modelBuilder)</text>
+  <text x="764" y="448" fill="#334155" font-size="10.5" font-weight="600">→ Ánh xạ EF Core 8 &amp; Unique Constraints</text>
+
+  <!-- Class: SmtpEmailSender -->
+  <rect x="754" y="485" width="287" height="147" rx="8" fill="#FFFFFF" stroke="#DB2777" stroke-width="2" filter="url(#cls-shadow)"/>
+  <rect x="754" y="485" width="287" height="28" rx="6" fill="#FCE7F3"/>
+  <text x="897" y="504" fill="#9D174D" font-size="12" font-weight="700" text-anchor="middle">SmtpEmailSender : IEmailSender</text>
+  <line x1="754" y1="540" x2="1041" y2="540" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="764" y="531" fill="#475569" font-size="11" font-family="Consolas, monospace">- _settings : EmailSettings</text>
+  <text x="764" y="562" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ SendEmailAsync(toEmail, toName,</text>
+  <text x="764" y="579" fill="#0F172A" font-size="11" font-family="Consolas, monospace">    subject, htmlBody, ct) : Task</text>
+  <text x="764" y="616" fill="#BE185D" font-size="10.5" font-weight="600">→ Gửi kép Gmail (:587) &amp; Mailpit (:1025)</text>
+
+  <!-- ================= COLUMN 4 CLASSES (DOMAIN & BUSINESS RULES) ================= -->
+  <!-- Class: RecommendationEngine -->
+  <rect x="1094" y="122" width="312" height="142" rx="8" fill="#FFFFFF" stroke="#0284C7" stroke-width="2.2" filter="url(#cls-shadow)"/>
+  <rect x="1094" y="122" width="312" height="28" rx="6" fill="#0284C7"/>
+  <text x="1250" y="141" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">RecommendationEngine (gRPC)</text>
+  <line x1="1094" y1="176" x2="1406" y2="176" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="1104" y="168" fill="#475569" font-size="11" font-family="Consolas, monospace">+ RoutineCatalog.All : List&lt;Routine&gt;</text>
+  <text x="1104" y="196" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ Recommend(sittingMinutes, timeOfDay,</text>
+  <text x="1104" y="212" fill="#0F172A" font-size="11" font-family="Consolas, monospace">    stressLevel) : CatalogRoutine</text>
+  <text x="1104" y="230" fill="#0F172A" font-size="11" font-family="Consolas, monospace">- Normalize(value) : string</text>
+  <text x="1104" y="253" fill="#0369A1" font-size="11" font-weight="700">★ BR-01: 8 nhánh ưu tiên chọn bài tập</text>
+
+  <!-- Class: CityRoom & CityResident (Domain Aggregate) -->
+  <rect x="1094" y="282" width="312" height="190" rx="8" fill="#FFFFFF" stroke="#B45309" stroke-width="2.2" filter="url(#cls-shadow)"/>
+  <rect x="1094" y="282" width="312" height="28" rx="6" fill="#D97706"/>
+  <text x="1250" y="301" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">CityRoom &amp; CityResident (Domain)</text>
+  <line x1="1094" y1="395" x2="1406" y2="395" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="1104" y="328" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ Status : CityRoomStatus [Active/Archived]</text>
+  <text x="1104" y="345" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ MaxSlots : int = 12 | TotalCityScore : int</text>
+  <text x="1104" y="362" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ HouseFloors : int [1..4] | Materials : int</text>
+  <text x="1104" y="379" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ LastCheckInAt : DateTime? | IsActive : bool</text>
+  <text x="1104" y="416" fill="#92400E" font-size="10.5" font-weight="700">★ BR-04: Quá 24h không tập → Phủ rêu</text>
+  <text x="1104" y="435" fill="#92400E" font-size="10.5" font-weight="700">★ BR-05: Nâng tầng (Floor*100) &amp; Landmark</text>
+  <text x="1104" y="454" fill="#92400E" font-size="10.5" font-weight="700">★ BR-06: Đóng phòng sau 168h (CityCycleWorker)</text>
+
+  <!-- Class: StreakCalculator & VietnamTime -->
+  <rect x="1094" y="490" width="312" height="142" rx="8" fill="#FFFFFF" stroke="#15803D" stroke-width="2.2" filter="url(#cls-shadow)"/>
+  <rect x="1094" y="490" width="312" height="28" rx="6" fill="#15803D"/>
+  <text x="1250" y="509" fill="#FFFFFF" font-size="12.5" font-weight="700" text-anchor="middle">«static» StreakCalculator &amp; VietnamTime</text>
+  <line x1="1094" y1="544" x2="1406" y2="544" stroke="#CBD5E1" stroke-width="1"/>
+  <text x="1104" y="536" fill="#475569" font-size="11" font-family="Consolas, monospace">- Zone : TimeZoneInfo ("Asia/Ho_Chi_Minh")</text>
+  <text x="1104" y="564" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ Next(currentStreak, lastDate, today) : int</text>
+  <text x="1104" y="582" fill="#0F172A" font-size="11" font-family="Consolas, monospace">+ ToLocalDate(utc : DateTime) : DateOnly</text>
+  <text x="1104" y="616" fill="#166534" font-size="11" font-weight="700">★ BR-03: Tính chuỗi ngày chuẩn múi giờ VN</text>
+
+  <!-- ================= ARROWS BETWEEN LAYERS ================= -->
+  <!-- CheckInsController -> ICityService -->
+  <line x1="331" y1="175" x2="380" y2="175" stroke="#334155" stroke-width="1.8" marker-end="url(#dep-arr)"/>
+  <!-- CheckInsController -> KafkaProducer -->
+  <path d="M 331 145 L 725 145 L 725 165 L 750 165" fill="none" stroke="#D97706" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#dep-arr)"/>
+  <!-- CityController -> ICityService -->
+  <path d="M 331 300 L 358 300 L 358 195 L 380 195" fill="none" stroke="#334155" stroke-width="1.8" marker-end="url(#dep-arr)"/>
+  <!-- CityService ..|> ICityService -->
+  <line x1="542" y1="255" x2="542" y2="235" stroke="#059669" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#impl-arr)"/>
+  <!-- SchedulesController -> ScheduleService -->
+  <line x1="331" y1="460" x2="380" y2="460" stroke="#334155" stroke-width="1.8" marker-end="url(#dep-arr)"/>
+  <!-- CityService -> Power9DbContext -->
+  <line x1="701" y1="335" x2="750" y2="335" stroke="#334155" stroke-width="1.8" marker-end="url(#dep-arr)"/>
+  <!-- ScheduleService -> EfRepositories -->
+  <path d="M 701 495 L 726 495 L 726 410 L 750 410" fill="none" stroke="#334155" stroke-width="1.8" marker-end="url(#dep-arr)"/>
+  <!-- CityService -> CityRoom/Resident -->
+  <line x1="701" y1="365" x2="1090" y2="365" stroke="#B45309" stroke-width="2" marker-end="url(#dep-arr)"/>
+  <!-- Worker -> SmtpEmailSender -->
+  <line x1="331" y1="575" x2="750" y2="575" stroke="#DB2777" stroke-width="1.8" marker-end="url(#dep-arr)"/>
+  <!-- Worker -> StreakCalculator -->
+  <path d="M 331 605 L 1065 605 L 1065 565 L 1090 565" fill="none" stroke="#15803D" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#dep-arr)"/>
+
+  <!-- ================= BOTTOM SUMMARY BANNER (GUIDELINE V11 KEY MESSAGE) ================= -->
+  <rect x="20" y="658" width="1400" height="126" rx="10" fill="#0F172A"/>
+  <text x="42" y="688" fill="#38BDF8" font-size="14.5" font-weight="700">🎯 NGUYÊN TẮC THIẾT KẾ CLASS TRONG DỰ ÁN POWER9 (KHÔNG SAO CHÉP 1:1 BẢNG DATABASE):</text>
+  <text x="42" y="714" fill="#E2E8F0" font-size="12.5">1. Phân tách trách nhiệm (Clean Architecture): Controller chỉ điều phối HTTP/JWT; toàn bộ truy vấn nằm ở Repository/Infrastructure; Worker xử lý ngầm.</text>
+  <text x="42" y="738" fill="#E2E8F0" font-size="12.5">2. Business Rule đặt trong Domain &amp; Service (không đặt trên UI): BR-01 ở RecommendationEngine • BR-02 ở ConsumerWorker • BR-03 ở StreakCalculator • BR-04, BR-05 ở CityService.</text>
+  <text x="42" y="762" fill="#FCD34D" font-size="12.5" font-weight="600">3. Nhờ tách rời Pure Domain Logic (RecommendationEngine, StreakCalculator, CalcLandmark), nhóm viết được 31 Unit Tests chạy trong 48ms mà không phụ thuộc SQL Server.</text>
+</svg>

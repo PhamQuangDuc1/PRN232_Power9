@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 800" width="1440" height="800" font-family="'Segoe UI', Inter, Arial, sans-serif">
+  <defs>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#2563EB"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#059669"/>
+    </marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#D97706"/>
+    </marker>
+    <marker id="arr-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#334155"/>
+    </marker>
+    <marker id="arr-pink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#DB2777"/>
+    </marker>
+    <filter id="card-shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Slide Background -->
+  <rect width="1440" height="800" fill="#F8FAFC"/>
+
+  <!-- Top Header -->
+  <rect x="20" y="16" width="1400" height="52" rx="10" fill="#0F172A"/>
+  <text x="42" y="48" fill="#FFFFFF" font-size="19" font-weight="700">SLIDE 09 · SYSTEM ARCHITECTURE (C4 CONTAINER &amp; DEPLOYMENT VIEW)</text>
+  <text x="1398" y="47" fill="#38BDF8" font-size="14" font-weight="600" text-anchor="end">Sync (REST / gRPC HTTP/2) + Async (Apache Kafka) · Docker Compose</text>
+
+  <!-- ================= LEFT: CLIENT TIER ================= -->
+  <rect x="20" y="84" width="265" height="545" rx="12" fill="#EFF6FF" stroke="#93C5FD" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="152" y="112" fill="#1E3A8A" font-size="14" font-weight="800" text-anchor="middle">CLIENT TIER (BROWSER)</text>
+
+  <!-- Actor Box -->
+  <rect x="42" y="135" width="220" height="115" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" filter="url(#card-shadow)"/>
+  <text x="152" y="165" fill="#1D4ED8" font-size="15" font-weight="700" text-anchor="middle">👤 Nhân viên &amp; Admin</text>
+  <text x="152" y="187" fill="#475569" font-size="12.5" text-anchor="middle">Employee / HR Wellness</text>
+  <text x="152" y="210" fill="#64748B" font-size="11.5" text-anchor="middle">• Tập vi thói quen 1–5 phút</text>
+  <text x="152" y="228" fill="#64748B" font-size="11.5" text-anchor="middle">• Xây dựng thành phố 12 ô</text>
+
+  <!-- Web SPA Box -->
+  <rect x="42" y="310" width="220" height="185" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <rect x="42" y="310" width="220" height="34" rx="8" fill="#2563EB"/>
+  <text x="152" y="332" fill="#FFFFFF" font-size="13.5" font-weight="700" text-anchor="middle">Web SPA Client (wwwroot)</text>
+  <text x="152" y="362" fill="#1E293B" font-size="12" font-weight="700" text-anchor="middle">HTML5 • CSS3 Isometric • ES6 JS</text>
+  <text x="58" y="388" fill="#475569" font-size="12">• UI-01..02: Auth &amp; 9 Nhóm Power9</text>
+  <text x="58" y="410" fill="#475569" font-size="12">• UI-03..04: Gợi ý &amp; Lịch cá nhân</text>
+  <text x="58" y="432" fill="#475569" font-size="12">• UI-05: Bàn cờ Tribe City 12 ô</text>
+  <text x="58" y="454" fill="#475569" font-size="12">• UI-06: Bảo tàng Archive &amp; Admin</text>
+  <text x="152" y="480" fill="#2563EB" font-size="11.5" font-weight="700" text-anchor="middle">Port: http://localhost:5000</text>
+
+  <!-- Arrow Actor -> Web SPA -->
+  <line x1="152" y1="250" x2="152" y2="308" stroke="#2563EB" stroke-width="2.2" marker-end="url(#arr-blue)"/>
+  <text x="160" y="284" fill="#1D4ED8" font-size="11.5" font-weight="600">Tương tác UI</text>
+
+  <!-- ================= CENTER: DOCKER NETWORK BOUNDARY ================= -->
+  <rect x="315" y="84" width="805" height="545" rx="12" fill="#F1F5F9" stroke="#64748B" stroke-width="2" stroke-dasharray="8,4"/>
+  <rect x="335" y="96" width="490" height="28" rx="6" fill="#1E293B"/>
+  <text x="580" y="115" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">DOCKER BOUNDARY · Network: power9-network (docker-compose.yml)</text>
+
+  <!-- Container 1: routine-api (:5000) -->
+  <rect x="350" y="240" width="295" height="215" rx="10" fill="#FFFFFF" stroke="#059669" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <rect x="350" y="240" width="295" height="36" rx="8" fill="#059669"/>
+  <text x="497" y="263" fill="#FFFFFF" font-size="14" font-weight="700" text-anchor="middle">routine-api (:5000 → :8080)</text>
+  <text x="497" y="294" fill="#065F46" font-size="12.5" font-weight="700" text-anchor="middle">ASP.NET Core 8 REST API &amp; Gateway</text>
+  <text x="368" y="320" fill="#334155" font-size="12">• AuthController (JWT Bearer Role)</text>
+  <text x="368" y="342" fill="#334155" font-size="12">• Routines &amp; SchedulesController</text>
+  <text x="368" y="364" fill="#334155" font-size="12">• RecommendationsController (gRPC Client)</text>
+  <text x="368" y="386" fill="#334155" font-size="12">• CheckInsController (Kafka Producer)</text>
+  <text x="368" y="408" fill="#334155" font-size="12">• CityController &amp; FriendsController</text>
+  <text x="497" y="438" fill="#059669" font-size="11.5" font-weight="700" text-anchor="middle">Clean Architecture (4 Layers)</text>
+
+  <!-- Container 2: recommendation-grpc (:50051) -->
+  <rect x="765" y="125" width="325" height="135" rx="10" fill="#FFFFFF" stroke="#0284C7" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <rect x="765" y="125" width="325" height="34" rx="8" fill="#0284C7"/>
+  <text x="927" y="147" fill="#FFFFFF" font-size="13.5" font-weight="700" text-anchor="middle">recommendation-grpc (:50051 → :8080)</text>
+  <text x="927" y="176" fill="#0369A1" font-size="12" font-weight="700" text-anchor="middle">ASP.NET Core 8 gRPC Server (HTTP/2)</text>
+  <text x="783" y="200" fill="#334155" font-size="12">• Contract: recommendation.proto</text>
+  <text x="783" y="220" fill="#334155" font-size="12">• RecommendationEngine (8 mức ưu tiên BR-01)</text>
+  <text x="783" y="240" fill="#0284C7" font-size="11.5" font-weight="700">• Phản hồi nhị phân Protobuf siêu tốc (&lt; 10ms)</text>
+
+  <!-- Container 3: Apache Kafka + Zookeeper (:9092) -->
+  <rect x="765" y="282" width="325" height="140" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <rect x="765" y="282" width="325" height="34" rx="8" fill="#D97706"/>
+  <text x="927" y="304" fill="#FFFFFF" font-size="13.5" font-weight="700" text-anchor="middle">kafka (:9092 / :29092) + zookeeper</text>
+  <text x="927" y="333" fill="#92400E" font-size="12" font-weight="700" text-anchor="middle">Confluent Apache Kafka 7.5 + kafka-ui (:8085)</text>
+  <text x="783" y="357" fill="#334155" font-size="12">• Topic: power9-routine-completed (3 Partitions)</text>
+  <text x="783" y="377" fill="#334155" font-size="12">• Partition Key = UserId (Giữ thứ tự tính Streak)</text>
+  <text x="783" y="397" fill="#B45309" font-size="11.5" font-weight="700">• Lưu trữ bền vững Event Log chống mất tin</text>
+
+  <!-- Container 4: notification-worker -->
+  <rect x="765" y="445" width="325" height="165" rx="10" fill="#FFFFFF" stroke="#EA580C" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <rect x="765" y="445" width="325" height="34" rx="8" fill="#EA580C"/>
+  <text x="927" y="467" fill="#FFFFFF" font-size="13.5" font-weight="700" text-anchor="middle">notification-worker (BackgroundService)</text>
+  <text x="927" y="495" fill="#9A3412" font-size="12" font-weight="700" text-anchor="middle">.NET 8 Hosted Worker (3 Dịch vụ chạy ngầm)</text>
+  <text x="783" y="519" fill="#334155" font-size="12">1. RoutineCompletedConsumerWorker (BR-02, BR-03)</text>
+  <text x="783" y="540" fill="#334155" font-size="12">2. DailyScheduleReminderJob (Quét lịch mỗi 60s)</text>
+  <text x="783" y="561" fill="#334155" font-size="12">3. CityCycleWorker (Đóng phòng 7 ngày BR-06)</text>
+  <text x="783" y="588" fill="#C2410C" font-size="11.5" font-weight="700">• Manual Offset Commit + Idempotent EventId</text>
+
+  <!-- Container 5: sqlserver (:1433) -->
+  <rect x="350" y="485" width="295" height="125" rx="10" fill="#FFFFFF" stroke="#334155" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <rect x="350" y="485" width="295" height="34" rx="8" fill="#334155"/>
+  <text x="497" y="507" fill="#FFFFFF" font-size="13.5" font-weight="700" text-anchor="middle">sqlserver (:1433) · Power9Db</text>
+  <text x="497" y="535" fill="#1E293B" font-size="12" font-weight="700" text-anchor="middle">Microsoft SQL Server 2022 (9 Bảng dữ liệu)</text>
+  <text x="368" y="558" fill="#475569" font-size="11.5">• Core: Users, RoutineCategories, Routines, Schedules</text>
+  <text x="368" y="578" fill="#475569" font-size="11.5">• Log &amp; City: DailyLogs, CityRooms, Residents, Friends</text>
+  <text x="497" y="598" fill="#0F172A" font-size="11" font-weight="700" text-anchor="middle">Volume: sqlserver-data • EF Core 8 Migrations</text>
+
+  <!-- ================= RIGHT: EXTERNAL / EMAIL TIER ================= -->
+  <rect x="1145" y="84" width="275" height="545" rx="12" fill="#FDF2F8" stroke="#F472B6" stroke-width="2" stroke-dasharray="6,4"/>
+  <text x="1282" y="112" fill="#9D174D" font-size="14" font-weight="800" text-anchor="middle">EXTERNAL &amp; SMTP SERVICES</text>
+
+  <!-- Gmail SMTP Box -->
+  <rect x="1165" y="195" width="235" height="165" rx="10" fill="#FFFFFF" stroke="#DB2777" stroke-width="2.5" filter="url(#card-shadow)"/>
+  <rect x="1165" y="195" width="235" height="34" rx="8" fill="#DB2777"/>
+  <text x="1282" y="217" fill="#FFFFFF" font-size="13.5" font-weight="700" text-anchor="middle">Gmail SMTP Server</text>
+  <text x="1282" y="246" fill="#9D174D" font-size="12" font-weight="700" text-anchor="middle">smtp.gmail.com (:587 TLS)</text>
+  <text x="1180" y="272" fill="#334155" font-size="12">• Xác thực Google App Password</text>
+  <text x="1180" y="294" fill="#334155" font-size="12">• Gửi Email HTML tới hộp thư thật</text>
+  <text x="1180" y="316" fill="#334155" font-size="12">• Chúc mừng Check-in &amp; Streak</text>
+  <text x="1180" y="338" fill="#334155" font-size="12">• Nhắc giờ tập UserSchedules</text>
+
+  <!-- Mailpit Box -->
+  <rect x="1165" y="410" width="235" height="145" rx="10" fill="#FFFFFF" stroke="#9333EA" stroke-width="2" filter="url(#card-shadow)"/>
+  <rect x="1165" y="410" width="235" height="34" rx="8" fill="#9333EA"/>
+  <text x="1282" y="432" fill="#FFFFFF" font-size="13.5" font-weight="700" text-anchor="middle">mailpit (:1025 / :8025)</text>
+  <text x="1282" y="460" fill="#6B21A8" font-size="12" font-weight="700" text-anchor="middle">Local SMTP &amp; Web Mailbox UI</text>
+  <text x="1180" y="485" fill="#334155" font-size="12">• Lưu bản sao mọi email nội bộ</text>
+  <text x="1180" y="507" fill="#334155" font-size="12">• Xem trực tiếp tại localhost:8025</text>
+  <text x="1180" y="529" fill="#6B21A8" font-size="11.5" font-weight="700">• Đảm bảo Demo 100% cả khi Offline</text>
+
+  <!-- ================= CONNECTIONS & PROTOCOLS ================= -->
+  <!-- Web SPA -> routine-api -->
+  <line x1="262" y1="365" x2="348" y2="365" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+  <rect x="267" y="325" width="76" height="32" rx="4" fill="#EFF6FF"/>
+  <text x="305" y="339" fill="#1D4ED8" font-size="10.5" font-weight="700" text-anchor="middle">HTTPS / REST</text>
+  <text x="305" y="352" fill="#2563EB" font-size="10" font-weight="600" text-anchor="middle">[Sync • JWT]</text>
+
+  <!-- routine-api -> recommendation-grpc (Sync gRPC) -->
+  <path d="M 645 280 L 705 280 L 705 195 L 763 195" fill="none" stroke="#0284C7" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+  <rect x="652" y="205" width="102" height="34" rx="4" fill="#E0F2FE" stroke="#7DD3FC" stroke-width="1"/>
+  <text x="703" y="220" fill="#0369A1" font-size="10.5" font-weight="700" text-anchor="middle">gRPC HTTP/2</text>
+  <text x="703" y="233" fill="#0284C7" font-size="10" font-weight="700" text-anchor="middle">[Sync • Protobuf]</text>
+
+  <!-- routine-api -> kafka (Async Publish) -->
+  <line x1="645" y1="350" x2="763" y2="350" stroke="#D97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+  <rect x="654" y="310" width="102" height="34" rx="4" fill="#FEF3C7" stroke="#FCD34D" stroke-width="1"/>
+  <text x="705" y="325" fill="#92400E" font-size="10.5" font-weight="700" text-anchor="middle">Publish Event</text>
+  <text x="705" y="338" fill="#B45309" font-size="10" font-weight="700" text-anchor="middle">[Async • 202]</text>
+
+  <!-- kafka -> notification-worker (Async Consume) -->
+  <line x1="927" y1="422" x2="927" y2="443" stroke="#EA580C" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+  <text x="998" y="437" fill="#9A3412" font-size="11" font-weight="700" text-anchor="middle">[Async Consume]</text>
+
+  <!-- routine-api -> sqlserver -->
+  <line x1="497" y1="455" x2="497" y2="483" stroke="#334155" stroke-width="2.5" marker-end="url(#arr-slate)"/>
+  <text x="435" y="473" fill="#1E293B" font-size="11" font-weight="700" text-anchor="middle">EF Core 8 (CRUD)</text>
+
+  <!-- notification-worker -> sqlserver -->
+  <line x1="765" y1="545" x2="647" y2="545" stroke="#334155" stroke-width="2.5" marker-end="url(#arr-slate)"/>
+  <rect x="656" y="510" width="100" height="30" rx="4" fill="#F8FAFC"/>
+  <text x="706" y="523" fill="#1E293B" font-size="10.5" font-weight="700" text-anchor="middle">EF Core 8</text>
+  <text x="706" y="536" fill="#475569" font-size="9.5" font-weight="600" text-anchor="middle">(Streak, Logs, City)</text>
+
+  <!-- notification-worker -> Gmail SMTP & Mailpit -->
+  <path d="M 1090 500 L 1128 500 L 1128 280 L 1163 280" fill="none" stroke="#DB2777" stroke-width="2.2" marker-end="url(#arr-pink)"/>
+  <line x1="1090" y1="500" x2="1163" y2="500" stroke="#9333EA" stroke-width="2.2" marker-end="url(#arr-pink)"/>
+  <text x="1126" y="395" fill="#9D174D" font-size="10.5" font-weight="700" text-anchor="middle" transform="rotate(-90 1126 395)">SMTP HTML Email</text>
+
+  <!-- ================= BOTTOM: DEPLOYMENT & ARCHITECTURAL DECISIONS (TRADE-OFFS) ================= -->
+  <rect x="20" y="644" width="1400" height="140" rx="10" fill="#0F172A"/>
+  
+  <!-- Box 1: Deployment -->
+  <rect x="36" y="658" width="415" height="112" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  <text x="52" y="682" fill="#38BDF8" font-size="13.5" font-weight="700">🚀 DEPLOYMENT (MÔI TRƯỜNG TRIỂN KHAI)</text>
+  <text x="52" y="705" fill="#E2E8F0" font-size="12">• Đóng gói bằng Multi-stage Dockerfile cho 3 dịch vụ .NET 8.</text>
+  <text x="52" y="726" fill="#E2E8F0" font-size="12">• Điều phối 8 containers qua docker-compose.yml kèm Healthcheck.</text>
+  <text x="52" y="747" fill="#94A3B8" font-size="11.5">• Tự động chạy EF Core Migrate &amp; Seed Data ngay khi khởi động.</text>
+
+  <!-- Box 2: Decision 1 (Sync gRPC) -->
+  <rect x="468" y="658" width="460" height="112" rx="8" fill="#1E293B" stroke="#0284C7" stroke-width="1.5"/>
+  <text x="484" y="682" fill="#38BDF8" font-size="13.5" font-weight="700">⚖️ QUYẾT ĐỊNH KIẾN TRÚC 1: GIAO TIẾP ĐỒNG BỘ QUA gRPC</text>
+  <text x="484" y="705" fill="#E2E8F0" font-size="12">• Chọn gRPC (HTTP/2 + Protobuf) cho RecommendationService để gợi ý</text>
+  <text x="484" y="724" fill="#E2E8F0" font-size="12">  bài tập tức thì (&lt; 10ms) với hợp đồng dữ liệu chặt chẽ (.proto).</text>
+  <text x="484" y="747" fill="#FCD34D" font-size="11.5" font-weight="600">• Đánh đổi (Trade-off): Trình duyệt gọi gián tiếp qua Gateway routine-api.</text>
+
+  <!-- Box 3: Decision 2 (Async Kafka) -->
+  <rect x="945" y="658" width="459" height="112" rx="8" fill="#1E293B" stroke="#D97706" stroke-width="1.5"/>
+  <text x="961" y="682" fill="#FBBF24" font-size="13.5" font-weight="700">⚖️ QUYẾT ĐỊNH KIẾN TRÚC 2: BẤT ĐỒNG BỘ QUA APACHE KAFKA</text>
+  <text x="961" y="705" fill="#E2E8F0" font-size="12">• Chọn Kafka (Key = UserId) cho luồng Check-in để API trả 202 Accepted</text>
+  <text x="961" y="724" fill="#E2E8F0" font-size="12">  ngay, giữ đúng thứ tự tính Streak và không bị treo khi gửi SMTP Gmail.</text>
+  <text x="961" y="747" fill="#FCD34D" font-size="11.5" font-weight="600">• Đánh đổi: Eventual Consistency → Xử lý bằng Idempotent EventId (BR-02).</text>
+</svg>

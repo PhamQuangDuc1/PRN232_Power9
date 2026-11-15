@@ -1,0 +1,67 @@
+@startuml Slide12_Sequence_Diagram_Power9
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Segoe UI", "Inter", Arial
+skinparam defaultFontSize 12.5
+skinparam roundCorner 8
+skinparam shadowing false
+skinparam sequenceArrowThickness 1.8
+skinparam sequenceLifeLineBorderColor #64748B
+skinparam sequenceParticipantBorderThickness 1.8
+skinparam sequenceGroupBorderColor #D97706
+skinparam sequenceGroupBackgroundColor #FFFBEB
+
+title **SLIDE 12 · SEQUENCE DIAGRAM — LUỒNG CHECK-IN BẤT ĐỒNG BỘ & TÍCH HỢP TRIBE CITY**
+
+autonumber "<b>[0]"
+
+actor "Nhân viên\n(UI-02 / UI-05)" as Emp #DBEAFE
+participant ":CheckInsController\n(RoutineService.Api)" as Ctrl #DCFCE7
+participant ":CityService\n(Infrastructure)" as City #E0F2FE
+queue "Kafka Broker\n(power9-routine-completed)" as Kafka #FEF3C7
+participant ":RoutineCompleted\nConsumerWorker" as Work #FFEDD5
+database ":Power9Db\n(SQL Server)" as DB #F1F5F9
+participant ":SmtpEmailSender\n(Gmail / Mailpit)" as Mail #FCE7F3
+
+Emp -> Ctrl : POST /api/routines/{routineId}/checkin (JWT, CheckInRequest)
+activate Ctrl
+
+alt Tham số không hợp lệ [routineId <= 0 || UserId == null]
+  Ctrl --> Emp : 400 Bad Request / 401 Unauthorized
+else Hợp lệ [routineId > 0]
+  Ctrl -> City : RewardMaterialsAsync(userId, 50)
+  activate City
+  City -> DB : UPDATE CityResidents (+50 Materials), CityRooms (+50 Score)
+  City --> Ctrl : void (Cập nhật tức thì)
+  deactivate City
+
+  Ctrl -> Kafka : PublishAsync("power9-routine-completed", key=userId, evt)
+  Ctrl --> Emp : 202 Accepted (EventId, "+50 vật liệu Tribe City")
+end
+deactivate Ctrl
+
+== Xử lý Bất đồng bộ tại Background Worker (At-Least-Once + Idempotent) ==
+
+Kafka -> Work : Consume(stoppingToken) -> HandleAsync(payload)
+activate Work
+
+Work -> DB : AnyAsync(l => l.EventId == evt.EventId)
+activate DB
+DB --> Work : bool isDuplicate
+deactivate DB
+
+alt Vi phạm BR-02 [isDuplicate == true (Trùng EventId khi Kafka gửi lại)]
+  Work -> Kafka : Commit(result) (Bỏ qua, không cộng điểm lần 2)
+else Hợp lệ [isDuplicate == false (Event mới)]
+  Work -> DB : SELECT Routine, User, LastCompletedAt
+  Work -> Work : StreakCalculator.Next(currentStreak, lastDate, today) [BR-03]
+  Work -> DB : SaveChangesAsync() (Cộng TotalPoints, Insert DailyLogs, Check BR-05)
+  Work -> Kafka : Commit(result) (Manual Offset Commit sau khi lưu DB)
+  Work -> Mail : SendEmailAsync(toEmail, subject, htmlBody)
+  activate Mail
+  Mail --> Work : [GMAIL SENT] & [MAILPIT SENT]
+  deactivate Mail
+end
+deactivate Work
+
+@enduml

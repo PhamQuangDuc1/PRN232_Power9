@@ -322,15 +322,29 @@
     },
 
     /** [Thành viên 2] POST /api/routines/{id}/checkin — bắn Kafka event, trả 202 Accepted */
-    async checkIn(routineId, note) {
-      if (session.isOffline()) return { data: { eventId: null, message: 'Chế độ demo offline — chưa gửi lên Kafka' }, source: 'mock' };
+    async checkIn(routineId, note, toEmail) {
+      const s = session.get();
+      const targetEmail = toEmail || (s?.email && s.email.includes('@gmail.com') ? s.email : 'zrya1236987@gmail.com');
+      if (session.isOffline()) {
+        try { await request('POST', '/api/routines/test-email', { body: { toEmail: targetEmail, customNote: note || `Check-in Routine #${routineId}` }, auth: false, timeout: 8000 }); } catch {}
+        return { data: { eventId: null, message: 'Chế độ demo offline — đã gửi thông báo qua SMTP' }, source: 'mock' };
+      }
       try {
-        const d = await request('POST', `/api/routines/${routineId}/checkin`, { body: { note: note || null }, timeout: 10000 });
+        const d = await request('POST', `/api/routines/${routineId}/checkin`, { body: { note: note || null, toEmail: targetEmail }, timeout: 10000 });
         return { data: d, source: 'api' };
       } catch (e) {
         if (!canFallback(e)) throw e;
         return { data: { eventId: null, message: e.message }, source: 'mock', error: e.message };
       }
+    },
+
+    /** Gửi thử Email HTML trực tiếp về Gmail / Mailpit */
+    async sendTestEmail(toEmail, subject, customNote) {
+      return await request('POST', '/api/routines/test-email', {
+        body: { toEmail: toEmail || 'zrya1236987@gmail.com', subject, customNote },
+        auth: false,
+        timeout: 12000
+      });
     },
 
     /* =================== TRIBE CITY & FRIEND API =================== */

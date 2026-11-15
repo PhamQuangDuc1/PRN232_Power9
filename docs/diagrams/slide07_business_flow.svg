@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 760" width="1440" height="760" font-family="'Segoe UI', Inter, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#DC2626"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#059669"/>
+    </marker>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="760" fill="#F8FAFC"/>
+
+  <!-- Header -->
+  <rect x="20" y="16" width="1400" height="52" rx="10" fill="#0F172A"/>
+  <text x="42" y="48" fill="#FFFFFF" font-size="19" font-weight="700">SLIDE 07 · BUSINESS FLOW TỔNG THỂ (SWIMLANE UML ACTIVITY DIAGRAM)</text>
+  <text x="1398" y="47" fill="#38BDF8" font-size="14" font-weight="600" text-anchor="end">Power9 Office Routine &amp; Tribe City · BR-01 → BR-06</text>
+
+  <!-- 4 Horizontal Swimlanes (fits 16:9 slide perfectly!) -->
+  <!-- Lane 1: NHÂN VIÊN (EMPLOYEE) -->
+  <rect x="20" y="80" width="1400" height="155" rx="8" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+  <rect x="20" y="80" width="185" height="155" rx="8" fill="#1D4ED8"/>
+  <text x="112" y="152" fill="#FFFFFF" font-size="15" font-weight="700" text-anchor="middle">NHÂN VIÊN</text>
+  <text x="112" y="174" fill="#DBEAFE" font-size="12" font-weight="600" text-anchor="middle">(Employee / Cư dân)</text>
+
+  <!-- Lane 2: HỆ THỐNG CORE (ROUTINE API & gRPC) -->
+  <rect x="20" y="245" width="1400" height="175" rx="8" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1.5"/>
+  <rect x="20" y="245" width="185" height="175" rx="8" fill="#047857"/>
+  <text x="112" y="325" fill="#FFFFFF" font-size="15" font-weight="700" text-anchor="middle">HỆ THỐNG CORE</text>
+  <text x="112" y="347" fill="#D1FAE5" font-size="12" font-weight="600" text-anchor="middle">(REST API &amp; gRPC)</text>
+
+  <!-- Lane 3: BACKGROUND WORKER & KAFKA -->
+  <rect x="20" y="430" width="1400" height="175" rx="8" fill="#FFFBEB" stroke="#FDE68A" stroke-width="1.5"/>
+  <rect x="20" y="430" width="185" height="175" rx="8" fill="#B45309"/>
+  <text x="112" y="510" fill="#FFFFFF" font-size="14" font-weight="700" text-anchor="middle">WORKER &amp; KAFKA</text>
+  <text x="112" y="532" fill="#FEF3C7" font-size="12" font-weight="600" text-anchor="middle">(Xử lý ngầm &amp; Chu kỳ)</text>
+
+  <!-- Lane 4: DỊCH VỤ EMAIL (SMTP / GMAIL) -->
+  <rect x="20" y="615" width="1400" height="125" rx="8" fill="#FDF2F8" stroke="#FBCFE8" stroke-width="1.5"/>
+  <rect x="20" y="615" width="185" height="125" rx="8" fill="#BE185D"/>
+  <text x="112" y="672" fill="#FFFFFF" font-size="15" font-weight="700" text-anchor="middle">EMAIL SERVICE</text>
+  <text x="112" y="694" fill="#FCE7F3" font-size="12" font-weight="600" text-anchor="middle">(Gmail SMTP / Mailpit)</text>
+
+  <!-- ================= NODES IN LANE 1 (EMPLOYEE) ================= -->
+  <!-- Start Node -->
+  <circle cx="242" cy="158" r="14" fill="#1E293B"/>
+  
+  <!-- Step 1: Yêu cầu Gợi ý & Lên lịch -->
+  <rect x="285" y="123" width="190" height="70" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" filter="url(#shadow)"/>
+  <text x="380" y="152" fill="#1E3A8A" font-size="13" font-weight="700" text-anchor="middle">1. Chọn trạng thái ngồi</text>
+  <text x="380" y="172" fill="#475569" font-size="12" text-anchor="middle">Gợi ý bài tập &amp; Đặt lịch</text>
+
+  <!-- Step 3: Thực hiện & Bấm Check-in -->
+  <rect x="555" y="123" width="190" height="70" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" filter="url(#shadow)"/>
+  <text x="650" y="152" fill="#1E3A8A" font-size="13" font-weight="700" text-anchor="middle">3. Tập 1–5 phút</text>
+  <text x="650" y="172" fill="#475569" font-size="12" text-anchor="middle">&amp; Bấm nút Check-in</text>
+
+  <!-- Step 6: Vào Tribe City Nâng tầng & Tương tác -->
+  <rect x="865" y="123" width="215" height="70" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" filter="url(#shadow)"/>
+  <text x="972" y="152" fill="#1E3A8A" font-size="13" font-weight="700" text-anchor="middle">6. Vào Tribe City (12 ô)</text>
+  <text x="972" y="172" fill="#475569" font-size="12" text-anchor="middle">Nâng tầng nhà &amp; Nhắc bạn</text>
+
+  <!-- ================= NODES IN LANE 2 (CORE API & gRPC) ================= -->
+  <!-- Diamond BR-01 -->
+  <polygon points="380,268 455,318 380,368 305,318" fill="#FEF3C7" stroke="#D97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="380" y="314" fill="#92400E" font-size="13" font-weight="700" text-anchor="middle">BR-01?</text>
+  <text x="380" y="331" fill="#B45309" font-size="11" font-weight="600" text-anchor="middle">gRPC Rule</text>
+
+  <!-- Step 2: Trả bài tập #3 + Lưu lịch -->
+  <rect x="495" y="283" width="170" height="70" rx="10" fill="#FFFFFF" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
+  <text x="580" y="313" fill="#065F46" font-size="13" font-weight="700" text-anchor="middle">2. Gợi ý bài #3</text>
+  <text x="580" y="332" fill="#475569" font-size="11.5" text-anchor="middle">(Hít thở 4-7-8) &amp; Lưu lịch</text>
+
+  <!-- Step 4: Publish Kafka & Cộng +50 Vật liệu -->
+  <rect x="695" y="283" width="185" height="70" rx="10" fill="#FFFFFF" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
+  <text x="787" y="311" fill="#065F46" font-size="13" font-weight="700" text-anchor="middle">4. +50 Vật liệu ngay</text>
+  <text x="787" y="329" fill="#475569" font-size="11.5" text-anchor="middle">Bắn Kafka (202 Accepted)</text>
+
+  <!-- Diamond BR-05 -->
+  <polygon points="972,268 1054,318 972,368 890,318" fill="#FEF3C7" stroke="#D97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="972" y="314" fill="#92400E" font-size="13" font-weight="700" text-anchor="middle">BR-05?</text>
+  <text x="972" y="331" fill="#B45309" font-size="11" font-weight="600" text-anchor="middle">Đủ Vật liệu</text>
+
+  <!-- Step 7: Tăng tầng nhà & Mở khóa Landmark -->
+  <rect x="1115" y="283" width="215" height="70" rx="10" fill="#FFFFFF" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1222" y="311" fill="#065F46" font-size="13" font-weight="700" text-anchor="middle">7. Tăng +1 Tầng (1→4)</text>
+  <text x="1222" y="330" fill="#475569" font-size="11.5" text-anchor="middle">Mở Landmark (250/500/800đ)</text>
+
+  <!-- ================= NODES IN LANE 3 (WORKER & KAFKA) ================= -->
+  <!-- Diamond BR-02: Chống trùng EventId -->
+  <polygon points="580,462 660,515 580,568 500,515" fill="#FEF3C7" stroke="#D97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="580" y="511" fill="#92400E" font-size="13" font-weight="700" text-anchor="middle">BR-02?</text>
+  <text x="580" y="528" fill="#B45309" font-size="11" font-weight="600" text-anchor="middle">EventId mới</text>
+
+  <!-- Box Bỏ qua trùng -->
+  <rect x="330" y="485" width="135" height="58" rx="8" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+  <text x="397" y="511" fill="#991B1B" font-size="12" font-weight="700" text-anchor="middle">Trùng EventId</text>
+  <text x="397" y="528" fill="#B91C1C" font-size="11" text-anchor="middle">Bỏ qua không cộng</text>
+
+  <!-- Step 5: Tính Streak BR-03 & Cộng điểm -->
+  <rect x="705" y="480" width="210" height="70" rx="10" fill="#FFFFFF" stroke="#D97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="810" y="508" fill="#92400E" font-size="13" font-weight="700" text-anchor="middle">5. Tính Streak (BR-03)</text>
+  <text x="810" y="527" fill="#475569" font-size="11.5" text-anchor="middle">Cộng Điểm &amp; Ghi DailyLogs</text>
+
+  <!-- Diamond BR-04 & BR-06: Quét Rêu 24h & Chu kỳ 7 ngày -->
+  <polygon points="1055,462 1140,515 1055,568 970,515" fill="#FEF3C7" stroke="#D97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1055" y="510" fill="#92400E" font-size="12.5" font-weight="700" text-anchor="middle">BR-04 / BR-06</text>
+  <text x="1055" y="527" fill="#B45309" font-size="10.5" font-weight="600" text-anchor="middle">&gt;24h / Hết 7 ngày</text>
+
+  <!-- Step 8: Phủ rêu & Lưu Bảo tàng Archive -->
+  <rect x="1175" y="480" width="190" height="70" rx="10" fill="#DCFCE7" stroke="#15803D" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1270" y="507" fill="#14532D" font-size="12.5" font-weight="700" text-anchor="middle">8. Phủ rêu (&gt;24h) /</text>
+  <text x="1270" y="525" fill="#166534" font-size="11.5" text-anchor="middle">Đóng phòng → Archive</text>
+  <text x="1270" y="541" fill="#15803D" font-size="10.5" font-weight="600" text-anchor="middle">(Chu kỳ 168 giờ)</text>
+
+  <!-- End Node -->
+  <circle cx="1395" cy="515" r="13" fill="#FFFFFF" stroke="#1E293B" stroke-width="3"/>
+  <circle cx="1395" cy="515" r="7" fill="#1E293B"/>
+
+  <!-- ================= NODES IN LANE 4 (EMAIL SERVICE) ================= -->
+  <rect x="690" y="643" width="240" height="68" rx="10" fill="#FFFFFF" stroke="#DB2777" stroke-width="2" filter="url(#shadow)"/>
+  <text x="810" y="672" fill="#9D174D" font-size="13" font-weight="700" text-anchor="middle">Gửi Email HTML Tự động</text>
+  <text x="810" y="692" fill="#475569" font-size="11.5" text-anchor="middle">Chúc mừng Check-in &amp; Nhắc lịch</text>
+
+  <rect x="995" y="643" width="235" height="68" rx="10" fill="#FFFFFF" stroke="#DB2777" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1112" y="672" fill="#9D174D" font-size="13" font-weight="700" text-anchor="middle">DailyScheduleReminderJob</text>
+  <text x="1112" y="692" fill="#475569" font-size="11.5" text-anchor="middle">Quét UserSchedules mỗi 60 giây</text>
+
+  <!-- ================= ARROWS & FLOW CONNECTIONS ================= -->
+  <!-- Start -> Step 1 -->
+  <line x1="256" y1="158" x2="283" y2="158" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 1 -> BR-01 -->
+  <line x1="380" y1="193" x2="380" y2="266" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- BR-01 FAIL -> Step 1 (400 Bad Request) -->
+  <path d="M 305 318 L 255 318 L 255 180 L 283 180" fill="none" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="250" y="262" fill="#DC2626" font-size="11" font-weight="700" text-anchor="end">FAIL BR-01 (400)</text>
+
+  <!-- BR-01 PASS -> Step 2 -->
+  <line x1="455" y1="318" x2="493" y2="318" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="474" y="310" fill="#047857" font-size="10.5" font-weight="700" text-anchor="middle">Hợp lệ</text>
+
+  <!-- Step 2 -> Step 3 -->
+  <path d="M 580 283 L 580 220 L 650 220 L 650 195" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 3 -> Step 4 -->
+  <path d="M 650 193 L 650 220 L 787 220 L 787 281" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Step 4 -> BR-02 (Kafka Event) -->
+  <path d="M 740 353 L 740 415 L 580 415 L 580 460" fill="none" stroke="#D97706" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="660" y="409" fill="#B45309" font-size="11" font-weight="700" text-anchor="middle">Kafka Event</text>
+
+  <!-- Step 4 -> Step 6 (Immediate +50 Materials) -->
+  <path d="M 835 283 L 835 158 L 863 158" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)"/>
+
+  <!-- BR-02 FAIL -> Trùng EventId -->
+  <line x1="500" y1="515" x2="467" y2="515" stroke="#DC2626" stroke-width="1.8" marker-end="url(#arrow-red)"/>
+
+  <!-- BR-02 PASS -> Step 5 -->
+  <line x1="660" y1="515" x2="703" y2="515" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="682" y="507" fill="#047857" font-size="10.5" font-weight="700" text-anchor="middle">Hợp lệ</text>
+
+  <!-- Step 5 -> Email Service -->
+  <line x1="810" y1="550" x2="810" y2="641" stroke="#DB2777" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="995" y1="677" x2="932" y2="677" stroke="#DB2777" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+  <!-- Step 6 -> BR-05 -->
+  <line x1="972" y1="193" x2="972" y2="266" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- BR-05 FAIL -> Step 6 (Thiếu vật liệu) -->
+  <path d="M 1015 292 L 1045 292 L 1045 195" fill="none" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="1082" y="258" fill="#DC2626" font-size="10.5" font-weight="700" text-anchor="middle">FAIL BR-05</text>
+
+  <!-- BR-05 PASS -> Step 7 -->
+  <line x1="1054" y1="318" x2="1113" y2="318" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="1084" y="310" fill="#047857" font-size="10.5" font-weight="700" text-anchor="middle">Đủ</text>
+
+  <!-- Step 7 -> BR-04 / BR-06 -->
+  <path d="M 1222 353 L 1222 415 L 1055 415 L 1055 460" fill="none" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- BR-04 / BR-06 -> Step 8 -->
+  <line x1="1140" y1="515" x2="1173" y2="515" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)"/>
+
+  <!-- Step 8 -> End -->
+  <line x1="1365" y1="515" x2="1380" y2="515" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+</svg>

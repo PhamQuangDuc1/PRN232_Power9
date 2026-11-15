@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 800" width="1440" height="800" font-family="'Segoe UI', Inter, Arial, sans-serif">
+  <defs>
+    <marker id="seq-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#1E293B"/>
+    </marker>
+    <marker id="seq-arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#059669"/>
+    </marker>
+    <marker id="seq-arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#DC2626"/>
+    </marker>
+    <marker id="seq-arr-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#D97706"/>
+    </marker>
+    <marker id="seq-arr-pink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#DB2777"/>
+    </marker>
+    <filter id="box-shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1440" height="800" fill="#F8FAFC"/>
+
+  <!-- Top Banner -->
+  <rect x="20" y="14" width="1400" height="50" rx="10" fill="#0F172A"/>
+  <text x="42" y="45" fill="#FFFFFF" font-size="18.5" font-weight="700">SLIDE 12 · SEQUENCE DIAGRAM — PHỐI HỢP CHECK-IN, KAFKA WORKER &amp; TRIBE CITY</text>
+  <text x="1398" y="44" fill="#38BDF8" font-size="13.5" font-weight="600" text-anchor="end">Lifelines khớp Class thật (Slide 13) · Nhánh alt theo BR-02 &amp; BR-03</text>
+
+  <!-- ================= LIFELINE HEADERS (7 PARTICIPANTS) ================= -->
+  <!-- 1: Actor Employee (x=105) -->
+  <rect x="30" y="76" width="150" height="56" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2" filter="url(#box-shadow)"/>
+  <text x="105" y="100" fill="#1D4ED8" font-size="13" font-weight="700" text-anchor="middle">👤 :Employee</text>
+  <text x="105" y="119" fill="#475569" font-size="11.5" text-anchor="middle">(Web UI-02 / UI-05)</text>
+  <line x1="105" y1="132" x2="105" y2="765" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="6,4"/>
+
+  <!-- 2: CheckInsController (x=310) -->
+  <rect x="215" y="76" width="190" height="56" rx="8" fill="#F0FDF4" stroke="#059669" stroke-width="2" filter="url(#box-shadow)"/>
+  <text x="310" y="100" fill="#065F46" font-size="13" font-weight="700" text-anchor="middle">:CheckInsController</text>
+  <text x="310" y="119" fill="#475569" font-size="11.5" text-anchor="middle">(RoutineService.Api)</text>
+  <line x1="310" y1="132" x2="310" y2="765" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="6,4"/>
+
+  <!-- 3: CityService (x=520) -->
+  <rect x="435" y="76" width="170" height="56" rx="8" fill="#E0F2FE" stroke="#0284C7" stroke-width="2" filter="url(#box-shadow)"/>
+  <text x="520" y="100" fill="#0369A1" font-size="13" font-weight="700" text-anchor="middle">:CityService</text>
+  <text x="520" y="119" fill="#475569" font-size="11.5" text-anchor="middle">(Infrastructure)</text>
+  <line x1="520" y1="132" x2="520" y2="765" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="6,4"/>
+
+  <!-- 4: KafkaProducer / Broker (x=725) -->
+  <rect x="630" y="76" width="190" height="56" rx="8" fill="#FEF3C7" stroke="#D97706" stroke-width="2" filter="url(#box-shadow)"/>
+  <text x="725" y="100" fill="#92400E" font-size="13" font-weight="700" text-anchor="middle">:KafkaProducer / Broker</text>
+  <text x="725" y="119" fill="#B45309" font-size="11" font-weight="600" text-anchor="middle">power9-routine-completed</text>
+  <line x1="725" y1="132" x2="725" y2="765" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="6,4"/>
+
+  <!-- 5: RoutineCompletedConsumerWorker (x=945) -->
+  <rect x="840" y="76" width="210" height="56" rx="8" fill="#FFEDD5" stroke="#EA580C" stroke-width="2" filter="url(#box-shadow)"/>
+  <text x="945" y="100" fill="#9A3412" font-size="12.5" font-weight="700" text-anchor="middle">:RoutineCompletedWorker</text>
+  <text x="945" y="119" fill="#C2410C" font-size="11" font-weight="600" text-anchor="middle">(NotificationWorker)</text>
+  <line x1="945" y1="132" x2="945" y2="765" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="6,4"/>
+
+  <!-- 6: Power9Db / WorkerDbContext (x=1155) -->
+  <rect x="1070" y="76" width="170" height="56" rx="8" fill="#F1F5F9" stroke="#334155" stroke-width="2" filter="url(#box-shadow)"/>
+  <text x="1155" y="100" fill="#1E293B" font-size="13" font-weight="700" text-anchor="middle">:Power9Db (SQL)</text>
+  <text x="1155" y="119" fill="#475569" font-size="11.5" text-anchor="middle">(EF Core DbContext)</text>
+  <line x1="1155" y1="132" x2="1155" y2="765" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="6,4"/>
+
+  <!-- 7: SmtpEmailSender (x=1340) -->
+  <rect x="1260" y="76" width="160" height="56" rx="8" fill="#FDF2F8" stroke="#DB2777" stroke-width="2" filter="url(#box-shadow)"/>
+  <text x="1340" y="100" fill="#9D174D" font-size="13" font-weight="700" text-anchor="middle">:SmtpEmailSender</text>
+  <text x="1340" y="119" fill="#BE185D" font-size="11" font-weight="600" text-anchor="middle">(Gmail :587 / Mailpit)</text>
+  <line x1="1340" y1="132" x2="1340" y2="765" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="6,4"/>
+
+  <!-- ================= PHASE 1: SYNCHRONOUS HTTP API & KAFKA PUBLISH ================= -->
+  <!-- Activation bar on CheckInsController -->
+  <rect x="303" y="155" width="14" height="225" rx="3" fill="#10B981" stroke="#047857" stroke-width="1.2"/>
+
+  <!-- Msg 1: POST /api/routines/{id}/checkin -->
+  <line x1="105" y1="162" x2="299" y2="162" stroke="#1E293B" stroke-width="2" marker-end="url(#seq-arr)"/>
+  <text x="202" y="154" fill="#0F172A" font-size="12" font-weight="700" text-anchor="middle">1. CheckIn(routineId, body)</text>
+
+  <!-- ALT FRAME 1: Kiểm tra tham số hợp lệ -->
+  <rect x="45" y="178" width="710" height="208" rx="6" fill="none" stroke="#059669" stroke-width="1.8"/>
+  <polygon points="45,178 100,178 110,190 100,200 45,200" fill="#059669"/>
+  <text x="73" y="193" fill="#FFFFFF" font-size="11.5" font-weight="700" text-anchor="middle">alt</text>
+  <text x="122" y="194" fill="#991B1B" font-size="11.5" font-weight="700">[routineId &lt;= 0 || UserId == null]</text>
+
+  <!-- Msg 1a: 400 Bad Request -->
+  <line x1="303" y1="216" x2="109" y2="216" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#seq-arr-red)"/>
+  <text x="206" y="210" fill="#DC2626" font-size="11.5" font-weight="700" text-anchor="middle">1a. 400 BadRequest / 401 Unauthorized</text>
+
+  <!-- Divider else -->
+  <line x1="45" y1="230" x2="755" y2="230" stroke="#059669" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="60" y="246" fill="#065F46" font-size="11.5" font-weight="700">[else: Hợp lệ]</text>
+
+  <!-- Msg 2: RewardMaterialsAsync(userId, 50) -->
+  <rect x="513" y="255" width="14" height="46" rx="3" fill="#38BDF8" stroke="#0284C7" stroke-width="1.2"/>
+  <line x1="317" y1="262" x2="509" y2="262" stroke="#0284C7" stroke-width="2" marker-end="url(#seq-arr)"/>
+  <text x="415" y="255" fill="#0369A1" font-size="11.5" font-weight="700" text-anchor="middle">2. RewardMaterialsAsync(userId, 50)</text>
+
+  <!-- Msg 3: SaveChangesAsync (+50 Materials, +50 Score) -->
+  <line x1="527" y1="280" x2="1151" y2="280" stroke="#334155" stroke-width="1.8" marker-end="url(#seq-arr)"/>
+  <text x="840" y="273" fill="#334155" font-size="11.5" font-weight="600" text-anchor="middle">3. UPDATE CityResidents (+50 Materials) &amp; CityRooms (+50 Score)</text>
+
+  <!-- Msg 4: PublishAsync("power9-routine-completed", key=userId, evt) -->
+  <line x1="317" y1="322" x2="721" y2="322" stroke="#D97706" stroke-width="2.2" marker-end="url(#seq-arr-amber)"/>
+  <text x="520" y="314" fill="#92400E" font-size="12" font-weight="700" text-anchor="middle">4. PublishAsync(RoutineCompletedTopic, key=userId, evt)</text>
+
+  <!-- Msg 5: Return 202 Accepted -->
+  <line x1="303" y1="365" x2="109" y2="365" stroke="#059669" stroke-width="2.2" stroke-dasharray="5,3" marker-end="url(#seq-arr-green)"/>
+  <text x="206" y="357" fill="#047857" font-size="12" font-weight="700" text-anchor="middle">5. 202 Accepted (EventId, "+50 vật liệu")</text>
+
+  <!-- ================= PHASE 2: ASYNCHRONOUS BACKGROUND WORKER ================= -->
+  <rect x="30" y="400" width="1390" height="24" rx="4" fill="#E2E8F0"/>
+  <text x="725" y="416" fill="#1E293B" font-size="12" font-weight="700" text-anchor="middle">═══ XỬ LÝ BẤT ĐỒNG BỘ TẠI BACKGROUND WORKER (AT-LEAST-ONCE + IDEMPOTENT BR-02) ═══</text>
+
+  <!-- Activation bar on Worker -->
+  <rect x="938" y="438" width="14" height="312" rx="3" fill="#FB923C" stroke="#C2410C" stroke-width="1.2"/>
+
+  <!-- Msg 6: Consume -> HandleAsync(payload) -->
+  <line x1="725" y1="446" x2="934" y2="446" stroke="#D97706" stroke-width="2.2" marker-end="url(#seq-arr-amber)"/>
+  <text x="830" y="439" fill="#9A3412" font-size="12" font-weight="700" text-anchor="middle">6. Consume() → HandleAsync(payload)</text>
+
+  <!-- Msg 7: AnyAsync(l => l.EventId == evt.EventId) -->
+  <line x1="952" y1="476" x2="1151" y2="476" stroke="#1E293B" stroke-width="1.8" marker-end="url(#seq-arr)"/>
+  <text x="1052" y="469" fill="#1E293B" font-size="11.5" font-weight="700" text-anchor="middle">7. AnyAsync(EventId == evt.EventId)</text>
+
+  <!-- ALT FRAME 2: Kiểm tra trùng EventId (BR-02) -->
+  <rect x="680" y="495" width="740" height="260" rx="6" fill="none" stroke="#D97706" stroke-width="2"/>
+  <polygon points="680,495 735,495 745,507 735,517 680,517" fill="#D97706"/>
+  <text x="708" y="510" fill="#FFFFFF" font-size="11.5" font-weight="700" text-anchor="middle">alt</text>
+  <text x="758" y="511" fill="#991B1B" font-size="12" font-weight="700">[Vi phạm BR-02: EventId đã tồn tại trong DailyLogs (Duplicate Message)]</text>
+
+  <!-- Msg 8a: Commit(result) & Bỏ qua -->
+  <line x1="938" y1="538" x2="729" y2="538" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#seq-arr-red)"/>
+  <text x="833" y="531" fill="#DC2626" font-size="11.5" font-weight="700" text-anchor="middle">8a. Commit(result) — Bỏ qua, chống cộng điểm 2 lần</text>
+
+  <!-- Divider else -->
+  <line x1="680" y1="556" x2="1420" y2="556" stroke="#D97706" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="695" y="574" fill="#065F46" font-size="12" font-weight="700">[else: Event mới hợp lệ — Tính Streak (BR-03), Cộng điểm &amp; Gửi Email]</text>
+
+  <!-- Msg 8b: Self-call StreakCalculator.Next(...) -->
+  <path d="M 952 590 L 1010 590 L 1010 612 L 955 612" fill="none" stroke="#EA580C" stroke-width="1.8" marker-end="url(#seq-arr-amber)"/>
+  <text x="1018" y="605" fill="#9A3412" font-size="11.5" font-weight="700">8b. StreakCalculator.Next(streak, lastDate, today) [BR-03]</text>
+
+  <!-- Msg 9: SaveChangesAsync (Update Users, Insert DailyLogs, Upgrade Floor BR-05) -->
+  <line x1="952" y1="642" x2="1151" y2="642" stroke="#059669" stroke-width="2" marker-end="url(#seq-arr-green)"/>
+  <text x="1052" y="634" fill="#065F46" font-size="11.5" font-weight="700" text-anchor="middle">9. SaveChangesAsync() (+Points, DailyLog, Floor)</text>
+
+  <!-- Msg 10: Manual Offset Commit -->
+  <line x1="938" y1="678" x2="729" y2="678" stroke="#D97706" stroke-width="2" marker-end="url(#seq-arr-amber)"/>
+  <text x="833" y="670" fill="#92400E" font-size="11.5" font-weight="700" text-anchor="middle">10. consumer.Commit(result) (At-Least-Once)</text>
+
+  <!-- Msg 11: SendEmailAsync -->
+  <rect x="1333" y="704" width="14" height="36" rx="3" fill="#F472B6" stroke="#DB2777" stroke-width="1.2"/>
+  <line x1="952" y1="712" x2="1329" y2="712" stroke="#DB2777" stroke-width="2" marker-end="url(#seq-arr-pink)"/>
+  <text x="1140" y="704" fill="#9D174D" font-size="11.5" font-weight="700" text-anchor="middle">11. SendEmailAsync(toEmail, subject, htmlBody)</text>
+
+  <!-- Msg 12: Return Email Sent -->
+  <line x1="1333" y1="736" x2="956" y2="736" stroke="#DB2777" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#seq-arr-pink)"/>
+  <text x="1140" y="730" fill="#BE185D" font-size="11" font-weight="600" text-anchor="middle">12. [GMAIL SENT :587] &amp; [MAILPIT SENT :1025]</text>
+</svg>

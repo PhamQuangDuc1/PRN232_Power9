@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 680" width="100%" height="100%" style="background:#FFFFFF; font-family: 'Segoe UI', Inter, Roboto, Arial, sans-serif;">
+  <!-- Outer Card Border matching MẪU BỐ CỤC -->
+  <rect x="8" y="8" width="1104" height="664" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+  <text x="40" y="46" fill="#64748B" font-size="13.5" font-weight="700" letter-spacing="1.2">MẪU BỐ CỤC • 3 THÔNG ĐIỆP CHỐT LẠI GIÁ TRỊ ĐÃ CHỨNG MINH (GIỮ TRÊN MÀN HÌNH KHI Q&amp;A)</text>
+
+  <!-- ================= ITEM 1: PROBLEM SOLVED (Blue Circle 1) ================= -->
+  <g transform="translate(40, 74)">
+    <rect x="0" y="0" width="1040" height="128" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.2"/>
+    <circle cx="48" cy="64" r="28" fill="#1D4ED8"/>
+    <text x="48" y="72" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">1</text>
+
+    <text x="98" y="38" fill="#0F172A" font-size="17" font-weight="800">PROBLEM SOLVED — Giải quyết trọn vẹn bài toán bỏ cuộc của dân văn phòng</text>
+    <text x="98" y="66" fill="#334155" font-size="14">• Chuyển đổi việc tập luyện đơn độc, tốn thời gian thành các bài vận động ngắn <tspan fill="#1D4ED8" font-weight="700">&lt; 3 phút ngay tại bàn làm việc</tspan></text>
+    <text x="98" y="90" fill="#334155" font-size="14">  (ngừa đau mỏi cổ vai gáy &amp; mỏi mắt) kết hợp <tspan fill="#1D4ED8" font-weight="700">trách nhiệm đồng đội (Social Accountability)</tspan> giữa 12 đồng nghiệp</text>
+    <text x="98" y="112" fill="#64748B" font-size="13">  cùng xây dựng Thành phố chung Tribe City 2.5D trong chu kỳ 7 ngày.</text>
+  </g>
+
+  <!-- ================= ITEM 2: WORKING PRODUCT (Orange Circle 2) ================= -->
+  <g transform="translate(40, 222)">
+    <rect x="0" y="0" width="1040" height="136" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.2"/>
+    <circle cx="48" cy="68" r="28" fill="#EA580C"/>
+    <text x="48" y="76" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">2</text>
+
+    <text x="98" y="36" fill="#0F172A" font-size="17" font-weight="800">WORKING PRODUCT — 3 Luồng nghiệp vụ (WF-01..03) vận hành mượt trên 7 Docker Containers</text>
+    <text x="98" y="64" fill="#334155" font-size="13.5">• <tspan fill="#EA580C" font-weight="700">WF-01 (Smart Routine &amp; gRPC):</tspan> Gợi ý bài tập tức thì qua HTTP/2 gRPC (:50051) theo thời gian ngồi, buổi &amp; mức Stress.</text>
+    <text x="98" y="88" fill="#334155" font-size="13.5">• <tspan fill="#EA580C" font-weight="700">WF-02 (Tribe City 2.5D):</tspan> Check-in nhận +50 vật liệu, nâng nhà 4 tầng (BR-05), quét rêu 24h (BR-04) &amp; Bảo tàng 7 ngày (BR-06).</text>
+    <text x="98" y="112" fill="#334155" font-size="13.5">• <tspan fill="#EA580C" font-weight="700">WF-03 (Kafka &amp; Gmail SMTP):</tspan> Xử lý bất đồng bộ qua Kafka (:8085), tự động tính Streak (BR-02) &amp; gửi thẳng Email về Gmail thật.</text>
+  </g>
+
+  <!-- ================= ITEM 3: VERIFIED RESULT (Green Circle 3) ================= -->
+  <g transform="translate(40, 378)">
+    <rect x="0" y="0" width="1040" height="128" rx="10" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.2"/>
+    <circle cx="48" cy="64" r="28" fill="#0D7A5F"/>
+    <text x="48" y="72" text-anchor="middle" fill="#FFFFFF" font-size="22" font-weight="800">3</text>
+
+    <text x="98" y="38" fill="#0F172A" font-size="17" font-weight="800">VERIFIED RESULT — Minh chứng kỹ thuật đo đạc thực tế &amp; hướng mở rộng rõ ràng</text>
+    <text x="98" y="66" fill="#334155" font-size="14">• <tspan fill="#0D7A5F" font-weight="700">31 / 31 xUnit Tests Passed (100% trong ~1.04s)</tspan> • 23 REST Endpoints • 7 bảng SQL Server 2022 (Power9Db) • 100+ bản ghi Seed.</text>
+    <text x="98" y="90" fill="#334155" font-size="14">• Độ trễ gRPC <tspan fill="#0D7A5F" font-weight="700">&lt; 15ms</tspan> (có Fallback chịu lỗi 100%); Kafka Consumer xử lý <tspan fill="#0D7A5F" font-weight="700">&lt; 1s</tspan> (chống cộng trùng bằng EventId UNIQUE).</text>
+    <text x="98" y="112" fill="#64748B" font-size="13">• Bước tiếp theo: Nâng cấp SignalR Real-time (&lt; 100ms), Hybrid ML Scoring &amp; Transactional Outbox.</text>
+  </g>
+
+  <!-- ================= BOTTOM 3 PILL BUTTONS (Demo URL | Git Repo | Kafka & Mail) ================= -->
+  <g transform="translate(40, 530)">
+    <!-- Pill 1: Demo URL -->
+    <rect x="0" y="0" width="328" height="62" rx="31" fill="#E0E7FF"/>
+    <text x="164" y="27" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800">Demo URL (Web 2.5D &amp; Swagger)</text>
+    <text x="164" y="47" text-anchor="middle" fill="#1E3A8A" font-size="12.5" font-family="Consolas, monospace">http://localhost:5000</text>
+
+    <!-- Pill 2: Git Repo / Solution -->
+    <rect x="356" y="0" width="328" height="62" rx="31" fill="#E0E7FF"/>
+    <text x="520" y="27" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800">Git Repo &amp; Test Suite</text>
+    <text x="520" y="47" text-anchor="middle" fill="#1E3A8A" font-size="12.5" font-family="Consolas, monospace">Power9.slnx (31/31 xUnit Pass)</text>
+
+    <!-- Pill 3: Kafka UI & Gmail/Mailpit -->
+    <rect x="712" y="0" width="328" height="62" rx="31" fill="#E0E7FF"/>
+    <text x="876" y="27" text-anchor="middle" fill="#1D4ED8" font-size="14" font-weight="800">Kafka UI &amp; Real Gmail SMTP</text>
+    <text x="876" y="47" text-anchor="middle" fill="#1E3A8A" font-size="12.5" font-family="Consolas, monospace">:8085 (Kafka) • :8025 / Gmail</text>
+  </g>
+
+  <!-- Bottom Caption -->
+  <text x="40" y="636" fill="#0D7A5F" font-size="13.5" font-weight="700" font-style="italic">Xin chân thành cảm ơn Hội đồng! Nhóm xin để slide này trên màn hình trong suốt phần Q&amp;A để đối chiếu trực tiếp.</text>
+</svg>

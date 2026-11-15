@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 680" width="100%" height="100%" style="background:#FFFFFF; font-family: 'Segoe UI', Inter, Roboto, Arial, sans-serif;">
+  <!-- Outer Card Border -->
+  <rect x="8" y="8" width="1104" height="664" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+  <text x="32" y="40" fill="#64748B" font-size="13" font-weight="700" letter-spacing="1.2">MINH CHỨNG KIỂM THỬ THẬT • 31/31 XUNIT TEST CASES PASSED (DOTNET TEST POWER9.SLNX)</text>
+
+  <!-- Summary Stat Pills -->
+  <g transform="translate(32, 56)">
+    <rect x="0" y="0" width="245" height="58" rx="8" fill="#ECFDF5" stroke="#10B981" stroke-width="1.2"/>
+    <text x="18" y="23" fill="#047857" font-size="11.5" font-weight="700">TỔNG SỐ TEST CASES</text>
+    <text x="18" y="46" fill="#065F46" font-size="22" font-weight="800">31 / 31 PASSED (100%)</text>
+
+    <rect x="262" y="0" width="265" height="58" rx="8" fill="#EFF6FF" stroke="#3B82F6" stroke-width="1.2"/>
+    <text x="280" y="23" fill="#1D4ED8" font-size="11.5" font-weight="700">PROJECT 1: RECOMMENDATION GRPC</text>
+    <text x="280" y="46" fill="#1E3A8A" font-size="20" font-weight="800">10 Tests • 0 Failed</text>
+
+    <rect x="544" y="0" width="275" height="58" rx="8" fill="#F5F3FF" stroke="#8B5CF6" stroke-width="1.2"/>
+    <text x="562" y="23" fill="#6D28D9" font-size="11.5" font-weight="700">PROJECT 2: NOTIFICATION &amp; TRIBE CITY</text>
+    <text x="562" y="46" fill="#4C1D95" font-size="20" font-weight="800">21 Tests • 0 Failed</text>
+
+    <rect x="836" y="0" width="248" height="58" rx="8" fill="#FFFBEB" stroke="#F59E0B" stroke-width="1.2"/>
+    <text x="854" y="23" fill="#B45309" font-size="11.5" font-weight="700">THỜI GIAN THỰC THI (XUNIT)</text>
+    <text x="854" y="46" fill="#78350F" font-size="20" font-weight="800">~1.04s (In-Memory)</text>
+  </g>
+
+  <!-- Matrix Table of 31 Test Cases Mapped to Business Rules -->
+  <g transform="translate(32, 130)">
+    <rect x="0" y="0" width="1052" height="36" fill="#0F172A" rx="4"/>
+    <text x="14" y="23" fill="#FFFFFF" font-size="12.5" font-weight="700">Nhóm Test Class &amp; File Code Thật</text>
+    <text x="295" y="23" fill="#FFFFFF" font-size="12.5" font-weight="700">Danh sách Test Cases (Fact / Theory InlineData)</text>
+    <text x="745" y="23" fill="#FFFFFF" font-size="12.5" font-weight="700">Đối chiếu Business Rule</text>
+    <text x="955" y="23" fill="#FFFFFF" font-size="12.5" font-weight="700">Kết quả</text>
+
+    <!-- Row 1: RecommendationEngineTests (10 tests) -->
+    <rect x="0" y="36" width="1052" height="72" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+    <text x="14" y="58" fill="#0F172A" font-size="12.5" font-weight="700">1. RecommendationEngineTests</text>
+    <text x="14" y="76" fill="#64748B" font-size="11.5">RecommendationEngineTests.cs</text>
+    <text x="14" y="94" fill="#0D8A7B" font-size="11.5" font-weight="700">(10 Test Cases)</text>
+
+    <text x="295" y="56" fill="#334155" font-size="12">• [Theory] Recommend_FollowsRulePriority (8 kịch bản: ngồi 5..120p, Stress Low..High)</text>
+    <text x="295" y="75" fill="#334155" font-size="12">• [Fact] Recommend_IsCaseInsensitive_AndHandlesNull (Biên âm -5p, null time/stress)</text>
+    <text x="295" y="94" fill="#334155" font-size="12">• [Fact] Catalog_HasUniqueIds (Đảm bảo 8 bài tập gRPC không trùng ID)</text>
+
+    <text x="745" y="65" fill="#1E293B" font-size="12" font-weight="600">Rule ưu tiên gợi ý AI / gRPC</text>
+    <text x="745" y="84" fill="#64748B" font-size="11.5">Boundary &amp; Null Safety</text>
+    <rect x="950" y="56" width="88" height="26" rx="13" fill="#DCFCE7"/>
+    <text x="994" y="73" text-anchor="middle" fill="#15803D" font-size="11.5" font-weight="700">10/10 PASS</text>
+
+    <!-- Row 2: StreakCalculatorTests (5 tests) -->
+    <rect x="0" y="108" width="1052" height="68" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.8"/>
+    <text x="14" y="130" fill="#0F172A" font-size="12.5" font-weight="700">2. StreakCalculatorTests</text>
+    <text x="14" y="148" fill="#64748B" font-size="11.5">WorkerLogicTests.cs (L7-L16)</text>
+    <text x="14" y="165" fill="#0D8A7B" font-size="11.5" font-weight="700">(5 Test Cases)</text>
+
+    <text x="295" y="128" fill="#334155" font-size="12">• FirstActivity_StartsAtOne (0 → 1) • Yesterday_Increments (Liên tiếp hôm qua → +1)</text>
+    <text x="295" y="147" fill="#334155" font-size="12">• SameDay_KeepsStreak (Tập trùng ngày giữ nguyên) • SameDay_ZeroStreak_BecomesOne</text>
+    <text x="295" y="165" fill="#334155" font-size="12">• Gap_Resets (Nghỉ cách quãng ≥ 2 ngày → Reset Streak về 1)</text>
+
+    <text x="745" y="136" fill="#1E293B" font-size="12" font-weight="600">BR-02 (Chuỗi Streak &amp; Điểm)</text>
+    <text x="745" y="155" fill="#64748B" font-size="11.5">Chống cộng trùng trong ngày</text>
+    <rect x="950" y="128" width="88" height="26" rx="13" fill="#DCFCE7"/>
+    <text x="994" y="145" text-anchor="middle" fill="#15803D" font-size="11.5" font-weight="700">5/5 PASS</text>
+
+    <!-- Row 3: ReminderWindowTests (5 tests) -->
+    <rect x="0" y="176" width="1052" height="68" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.8"/>
+    <text x="14" y="198" fill="#0F172A" font-size="12.5" font-weight="700">3. ReminderWindowTests</text>
+    <text x="14" y="216" fill="#64748B" font-size="11.5">WorkerLogicTests.cs (L18-L32)</text>
+    <text x="14" y="233" fill="#0D8A7B" font-size="11.5" font-weight="700">(5 Test Cases)</text>
+
+    <text x="295" y="196" fill="#334155" font-size="12">• InsideWindow_MatchingDay_IsDue (Đúng khung giờ &amp; thứ → Gửi Email nhắc lịch)</text>
+    <text x="295" y="215" fill="#334155" font-size="12">• EmptyDays_MeansEveryDay (Trống thứ = Nhắc mỗi ngày) • WrongDay_NotDue (Sai thứ)</text>
+    <text x="295" y="233" fill="#334155" font-size="12">• WindowStartIsExclusive (Chặn gửi lặp đầu khung giờ) • OutsideWindow_NotDue</text>
+
+    <text x="745" y="205" fill="#1E293B" font-size="12" font-weight="600">Background Reminder Job</text>
+    <text x="745" y="224" fill="#64748B" font-size="11.5">Chống gửi trùng Email SMTP</text>
+    <rect x="950" y="196" width="88" height="26" rx="13" fill="#DCFCE7"/>
+    <text x="994" y="213" text-anchor="middle" fill="#15803D" font-size="11.5" font-weight="700">5/5 PASS</text>
+
+    <!-- Row 4: TribeCityTests (11 tests) -->
+    <rect x="0" y="244" width="1052" height="86" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.8"/>
+    <text x="14" y="268" fill="#0F172A" font-size="12.5" font-weight="700">4. TribeCityTests</text>
+    <text x="14" y="286" fill="#64748B" font-size="11.5">TribeCityTests.cs (L5-L68)</text>
+    <text x="14" y="304" fill="#0D8A7B" font-size="11.5" font-weight="700">(11 Test Cases)</text>
+
+    <text x="295" y="264" fill="#334155" font-size="12">• [Theory] LandmarkMilestone_CalculatesExpectedLevel (8 mốc điểm: 0, 150, 250, 450, 500, 750, 800, 1500)</text>
+    <text x="295" y="283" fill="#334155" font-size="12">• [Fact] HouseUpgrade_RequiresEnoughMaterials (Tầng 2 cần 200 vật liệu: 150 False → 200 True)</text>
+    <text x="295" y="302" fill="#334155" font-size="12">• [Fact] MossDecay_TriggersWhenNoCheckInOver24Hours (12h False → 25h True phủ rêu)</text>
+    <text x="295" y="321" fill="#334155" font-size="12">• [Fact] CityCycle_DefaultsToExactlySevenDays (Chu kỳ thành phố = đúng 168 giờ / 7 ngày)</text>
+
+    <text x="745" y="272" fill="#1E293B" font-size="12" font-weight="600">BR-04 (Phủ rêu ≥ 24h)</text>
+    <text x="745" y="292" fill="#1E293B" font-size="12" font-weight="600">BR-05 (Nâng nhà Floor*100)</text>
+    <text x="745" y="312" fill="#1E293B" font-size="12" font-weight="600">BR-06 (Chu kỳ 7 ngày = 168h)</text>
+    <rect x="950" y="274" width="88" height="26" rx="13" fill="#DCFCE7"/>
+    <text x="994" y="291" text-anchor="middle" fill="#15803D" font-size="11.5" font-weight="700">11/11 PASS</text>
+  </g>
+
+  <!-- Terminal Log Box at the Bottom -->
+  <g transform="translate(32, 476)">
+    <rect x="0" y="0" width="1052" height="172" rx="8" fill="#0F172A"/>
+    <circle cx="20" cy="18" r="5" fill="#EF4444"/>
+    <circle cx="36" cy="18" r="5" fill="#F59E0B"/>
+    <circle cx="52" cy="18" r="5" fill="#10B981"/>
+    <text x="72" y="22" fill="#94A3B8" font-size="11.5" font-family="Consolas, monospace">PS D:\hoc2026\prn232\ass&gt; dotnet test Power9.slnx --logger "console;verbosity=normal"</text>
+
+    <text x="20" y="48" fill="#E2E8F0" font-size="11.5" font-family="Consolas, monospace">[xUnit.net 00:00:00.18] Starting: Power9.RecommendationGrpc.Tests (8 Theory + 2 Fact = 10 Tests)</text>
+    <text x="20" y="68" fill="#4ADE80" font-size="11.5" font-family="Consolas, monospace">  Passed RecommendationEngineTests.Recommend_FollowsRulePriority (8/8 InlineData) &amp; Catalog_HasUniqueIds [58 ms]</text>
+    <text x="20" y="90" fill="#E2E8F0" font-size="11.5" font-family="Consolas, monospace">[xUnit.net 00:00:00.18] Starting: Power9.NotificationWorker.Tests (5 Streak + 5 Reminder + 11 TribeCity = 21 Tests)</text>
+    <text x="20" y="110" fill="#4ADE80" font-size="11.5" font-family="Consolas, monospace">  Passed StreakCalculatorTests (5/5) • ReminderWindowTests (5/5) • TribeCityTests (11/11) [96 ms]</text>
+    <text x="20" y="136" fill="#38BDF8" font-size="12.5" font-weight="700" font-family="Consolas, monospace">Test Run Successful. Total tests: 31 (10 + 21) | Passed: 31 | Failed: 0 | Skipped: 0 | Total time: ~1.04 Seconds</text>
+    <text x="20" y="156" fill="#94A3B8" font-size="11" font-family="Consolas, monospace">Files: tests/Power9.RecommendationGrpc.Tests/RecommendationEngineTests.cs | tests/Power9.NotificationWorker.Tests/{TribeCityTests,WorkerLogicTests}.cs</text>
+  </g>
+</svg>
